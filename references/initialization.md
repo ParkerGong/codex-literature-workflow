@@ -10,6 +10,7 @@ The Controller Console:
 
 - owns the active goal for long-running workflows;
 - initializes or updates all `00_controller/` records;
+- owns local Git checkpoint commits for the target project root;
 - verifies dependency status before long batches;
 - creates or reuses fixed specialist sessions;
 - dispatches bounded work to specialists;
@@ -34,6 +35,7 @@ Required questions:
 8. If Zotero is enabled, what collection, collection mapping, or mapping document should be used?
 9. If Obsidian is enabled, what vault/project root and allowed write paths should be used?
 10. Are there existing local direction documents, literature indexes, PDF folders, manifests, or Zotero/Obsidian mapping files?
+11. Which target project root should receive local Git checkpoint commits, or should the initialized root be used?
 
 Record answers in `project_profile.md`. Set `user_scope_confirmed: true` only after required answers are present. Do not dispatch long specialist work while `user_scope_confirmed=false`.
 
@@ -55,20 +57,24 @@ Do not create one session per paper. Reuse fixed specialist sessions for batches
 3. Run `scripts/init_workspace.py --root <target-project>` if controller records do not exist.
 4. Ask the required user startup questions above and record answers in `00_controller/project_profile.md`.
 5. Read and fill `00_controller/project_profile.md`; do not continue until `user_scope_confirmed=true`.
-6. Read and fill `00_controller/dependency_setup.md`.
-7. Run or request the permanent environment check:
+6. Verify the target project root is a Git repository. If it is not, stop and ask the user to initialize Git or designate the correct Git root before long work.
+7. Create the first forced local Git checkpoint after initialization and scope records are written. Record it in `00_controller/git_checkpoints.md`.
+8. Read and fill `00_controller/dependency_setup.md`.
+9. Run or request the permanent environment check:
 
 ```bash
 micromamba activate codex-literature
 python3 <skill-root>/scripts/env_check.py --json
 ```
 
-8. Read `00_controller/session_registry.md`.
-9. Reuse fixed specialist sessions when listed and active.
-10. If a required specialist session is missing, create it or ask the user to create it, then record its ID.
-11. Write the first dispatch to `00_controller/dispatch_log.md`.
-12. Send the bounded dispatch prompt from `references/dispatch-templates.md`.
-13. Wait for a durable handoff before dispatching the next phase.
+10. Read `00_controller/session_registry.md`.
+11. Reuse fixed specialist sessions when listed and active.
+12. If a required specialist session is missing, create it or ask the user to create it, then record its ID.
+13. Create another forced local Git checkpoint after dependency and session records are updated.
+14. Write the first dispatch to `00_controller/dispatch_log.md`.
+15. Send the bounded dispatch prompt from `references/dispatch-templates.md`.
+16. Wait for a durable handoff before dispatching the next phase.
+17. After every 3 meaningful file-writing steps or accepted handoffs, before risky bulk writes, and before pausing or handing off, create a local Git checkpoint.
 
 ## Recommended Controller Prompt
 
@@ -76,9 +82,10 @@ python3 <skill-root>/scripts/env_check.py --json
 You are the Controller Console for codex-literature-workflow.
 Do not do all work yourself.
 Initialize controller records, verify dependencies, choose or create fixed specialist sessions, then dispatch small bounded tasks.
-Before dispatch, ask the user to confirm paper direction, target count, source mode, download/access permission, Zotero connection, Obsidian connection, local inputs, output paths, and mapping needs.
+Before dispatch, ask the user to confirm paper direction, target count, source mode, download/access permission, Zotero connection, Obsidian connection, local inputs, output paths, mapping needs, and target Git checkpoint root.
 Use academic-research-suite as the default literature discovery/screening companion.
 Use research-lr-ra only as auxiliary/fallback.
+Force a local Git checkpoint after initialization/scope/dependency/session records, after every 3 meaningful file-writing steps or accepted handoffs, before risky bulk writes, and before pausing or handoff. Do not auto-push.
 Only the Controller Console may mark outputs accepted.
 ```
 
@@ -98,8 +105,11 @@ Rules:
   - ObsidianAgent for PDF-first reading, selected visual checks, and Obsidian/RAG-ready notes.
 - If a specialist session does not exist, create it or ask the user to create it, then record the thread/session ID.
 - Before any long batch, initialize controller records and dependency_setup.md.
-- Before any search/download/Zotero/Obsidian/PDF-reading work, ask the user for paper direction, expected paper count, source input mode, download/access permission, language scope, Zotero connection, Obsidian connection, local input paths, output paths, and collection/vault mapping needs.
+- Before any search/download/Zotero/Obsidian/PDF-reading work, ask the user for paper direction, expected paper count, source input mode, download/access permission, language scope, Zotero connection, Obsidian connection, local input paths, output paths, collection/vault mapping needs, and the target Git checkpoint root.
 - Record those answers in project_profile.md and set user_scope_confirmed=true before dispatch.
+- Verify the target root is a Git repository before long work. If not, stop and ask the user to initialize Git or designate the correct repo root.
+- Force local Git checkpoint commits after initialization/scope/dependency/session records, after every 3 meaningful file-writing steps or accepted handoffs, before risky bulk writes, and before pausing or handoff.
+- Run privacy scans before staging files. Do not commit private PDFs, Zotero databases, browser cookies, credentials, or closed vault content unless explicitly approved. Never push automatically.
 - Use academic-research-suite as the default research companion for literature discovery and screening.
 - Use research-lr-ra only as auxiliary/fallback when ARS is unavailable or a narrow LR task fits it better.
 - Do not bypass paywalls, logins, CAPTCHAs, or institutional access controls.
@@ -132,6 +142,7 @@ Stop before long work when:
 - no Controller Console has been designated;
 - the controller cannot create or record required specialist sessions;
 - the required user startup questions have not been answered;
+- the target Git checkpoint root is unclear, not a Git repository, or cannot pass a safe privacy scan;
 - dependency status is unknown and the host project requires strict readiness;
 - the Python environment cannot run `env_check.py`;
 - Zotero is required but unavailable;

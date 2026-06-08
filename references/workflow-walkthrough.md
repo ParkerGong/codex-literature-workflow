@@ -20,7 +20,8 @@ Controller decisions:
 10. Set access mode: open-only first, authorized browser/manual only with user permission.
 11. Set authorized download backend. When installed, use `sciencedirect-live-session-fetcher` as the preferred backend for authenticated publisher downloads before generic Chrome or Computer Use.
 12. Set closed-source fallback policy, batch size, render cap, and visual-check mode.
-13. Record allowed reads, allowed writes, forbidden paths, quota policy, process-check policy, temp cleanup policy, and worklog paths.
+13. Set the target Git checkpoint root, checkpoint interval, and manual-only push policy.
+14. Record allowed reads, allowed writes, forbidden paths, quota policy, process-check policy, temp cleanup policy, and worklog paths.
 
 Durable outputs:
 
@@ -31,6 +32,7 @@ Durable outputs:
 - `controller_kanban.md`
 - `session_registry.md`
 - `dispatch_log.md`
+- `git_checkpoints.md`
 - per-task handoff file
 
 The recommended controller goal is in `architecture.md`. A strict project should use goal mode for long work so the controller keeps state and routes fixed specialist sessions.
@@ -50,12 +52,23 @@ This creates controller records for:
 - source manifest;
 - download log;
 - Zotero link index;
+- Git checkpoint ledger;
 - quota status;
 - temp artifact ledger;
 - ingest queue/status;
 - per-task handoff folder.
 
 These records prevent long tasks from drifting after context compaction, browser failure, quota limits, or user interruption. After compaction, an agent reads `project_profile.md`, `session_registry.md`, its own worklog, the active handoff, and the relevant manifest/index before continuing.
+
+The controller then verifies the target root is a Git repository. If it is not, it stops and asks the user to initialize Git or designate the correct repo root before long work.
+
+First checkpoint trigger:
+
+```bash
+git status --short
+```
+
+The controller inspects changed paths, runs the configured privacy scan on intended text files, stages explicit safe paths only, commits a local checkpoint, and records the commit hash in `00_controller/git_checkpoints.md`. It does not push.
 
 ## 2. Environment Is Checked
 
@@ -90,6 +103,8 @@ python scripts/pdf_probe.py <paper.pdf> --pages 1,3,9 --out /private/tmp/codex_l
 
 The run records whether Python packages, Poppler tools, OCR tools, browser tools, and temp paths are available. If quota is unknown, write `quota unknown` rather than a guessed number.
 
+After dependency records are updated, the controller creates another local Git checkpoint before dispatching broad search or file-writing work.
+
 ## 3. LiteratureAgent Registers Existing Local PDFs When Provided
 
 If `source_input_mode=local-library` or `mixed`, LiteratureAgent starts from approved local folders, files, or manifests.
@@ -106,6 +121,8 @@ Local intake outputs:
 - LiteratureAgent worklog update.
 
 No web search or download happens in pure `local-library` mode unless the controller explicitly changes scope.
+
+After local intake writes manifests or quality reports, the controller checkpoints before moving to Zotero, Obsidian, or additional search.
 
 ## 4. LiteratureAgent Screens Sources When Needed
 
@@ -129,6 +146,8 @@ Screening outputs:
 - duplicate risk.
 
 The candidate table is not a final source list. The controller can audit why each item was selected, deferred, rejected, or marked manual-check.
+
+Before acquisition or other risky follow-up writes, the controller checkpoints the screening table and manifest changes.
 
 ## 5. LiteratureAgent Optionally Downloads Legal Or Authorized PDFs
 
@@ -182,6 +201,8 @@ Bad PDFs are recorded honestly as `wrong-pdf`, `incomplete-pdf`, `scan-or-ocr-ne
 
 For Chinese databases, LiteratureAgent records database-specific fields such as `cn_database`, `cn_record_url`, `cn_access_route`, Chinese/English title, journal/source name, year/issue/pages, database ID, download method, and manual blocker.
 
+After reviewing download logs and source manifest updates, the controller checkpoints before Zotero linking or Obsidian ingest.
+
 ## 6. ZoteroAgent Links Bibliography And Files
 
 This phase runs only when Zotero is enabled by the user or host project.
@@ -207,6 +228,8 @@ Zotero outputs:
 
 Default MD note behavior: do not link Markdown notes to Zotero in the first Zotero pass. After Obsidian notes are complete and stable, the controller may dispatch ZoteroAgent for an optional second pass with `attach_md_note=true`.
 
+After Zotero link-index or verification records change, the controller checkpoints before PDF-first reading or Obsidian writes.
+
 ## 7. ObsidianAgent Performs PDF-First Reading
 
 This phase runs only when Obsidian/RAG ingest is enabled.
@@ -230,6 +253,8 @@ Reading levels:
 - `bad-pdf`
 
 Visual work is optional and evidence-driven. Render only selected pages when claims depend on figures, tables, formulas, curves, screenshots, or diagrams. If the render cap is not enough, record TODO/RISK instead of rendering everything.
+
+After note drafts, rendered-page ledgers, or reading-level records are written, the controller checkpoints before accepting or dispatching the next note batch.
 
 ## 8. Obsidian Notes Become RAG-Ready
 
@@ -270,6 +295,8 @@ Optional outputs:
 
 Unverified visual claims are marked `TODO: visual verification` or `INFERRED`, not fact.
 
+After Obsidian/RAG notes and ingest status records are written, the controller checkpoints before final acceptance.
+
 ## 9. Controller Accepts Or Blocks
 
 The controller reviews files, not chat memory.
@@ -288,8 +315,11 @@ Acceptance checks:
 - temp artifacts are recorded and moved/preserved according to policy;
 - controller and target agent worklogs were updated;
 - sub-agent status is `Waiting review`.
+- the latest Git checkpoint includes the accepted record changes, or the blocker/skipped reason is recorded in `git_checkpoints.md`.
 
 Only then does the controller mark a source or batch accepted. Otherwise it writes an exact blocker and next owner.
+
+After acceptance or blocker decisions are written, the controller checkpoints again before pause, handoff, or the next batch.
 
 ## 10. Recovery And Long-Run Control
 
@@ -302,3 +332,5 @@ If a fixed specialist session stops or context compacts:
 5. Create a new session only after repeated system failure, severe context pollution, true isolation need, or explicit user approval.
 
 The workflow remains recoverable because state is stored in Markdown files, manifests, logs, verification records, and handoff reports.
+
+If the latest checkpoint is older than 3 meaningful file-writing steps or accepted handoffs, recovery starts by creating or repairing the checkpoint before any new broad writes.

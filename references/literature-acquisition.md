@@ -19,11 +19,14 @@ The controller should ask or infer from the latest user message:
 - local PDF folder or manifest path when available;
 - whether new downloads are enabled;
 - access mode: open-only, authorized browser, or manual-user;
-- whether Zotero/Obsidian outputs are enabled.
+- whether Zotero/Obsidian outputs are enabled;
 - Zotero collection or mapping document when Zotero is enabled;
-- Obsidian vault/project root and allowed write paths when Obsidian is enabled.
+- Obsidian vault/project root and allowed write paths when Obsidian is enabled;
+- target Git checkpoint root and whether the latest checkpoint is current.
 
 If the user gives a broad direction, LiteratureAgent first writes a direction map before downloading.
+
+Do not dispatch search, local-library intake, or download batches if the latest required Git checkpoint is stale or the checkpoint root is unclear.
 
 ## Source Input Modes
 

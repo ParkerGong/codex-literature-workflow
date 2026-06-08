@@ -16,7 +16,13 @@ FILES = {
 - controller_thread_id: TBD
 - long_task_goal: pending for long workflows
 - user_scope_confirmed: false
-- startup_questions_missing: direction, target_count, source_input_mode, download_enabled/access_mode, language_scope, zotero_enabled, obsidian_enabled, local inputs, output paths, collection/vault mapping
+- startup_questions_missing: direction, target_count, source_input_mode, download_enabled/access_mode, language_scope, zotero_enabled, obsidian_enabled, local inputs, output paths, collection/vault mapping, git checkpoint root
+- git_checkpoint_required: true
+- git_checkpoint_interval: 3 meaningful file-writing steps or accepted handoffs
+- git_checkpoint_root: TBD
+- git_push_policy: manual-only; never push automatically
+- latest_git_checkpoint: pending
+- git_privacy_scan_status: pending
 - language_scope: both
 - direction_source: TBD
 - direction_docs: TBD
@@ -67,6 +73,7 @@ FILES = {
 - Decisions made:
 - Evidence basis:
 - Temp artifacts:
+- Git checkpoint:
 - TODO:
 - RISK:
 - Next action:
@@ -88,6 +95,7 @@ FILES = {
 - Decisions made:
 - Evidence basis:
 - Temp artifacts:
+- Git checkpoint:
 - TODO:
 - RISK:
 - Next action:
@@ -109,6 +117,7 @@ FILES = {
 - Decisions made:
 - Evidence basis:
 - Temp artifacts:
+- Git checkpoint:
 - TODO:
 - RISK:
 - Next action:
@@ -130,6 +139,7 @@ FILES = {
 - Decisions made:
 - Evidence basis:
 - Temp artifacts:
+- Git checkpoint:
 - TODO:
 - RISK:
 - Next action:
@@ -170,7 +180,7 @@ FILES = {
 
 ## Required Rule
 
-One session must be explicitly designated as the Controller Console before long work starts. The Controller Console owns goal, scope, records, dependency setup, specialist-session routing, and final acceptance.
+One session must be explicitly designated as the Controller Console before long work starts. The Controller Console owns goal, scope, records, dependency setup, specialist-session routing, forced local Git checkpoints, and final acceptance.
 
 ## Required User Questions Before Work
 
@@ -186,8 +196,13 @@ Before any search, download, Zotero, Obsidian, or PDF-reading phase, ask the use
 8. If Zotero is enabled, what collection, collection mapping, or mapping document should be used?
 9. If Obsidian is enabled, what vault/project root and allowed write paths should be used?
 10. Are there existing local direction documents, literature indexes, PDF folders, manifests, or Zotero/Obsidian mapping files?
+11. Which target project root should receive local Git checkpoint commits, or should the initialized root be used?
 
 Record answers in `project_profile.md`. Set `user_scope_confirmed: true` only after required answers are present. Do not dispatch long specialist work while `user_scope_confirmed=false`.
+
+## Git Checkpoint Rule
+
+The Controller Console must force local Git checkpoint commits after initialization/scope/dependency/session records, after every 3 meaningful file-writing steps or accepted handoffs, before risky bulk writes, and before pausing or handoff. If the target root is not a Git repository, stop and ask the user to initialize Git or designate the correct repo root before long work. Run privacy scans before staging files. Never push automatically.
 
 ## Specialist Session Plan
 
@@ -203,9 +218,10 @@ Record answers in `project_profile.md`. Set `user_scope_confirmed: true` only af
 You are the Controller Console for codex-literature-workflow.
 Do not do all work yourself.
 Initialize controller records, verify dependencies, choose or create fixed specialist sessions, then dispatch small bounded tasks.
-Before dispatch, ask the user to confirm paper direction, target count, source mode, download/access permission, Zotero connection, Obsidian connection, local inputs, output paths, and mapping needs.
+Before dispatch, ask the user to confirm paper direction, target count, source mode, download/access permission, Zotero connection, Obsidian connection, local inputs, output paths, mapping needs, and target Git checkpoint root.
 Use academic-research-suite as the default literature discovery/screening companion.
 Use research-lr-ra only as auxiliary/fallback.
+Force a local Git checkpoint after initialization/scope/dependency/session records, after every 3 meaningful file-writing steps or accepted handoffs, before risky bulk writes, and before pausing or handoff. Do not auto-push.
 Only the Controller Console may mark outputs accepted.
 ```
 
@@ -225,8 +241,11 @@ Rules:
   - ObsidianAgent for PDF-first reading, selected visual checks, and Obsidian/RAG-ready notes.
 - If a specialist session does not exist, create it or ask the user to create it, then record the thread/session ID.
 - Before any long batch, initialize controller records and dependency_setup.md.
-- Before any search/download/Zotero/Obsidian/PDF-reading work, ask the user for paper direction, expected paper count, source input mode, download/access permission, language scope, Zotero connection, Obsidian connection, local input paths, output paths, and collection/vault mapping needs.
+- Before any search/download/Zotero/Obsidian/PDF-reading work, ask the user for paper direction, expected paper count, source input mode, download/access permission, language scope, Zotero connection, Obsidian connection, local input paths, output paths, collection/vault mapping needs, and the target Git checkpoint root.
 - Record those answers in project_profile.md and set user_scope_confirmed=true before dispatch.
+- Verify the target root is a Git repository before long work. If not, stop and ask the user to initialize Git or designate the correct repo root.
+- Force local Git checkpoint commits after initialization/scope/dependency/session records, after every 3 meaningful file-writing steps or accepted handoffs, before risky bulk writes, and before pausing or handoff.
+- Run privacy scans before staging files. Do not commit private PDFs, Zotero databases, browser cookies, credentials, or closed vault content unless explicitly approved. Never push automatically.
 - Use academic-research-suite as the default research companion for literature discovery and screening.
 - Use research-lr-ra only as auxiliary/fallback when ARS is unavailable or a narrow LR task fits it better.
 - Do not bypass paywalls, logins, CAPTCHAs, or institutional access controls.
@@ -296,6 +315,18 @@ Record:
 
 | Time | Task ID | Target session | Action | Status | Notes |
 | --- | --- | --- | --- | --- | --- |
+""",
+    "00_controller/git_checkpoints.md": """# Git Checkpoints
+
+Policy:
+
+- Required for long workflows: true
+- Interval: after every 3 meaningful file-writing steps or accepted handoffs
+- Also required: after initialization/scope/dependency/session records, before risky bulk writes, after each phase acceptance, and before pause/handoff
+- Push policy: manual-only; never push automatically
+
+| Time | Task ID | Trigger | Files intended | Privacy scan | Commit hash | Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- |
 """,
     "00_controller/source_manifest.md": """# Source Manifest
 

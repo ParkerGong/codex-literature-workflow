@@ -72,6 +72,7 @@ python3 scripts/env_check.py --json
 先初始化 controller records，检查依赖，选择或创建固定 specialist sessions，然后派发小范围任务。
 文献发现和筛选默认使用 academic-research-suite。
 research-lr-ra 只作为辅助或兜底。
+在初始化/scope/依赖/session 记录后、每 3 个有写入的 meaningful steps 或 accepted handoff 后、危险批量写入前、暂停或交接前，强制做本地 Git checkpoint commit。不要自动 push。
 只有 Controller Console 可以标记输出 accepted。
 ```
 
@@ -93,6 +94,11 @@ Rules:
   - ObsidianAgent for PDF-first reading, selected visual checks, and Obsidian/RAG-ready notes.
 - If a specialist session does not exist, create it or ask the user to create it, then record the thread/session ID.
 - Before any long batch, initialize controller records and dependency_setup.md.
+- Before any search/download/Zotero/Obsidian/PDF-reading work, ask the user for paper direction, expected paper count, source input mode, download/access permission, language scope, Zotero connection, Obsidian connection, local input paths, output paths, collection/vault mapping needs, and the target Git checkpoint root.
+- Record those answers in project_profile.md and set user_scope_confirmed=true before dispatch.
+- Verify the target root is a Git repository before long work. If it is not, stop and ask the user to initialize Git or designate the correct repo root.
+- Force local Git checkpoint commits after initialization/scope/dependency/session records, after every 3 meaningful file-writing steps or accepted handoffs, before risky bulk writes, and before pausing or handoff.
+- Run privacy scans before staging files. Do not commit private PDFs, Zotero databases, browser cookies, credentials, or closed vault content unless explicitly approved. Never push automatically.
 - Use academic-research-suite as the default research companion for literature discovery and screening.
 - Use research-lr-ra only as auxiliary/fallback when ARS is unavailable or a narrow LR task fits it better.
 - Do not bypass paywalls, logins, CAPTCHAs, or institutional access controls.
@@ -118,6 +124,7 @@ python3 scripts/init_workspace.py --root /path/to/literature/project
 - `00_controller/initialization.md`
 - `00_controller/dependency_setup.md`
 - `00_controller/session_registry.md`
+- `00_controller/git_checkpoints.md`
 - controller 与 specialist worklogs
 - source/download/Zotero/ingest manifests
 - handoff 和状态文件
@@ -136,10 +143,21 @@ python3 scripts/init_workspace.py --root /path/to/literature/project
 8. 如果启用 Zotero，使用哪个 collection 或 mapping 文档。
 9. 如果启用 Obsidian，vault/project root 和允许写入路径是什么。
 10. 是否已有方向文档、文献索引、本地 PDF 文件夹、manifest、或 Zotero/Obsidian mapping 文件。
+11. 用哪个目标项目根目录做本地 Git checkpoint commit。
 
 把这些答案记录到 `00_controller/project_profile.md`，并在派发 specialist 工作前设置 `user_scope_confirmed: true`。
 
-### 5. 长任务前填写依赖状态
+### 5. 强制定期本地 Git checkpoint
+
+长任务默认必须做 Git checkpoint。总控台需要创建本地 commit：
+
+- 初始化、启动 scope、依赖和 session 记录写完后；
+- 每 3 个有文件写入的 meaningful steps 或 accepted handoffs 后；
+- 危险批量写入、Zotero 附件批处理、Obsidian 笔记批处理、暂停或交接前。
+
+checkpoint commit 是本地恢复点，不等于 push 到 GitHub。总控台必须检查 `git status`，对准备提交的文本文件做隐私扫描，只 stage 明确安全的路径，并把结果记录到 `00_controller/git_checkpoints.md`。不要使用 `git add .`，除非用户另行明确要求，否则绝不自动 push。
+
+### 6. 长任务前填写依赖状态
 
 打开生成的 `00_controller/dependency_setup.md`，记录这些依赖是否可用：
 
@@ -152,9 +170,9 @@ python3 scripts/init_workspace.py --root /path/to/literature/project
 - Browser、Chrome、Computer Use：浏览和授权下载机制。
 - `codex-literature` Python 环境和 `env_check.py` 输出。
 
-### 6. 小批量派发
+### 7. 小批量派发
 
-总控台应该派发小批量任务，等待 durable handoff，审查后再进入下一阶段。第一批建议是 3-5 篇短论文，或 1-2 篇长报告/学位论文。
+总控台应该派发小批量任务，等待 durable handoff，审查、checkpoint 后再进入下一阶段。第一批建议是 3-5 篇短论文，或 1-2 篇长报告/学位论文。
 
 ## 这个 skill 处理什么
 
@@ -167,6 +185,7 @@ python3 scripts/init_workspace.py --root /path/to/literature/project
 | Zotero 条目和附件 | `zotero:Zotero` 与 `zotero-linked-attachments` |
 | PDF 文本/渲染检查 | 内置脚本，必要时配合 `pdf` skill |
 | Obsidian/RAG 笔记 | ObsidianAgent 与本地 wiki/Obsidian helper |
+| Git checkpoints | 仅 Controller Console；本地 commit，不自动 push |
 | 最终验收 | 仅 Controller Console |
 
 ## Zotero 连接

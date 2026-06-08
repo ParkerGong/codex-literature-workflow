@@ -44,7 +44,7 @@ If the user only wants one phase, load only the relevant reference. If the user 
 
 ## Non-Negotiables
 
-- Before any search, download, Zotero, Obsidian, or PDF-reading work, ask the user to confirm the required startup scope: research direction, target paper count, source input mode, download/access permission, Zotero enablement, Obsidian enablement, and output/write paths. If the latest user message already answered a field, record it instead of asking again.
+- Before any search, download, Zotero, Obsidian, or PDF-reading work, ask the user to confirm the required startup scope: research direction, target paper count, source input mode, download/access permission, language scope, Zotero enablement, Obsidian enablement, local input paths, output/write paths, collection/vault mapping needs, and target Git checkpoint root. If the latest user message already answered a field, record it instead of asking again.
 - Do not write directly to `zotero.sqlite`.
 - Do not bypass paywalls, logins, CAPTCHA, or institutional access controls.
 - Do not claim paper facts from model memory or web snippets.
@@ -54,6 +54,7 @@ If the user only wants one phase, load only the relevant reference. If the user 
 - Keep temporary text dumps and page images outside the project repo unless the user explicitly wants them preserved.
 - Every accepted item needs provenance: query/source date, URL/DOI when available, local PDF path, Zotero key or pending status, page evidence, and unresolved TODO/RISK.
 - The controller and every fixed specialist agent must write a Markdown worklog before and after meaningful work. Context recovery starts by reading these worklogs and the current handoff.
+- The Controller Console must perform forced local Git checkpoint commits during long workflows: after initialization/scope/dependency/session records, after every 3 meaningful file-writing steps or accepted handoffs, before risky bulk writes, and before pausing or handing off. If the target root is not a Git repo, stop and ask the user to initialize or designate one before long work.
 - Do not invent quota or environment status. If a host project has a quota pause rule, record `quota unknown` when unreadable and pause long work at the configured threshold.
 - Do not run routine process-residue sweeps unless the host project asks for them or there are real symptoms of stuck processes.
 - Do not delete temporary artifacts by default in strict projects. Prefer a recorded soft move to a configured temp trash folder.
@@ -68,6 +69,9 @@ Before dispatching, set these options explicitly in the controller note:
 | `controller_console` | current session ID or `pending` | required before long work |
 | `long_task_goal` | active goal text or `not-needed` | required for long workflows |
 | `user_scope_confirmed` | `true`, `false` | `false` until required startup questions are answered |
+| `git_checkpoint_required` | `true`, `false` | `true` for long workflows |
+| `git_checkpoint_interval` | integer meaningful file-writing steps or accepted handoffs | `3` |
+| `git_push_policy` | `manual-only`, `disabled`, `explicit-user-request` | `manual-only`; never push automatically |
 | `target_direction` | user-provided direction, local-doc direction, or pending | ask before work |
 | `target_count` | integer or `scope-map-only` | ask before work |
 | `direction_source` | `local-docs`, `user-prompt`, `agent-generated` | ask at start for full/strict runs |
@@ -94,14 +98,15 @@ Read `references/project-profiles.md` before using a non-generic profile. A stri
 2. **User scope intake gate**: ask required startup questions and record answers before work begins: direction, target count, source input mode, download/access permission, language scope, Zotero enablement, Obsidian enablement, local input paths, output paths, and collection/vault mapping needs.
 3. **Profile and scope gate**: create or reuse a controller task ID; choose `project_profile`; define topic/direction, source input mode, whether downloads are enabled, language, inclusion/exclusion rules, optional or required Zotero/Obsidian outputs, allowed writes, forbidden paths, quota/process/temp policies, and acceptance criteria.
 4. **Controller and agent records**: initialize or update Markdown state files before any long work: controller worklog, per-agent worklogs, kanban, session registry, dispatch log, dependency setup, source manifest, download log, ingest queue/status, and per-task handoff.
-5. **Dependency and environment check**: read `references/dependencies.md`; recommend the permanent `codex-literature` environment from `environment.yml`; run `scripts/env_check.py`; record companion-skill and Python/CLI readiness before long batches.
-6. **Source intake**: if `source_input_mode=local-library`, register existing PDFs and skip download; if `mixed`, register local PDFs first, then search only for gaps.
-7. **Search and screening when needed**: use `academic-research-suite` by default for literature discovery, query expansion, and screening strategy; use `research-lr-ra` only as an auxiliary/fallback; produce a dated candidate table with query strings, sources, URLs/DOIs, access route, relevance score, and exclusion reasons.
-8. **Optional acquisition and local registration**: only when `download_enabled=true`, download legal/authorized PDFs. For authenticated publisher pages, prefer `sciencedirect-live-session-fetcher` with one live authorized browser session before generic Chrome/Computer Use fallback; verify title/body/pages; write a manifest row and mark bad PDFs honestly.
-9. **Optional Zotero**: create or locate parent items, attach PDFs/MD notes as linked files, and verify via API or logged Zotero Desktop Run JavaScript results.
-10. **PDF-first reading**: extract text; classify reading level; render only selected claim-bearing pages; record visual evidence or TODO.
-11. **Optional Obsidian/RAG ingest**: create source records, literature notes, concept/claim updates if directly supported, and a batch report.
-12. **Controller acceptance**: check files, provenance, duplicate handling, temp cleanup, and status consistency; only the controller marks output accepted.
+5. **Git checkpoint gate**: read `references/controller-records.md`; verify the target root is a Git repo; run a local checkpoint commit after initialization/scope/dependency/session records and then after every 3 meaningful file-writing steps or accepted handoffs. Run privacy scans before adding files. Never auto-push.
+6. **Dependency and environment check**: read `references/dependencies.md`; recommend the permanent `codex-literature` environment from `environment.yml`; run `scripts/env_check.py`; record companion-skill and Python/CLI readiness before long batches.
+7. **Source intake**: if `source_input_mode=local-library`, register existing PDFs and skip download; if `mixed`, register local PDFs first, then search only for gaps.
+8. **Search and screening when needed**: use `academic-research-suite` by default for literature discovery, query expansion, and screening strategy; use `research-lr-ra` only as an auxiliary/fallback; produce a dated candidate table with query strings, sources, URLs/DOIs, access route, relevance score, and exclusion reasons.
+9. **Optional acquisition and local registration**: only when `download_enabled=true`, download legal/authorized PDFs. For authenticated publisher pages, prefer `sciencedirect-live-session-fetcher` with one live authorized browser session before generic Chrome/Computer Use fallback; verify title/body/pages; write a manifest row and mark bad PDFs honestly.
+10. **Optional Zotero**: create or locate parent items, attach PDFs/MD notes as linked files, and verify via API or logged Zotero Desktop Run JavaScript results.
+11. **PDF-first reading**: extract text; classify reading level; render only selected claim-bearing pages; record visual evidence or TODO.
+12. **Optional Obsidian/RAG ingest**: create source records, literature notes, concept/claim updates if directly supported, and a batch report.
+13. **Controller acceptance**: check files, provenance, duplicate handling, temp cleanup, status consistency, and the latest Git checkpoint; only the controller marks output accepted.
 
 ## Required Handoff Shape
 
@@ -119,6 +124,7 @@ Every phase must leave a durable handoff:
 - Sources processed:
 - Zotero status:
 - Obsidian/RAG status:
+- Git checkpoint:
 - Evidence basis:
 - TODO:
 - RISK:
@@ -132,6 +138,7 @@ Stop and ask the controller or user when:
 - no Controller Console has been explicitly designated for long work;
 - the active controller cannot create or record required fixed specialist sessions;
 - required startup scope is unanswered or `user_scope_confirmed=false`;
+- `git_checkpoint_required=true` but the target project root is not a Git repository, safe files to commit are unclear, or the privacy scan finds secrets/private local paths that cannot be excluded;
 - no legal/authorized PDF is available;
 - the PDF is wrong, incomplete, encrypted, scan-only without OCR, or mostly unreadable;
 - browser access requires login, CAPTCHA, payment, or institutional consent not yet granted; for IEEE/ScienceDirect-style authorized routes, first verify whether the live browser already shows institutional access and a PDF button before treating personal sign-in as required;

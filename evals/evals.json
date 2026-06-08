@@ -52,7 +52,13 @@
     {
       "id": 9,
       "prompt": "Start a new codex-literature-workflow workflow where the user only says they want papers. Before doing any search, ask the required startup scope questions.",
-      "expected_output": "The controller asks for paper direction, target paper count, source input mode, download/access permission, language scope, Zotero connection, Obsidian connection, local input paths, output/write paths, and Zotero/Obsidian mapping needs. user_scope_confirmed remains false and no LiteratureAgent/ZoteroAgent/ObsidianAgent work is dispatched until answers are recorded.",
+      "expected_output": "The controller asks for paper direction, target paper count, source input mode, download/access permission, language scope, Zotero connection, Obsidian connection, local input paths, output/write paths, Zotero/Obsidian mapping needs, and target Git checkpoint root. user_scope_confirmed remains false and no LiteratureAgent/ZoteroAgent/ObsidianAgent work is dispatched until answers are recorded.",
+      "files": []
+    },
+    {
+      "id": 10,
+      "prompt": "Initialize codex-literature-workflow for a long mixed literature workflow. Do not search yet. Require a forced local Git checkpoint policy before specialist work.",
+      "expected_output": "Controller records include git_checkpoint_required=true, git_checkpoint_interval, git_checkpoint_root, git_push_policy=manual-only, and git_checkpoints.md. The controller verifies the target root is a Git repository, stops for user action if it is not, or creates a local checkpoint after initialization/scope/dependency/session records with git status and privacy scan recorded. The controller stages explicit safe paths only, does not use git add ., and never pushes automatically.",
       "files": []
     }
   ]

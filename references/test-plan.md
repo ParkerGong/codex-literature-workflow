@@ -27,7 +27,7 @@ Use codex-literature-workflow. I want papers.
 Expected:
 
 - no search, download, Zotero, Obsidian, or PDF-reading work starts;
-- the Controller Console asks for paper direction, target paper count, source input mode, download/access permission, language scope, Zotero connection, Obsidian connection, local input paths, output/write paths, and collection/vault mapping needs;
+- the Controller Console asks for paper direction, target paper count, source input mode, download/access permission, language scope, Zotero connection, Obsidian connection, local input paths, output/write paths, collection/vault mapping needs, and target Git checkpoint root;
 - `project_profile.md` keeps `user_scope_confirmed=false` until answers are recorded;
 - no specialist dispatch happens before scope confirmation.
 
@@ -114,6 +114,23 @@ Expected:
 - no credentials, cookies, or private account details are stored;
 - accepted PDF, if any, passes PDF quality checks before `downloaded`.
 
+## Smoke Test 8: Forced Git Checkpoint Gate
+
+Prompt:
+
+```text
+Use codex-literature-workflow to initialize a long mixed literature workflow. Do not search yet. Require the Controller Console to set up the Git checkpoint policy and create the first local checkpoint after initialization/scope records.
+```
+
+Expected:
+
+- `project_profile.md` includes `git_checkpoint_required`, `git_checkpoint_interval`, `git_checkpoint_root`, `git_push_policy`, and latest checkpoint status;
+- `git_checkpoints.md` exists;
+- the controller verifies whether the target root is a Git repository before long work;
+- if the target root is not a Git repository, the controller stops and asks the user to initialize Git or designate the correct root;
+- if Git is available, the controller inspects changed paths, runs a privacy scan on intended text files, stages explicit safe paths only, creates a local checkpoint commit, and records the hash or blocker;
+- no automatic push happens.
+
 ## Acceptance Criteria
 
 - Fixed-session pattern is used; no session-per-paper behavior.
@@ -126,5 +143,7 @@ Expected:
 - No direct Zotero sqlite writes.
 - All outputs are durable files, not chat-only.
 - Controller and fixed specialist agents update Markdown worklogs.
+- Controller creates forced local Git checkpoint commits after initialization/scope/dependency/session records, after every 3 meaningful file-writing steps or accepted handoffs, before risky bulk writes, and before pause/handoff.
+- Git checkpoints inspect `git status`, run privacy scans, avoid `git add .`, exclude private PDFs/Zotero databases/cookies/credentials unless explicitly approved, and never auto-push.
 - Strict profile outputs include quota/process/temp policy state.
 - When Zotero is enabled or pending, Zotero and Obsidian records agree on `source_id`, `zotero_key`, `zotero_collection`, `local_pdf`, and `md_note_path`.

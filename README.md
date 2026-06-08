@@ -72,6 +72,7 @@ Do not do all work yourself.
 Initialize controller records, verify dependencies, choose or create fixed specialist sessions, then dispatch small bounded tasks.
 Use academic-research-suite as the default literature discovery/screening companion.
 Use research-lr-ra only as auxiliary/fallback.
+Force local Git checkpoint commits after initialization/scope/dependency/session records, after every 3 meaningful file-writing steps or accepted handoffs, before risky bulk writes, and before pausing or handoff. Do not auto-push.
 Only the Controller Console may mark outputs accepted.
 ```
 
@@ -93,6 +94,11 @@ Rules:
   - ObsidianAgent for PDF-first reading, selected visual checks, and Obsidian/RAG-ready notes.
 - If a specialist session does not exist, create it or ask the user to create it, then record the thread/session ID.
 - Before any long batch, initialize controller records and dependency_setup.md.
+- Before any search/download/Zotero/Obsidian/PDF-reading work, ask the user for paper direction, expected paper count, source input mode, download/access permission, language scope, Zotero connection, Obsidian connection, local input paths, output paths, collection/vault mapping needs, and the target Git checkpoint root.
+- Record those answers in project_profile.md and set user_scope_confirmed=true before dispatch.
+- Verify the target root is a Git repository before long work. If it is not, stop and ask the user to initialize Git or designate the correct repo root.
+- Force local Git checkpoint commits after initialization/scope/dependency/session records, after every 3 meaningful file-writing steps or accepted handoffs, before risky bulk writes, and before pausing or handoff.
+- Run privacy scans before staging files. Do not commit private PDFs, Zotero databases, browser cookies, credentials, or closed vault content unless explicitly approved. Never push automatically.
 - Use academic-research-suite as the default research companion for literature discovery and screening.
 - Use research-lr-ra only as auxiliary/fallback when ARS is unavailable or a narrow LR task fits it better.
 - Do not bypass paywalls, logins, CAPTCHAs, or institutional access controls.
@@ -118,6 +124,7 @@ This creates:
 - `00_controller/initialization.md`
 - `00_controller/dependency_setup.md`
 - `00_controller/session_registry.md`
+- `00_controller/git_checkpoints.md`
 - controller and specialist worklogs
 - source/download/Zotero/ingest manifests
 - handoff and status files
@@ -136,10 +143,21 @@ Before any search, download, Zotero, Obsidian, or PDF-reading work, the Controll
 8. Zotero collection or mapping document, if Zotero is enabled.
 9. Obsidian vault/project root and allowed write paths, if Obsidian is enabled.
 10. Existing direction documents, literature indexes, PDF folders, manifests, or mapping files.
+11. Target project root for local Git checkpoint commits.
 
 Record these answers in `00_controller/project_profile.md` and set `user_scope_confirmed: true` before dispatching specialist work.
 
-### 5. Fill in dependency status before long work
+### 5. Keep forced local Git checkpoints
+
+For long workflows, Git checkpointing is mandatory. The Controller Console must create a local commit:
+
+- after initialization, startup-scope, dependency, and session records are written;
+- after every 3 meaningful file-writing steps or accepted handoffs;
+- before risky bulk writes, Zotero attachment batches, Obsidian note batches, pauses, or handoffs.
+
+Checkpoint commits are local recovery points. The controller must inspect `git status`, run a privacy scan over intended text files, stage explicit safe paths only, and record the result in `00_controller/git_checkpoints.md`. It must not use `git add .`, and it must never push to GitHub unless the user separately asks for that.
+
+### 6. Fill in dependency status before long work
 
 Open the generated `00_controller/dependency_setup.md` and record what is available:
 
@@ -152,9 +170,9 @@ Open the generated `00_controller/dependency_setup.md` and record what is availa
 - Browser, Chrome, and Computer Use tools: source navigation and authorized download mechanics.
 - `codex-literature` Python environment and `env_check.py` output.
 
-### 6. Dispatch small batches
+### 7. Dispatch small batches
 
-The controller should dispatch bounded tasks, wait for durable handoff output, review, then route the next phase. A typical first batch is 3-5 short papers or 1-2 long reports/theses.
+The controller should dispatch bounded tasks, wait for durable handoff output, review, checkpoint, then route the next phase. A typical first batch is 3-5 short papers or 1-2 long reports/theses.
 
 ## What This Skill Handles
 
@@ -167,6 +185,7 @@ The controller should dispatch bounded tasks, wait for durable handoff output, r
 | Zotero item and attachment work | `zotero:Zotero` and `zotero-linked-attachments` |
 | PDF text/render checks | bundled scripts plus `pdf` skill when available |
 | Obsidian/RAG note output | ObsidianAgent plus local wiki/Obsidian helpers |
+| Git checkpoints | Controller Console only; local commits, no automatic push |
 | Final acceptance | Controller Console only |
 
 ## Zotero Connection

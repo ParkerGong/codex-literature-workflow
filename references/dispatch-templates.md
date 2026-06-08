@@ -18,6 +18,10 @@ Every dispatch has a Markdown recording rule:
 - controller_console: <thread/session id>
 - controller_goal_status: <active|not-needed|pending>
 - user_scope_confirmed: <true|false>
+- git_checkpoint_required: <true|false>
+- git_checkpoint_interval: <3 meaningful file-writing steps or custom>
+- git_checkpoint_root:
+- latest_git_checkpoint:
 - target_direction:
 - target_count:
 - direction_source:
@@ -54,6 +58,7 @@ Every dispatch has a Markdown recording rule:
 Do not dispatch a new long batch when the previous batch is still `Working` or `Waiting review`.
 Do not dispatch any long batch until one session is explicitly designated as the Controller Console and the required specialist session is created or recorded.
 Do not dispatch search, download, Zotero, Obsidian, or PDF-reading work until `user_scope_confirmed=true`.
+Do not dispatch risky or broad file-writing work when the latest Git checkpoint is stale. The controller should checkpoint after every 3 meaningful file-writing steps or accepted handoffs, and before any batch write.
 
 ## LiteratureAgent Dispatch
 

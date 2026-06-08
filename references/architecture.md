@@ -6,7 +6,7 @@ This workflow is controller-mediated. The controller keeps the global state smal
 
 | Role | Owns | Does not own |
 | --- | --- | --- |
-| Controller | task ID, scope, session routing, option flags, acceptance, status files, risk judgment | detailed reading of every paper unless doing a small recovery |
+| Controller | task ID, scope, session routing, option flags, acceptance, status files, Git checkpoints, risk judgment | detailed reading of every paper unless doing a small recovery |
 | LiteratureAgent | search strategy, screening, access route, legal PDF acquisition, local manifest | Zotero sqlite writes, final KB acceptance |
 | ZoteroAgent | parent item lookup/import, collection placement, linked-file attachments, verification | search decisions, paper interpretation |
 | ObsidianAgent | PDF-first reading, selective visual checks, notes, concepts, source registry, batch report | web discovery, Zotero database writes, controller acceptance |
@@ -26,6 +26,7 @@ A portable project should maintain these files or equivalents:
 - `agent_worklogs/<Agent>.md`: per-agent read/write/action logs for context recovery.
 - `session_registry.md`: fixed specialist sessions and current status.
 - `dispatch_log.md`: sent/recovered/accepted tasks.
+- `git_checkpoints.md`: forced local checkpoint commits and privacy scan notes.
 - `source_manifest.md`: local files, URLs, DOI, access route, status.
 - `zotero_link_index.md`: optional Zotero keys and attachment status.
 - `quota_status.md` and `temp_artifacts.md`: strict-project safeguards.
@@ -61,6 +62,10 @@ Options:
 - batch_size: <N>
 - access_mode: <open-only|authorized-browser|manual-user>
 - closed_source_fallback: <none|chrome-then-computer-use-once>
+- git_checkpoint_required: <true|false>
+- git_checkpoint_interval: <3 meaningful file-writing steps or custom>
+- git_checkpoint_root: <repo root>
+- git_push_policy: <manual-only>
 - quota_policy: <not-applicable|quota unknown|pause at <=N%>
 - process_check_policy: <symptom-driven|project-enabled>
 - temp_cleanup_policy: <preserve|soft-move to PATH|delete only when approved>
@@ -68,6 +73,8 @@ Options:
 Rules:
 - Use fixed sessions where available; do not create one session per paper.
 - Every phase must write a durable handoff and update the controller or agent worklog.
+- Force local Git checkpoint commits after initialization/scope/dependency/session records, after every 3 meaningful file-writing steps or accepted handoffs, before risky bulk writes, after phase acceptance, and before pause/handoff. Do not auto-push.
+- If the target root is not a Git repository or safe staged paths are unclear, stop before long work and ask the user.
 - Do not bypass access controls or write zotero.sqlite.
 - Stop at Waiting review for sub-agent outputs; controller acceptance is separate.
 - If blocked, write the blocker and next manual action rather than guessing.
@@ -88,13 +95,14 @@ For `project_profile=dissertation-strict`, the controller moves a source through
 | Direction and inclusion rules | Controller | project profile, kanban task, acceptance criteria |
 | Local library intake when provided | LiteratureAgent | source manifest, local quality report, duplicate/problem statuses |
 | Candidate search and screening when needed | LiteratureAgent | candidate table with queries, sources, scores, exclusion reasons |
+| Git checkpoint before acquisition | Controller | local commit recorded in `git_checkpoints.md` |
 | Optional legal or authorized acquisition | LiteratureAgent | source manifest and download log with quality/fallback status |
 | Optional Zotero parent and PDF linked file | ZoteroAgent | Zotero link index and verification record when Zotero is enabled |
 | PDF-first reading | ObsidianAgent | note with page evidence and reading level |
 | Selected visual checks | ObsidianAgent | rendered page evidence or explicit TODO/RISK |
 | KB/RAG ingest | ObsidianAgent | source registry, note, optional concept/claim updates, batch report |
 | Optional MD note link to Zotero | ZoteroAgent | second-pass `md-linked` verification after note path is stable |
-| Acceptance | Controller | checklist and status transition to accepted or blocked |
+| Acceptance | Controller | checklist, latest checkpoint status, and status transition to accepted or blocked |
 
 ## Which Skills To Use
 

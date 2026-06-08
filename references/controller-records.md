@@ -13,6 +13,7 @@ Long literature workflows drift when state lives only in chat. Before dispatchin
 | `00_controller/controller_kanban.md` | active task board and acceptance state | Controller |
 | `00_controller/session_registry.md` | fixed specialist sessions and their current role/status | Controller |
 | `00_controller/dispatch_log.md` | sent/recovered/accepted/blocker history | Controller |
+| `00_controller/git_checkpoints.md` | forced local Git checkpoints, privacy scans, commit hashes, and skipped/blocker reasons | Controller |
 | `00_controller/source_manifest.md` | canonical source IDs, metadata, local paths, DOI/URL, access status | LiteratureAgent, Controller accepts |
 | `00_controller/download_log.md` | attempted URLs, used URLs, browser/manual access notes, file sizes | LiteratureAgent |
 | `00_controller/quota_status.md` | reliable quota reading, `quota unknown`, or pause decision when applicable | Controller |
@@ -59,6 +60,7 @@ If a project uses more agents, add one worklog per fixed agent. Do not create a 
 - Decisions made:
 - Evidence basis:
 - Temp artifacts:
+- Git checkpoint:
 - TODO:
 - RISK:
 - Next action:
@@ -102,6 +104,10 @@ Use a small vocabulary consistently:
 - Download/access mode:
 - Zotero enabled:
 - Obsidian enabled:
+- Git checkpoint required: true | false
+- Git checkpoint interval: 3 meaningful steps | custom
+- Git checkpoint root:
+- Latest Git checkpoint:
 - Quota status: reliable <value> | quota unknown | not applicable
 - Quota decision:
 - Process check policy:
@@ -162,6 +168,22 @@ Use a small vocabulary consistently:
 | --- | --- | --- | --- | --- | --- |
 ```
 
+## Git Checkpoint Template
+
+```markdown
+# Git Checkpoints
+
+Policy:
+
+- Required for long workflows: true
+- Interval: after every 3 meaningful file-writing steps or accepted handoffs
+- Also required: after initialization/scope/dependency/session records, before risky bulk writes, after each phase acceptance, and before pause/handoff
+- Push policy: manual-only; never push automatically
+
+| Time | Task ID | Trigger | Files intended | Privacy scan | Commit hash | Status | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+```
+
 ## Per-Task Handoff Template
 
 ```markdown
@@ -181,6 +203,7 @@ Use a small vocabulary consistently:
 - Sources processed:
 - Zotero status:
 - Obsidian/RAG status:
+- Git checkpoint:
 - Temp artifacts:
 - Evidence basis:
 - TODO:
@@ -198,6 +221,51 @@ Use a small vocabulary consistently:
 - If a task runs for a long time, require batch reports after every small batch.
 - If a phase is blocked, write the exact manual action needed and stop.
 - Do not start the next batch while the previous batch is still `Working` or `Waiting review`.
+
+## Git Checkpoint Policy
+
+Local Git checkpoints are mandatory for long workflows so that controller records, manifests, notes, and routing decisions can be recovered after tool failure, context compaction, accidental overwrite, or a bad batch. A checkpoint means a local commit in the target project repository. It does not mean pushing to GitHub.
+
+If the target project root is not a Git repository, stop before long work and ask the user to initialize Git or designate the correct repo root.
+
+Meaningful file-writing steps include:
+
+- controller record initialization or scope updates;
+- dependency setup updates;
+- session registry or dispatch log updates;
+- candidate/source/download manifest changes;
+- Zotero link-index updates;
+- Obsidian note, ingest queue, or ingest status writes;
+- controller acceptance or rejection decisions;
+- specialist handoff files.
+
+Forced checkpoint triggers:
+
+- immediately after initialization and startup-scope records are written;
+- immediately after dependency and session records are written;
+- after every 3 meaningful file-writing steps or accepted handoffs, whichever comes first;
+- before any risky bulk write, batch rename/move, PDF registration batch, Zotero attachment batch, or Obsidian note batch;
+- after each phase acceptance;
+- before pausing for quota, waiting for the user, ending a long turn, or handing off to another session.
+
+Before staging files:
+
+1. Run `git status --short` and inspect changed paths.
+2. Run a privacy scan over intended text files for credentials, cookies, local private paths, and tokens.
+3. Exclude private PDFs, Zotero databases, browser profiles/cookies, credential files, closed vault content, and large rendered artifacts unless the user explicitly approves.
+4. Stage explicit safe paths only; do not use `git add .` for literature workflows.
+5. Commit with a message such as `checkpoint(<TASK_ID>): <phase-or-trigger>`.
+6. Record the commit hash or blocker in `00_controller/git_checkpoints.md`.
+
+Suggested minimum privacy scan pattern:
+
+```bash
+rg -n -i "<api-key-or-token-pattern>|<password-or-cookie-pattern>|zotero\\.sqlite|/Users/[^/ ]+" 00_controller
+```
+
+Treat matches as review items, not automatic deletion instructions. If a match is expected in a private local checkpoint, record why it is safe. For any repository that may be pushed publicly, local user paths and private project names must be scrubbed before commit or push.
+
+Never push automatically. Pushing to GitHub requires a separate explicit user request after the controller confirms the local checkpoint is safe.
 
 ## Quota Policy
 
