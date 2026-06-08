@@ -34,6 +34,7 @@ This repository is an **early preview** for developers who urgently need to test
 - Project statement: this project is meant to offer the most basic starting solution for users who are not yet sure how to use Codex for literature assistance and local literature management. Many intermediate layers in this repository may be redundant, over-specific, or close to reinventing existing tools. Please do **not** treat this repository as a model of excellent open-source project design.
 - Developed primarily on macOS.
 - Windows has not been tested.
+- This preview expects users to let their own Codex session adapt commands, paths, browser automation, and Zotero/Obsidian setup steps to the actual local environment. Windows users in particular may need Codex to rewrite macOS-oriented instructions before running them.
 - Browser, Zotero, Obsidian, and external skill integrations depend on your local Codex setup.
 - Legal or authorized access is required for closed-source PDFs. This project does not bypass paywalls, CAPTCHAs, logins, or institutional access controls.
 - If something breaks, please open a GitHub issue with your platform, Codex surface, dependency status, and the failing phase.
