@@ -8,6 +8,7 @@ Use `project_profile=generic` when the user has not provided a project-specific 
 
 Defaults:
 
+- `user_scope_confirmed=false` until startup questions are answered.
 - `zotero_enabled=false` unless requested.
 - `obsidian_enabled=false` unless requested.
 - `visual_check=selected-pages` only when figures, tables, curves, formulas, or screenshots matter.
@@ -31,7 +32,9 @@ Strict overrides:
 
 | Setting | Value |
 | --- | --- |
+| `user_scope_confirmed` | ask first and require `true` before dispatch |
 | `direction_source` | ask first: local direction docs/mapping, or user-provided direction |
+| `target_count` | ask first; do not assume a paper count |
 | `source_input_mode` | ask first: existing local library, search/download, or mixed |
 | `download_enabled` | ask first; `false` when using only existing local PDFs |
 | `zotero_enabled` | ask at start; optional, but strict verification applies if enabled |
@@ -63,6 +66,9 @@ Do not hard-code a private dissertation direction map or Zotero collection mappi
 4. If yes, what local PDF/library/manifest path(s) should be used?
 5. If no, should LiteratureAgent search/download new sources, or only make a candidate list?
 6. If no direction mapping exists, what research direction should LiteratureAgent use to create a direction map and proposed collection buckets?
+7. How many papers should the first batch target?
+8. Should Zotero be enabled?
+9. Should Obsidian/RAG-ready notes be enabled, and where may they be written?
 
 Record the answer in `project_profile.md`:
 
@@ -70,10 +76,17 @@ Record the answer in `project_profile.md`:
 - direction_source: local-docs | user-prompt | agent-generated
 - direction_docs:
 - collection_mapping_source:
+- user_scope_confirmed:
 - source_input_mode: local-library | search-and-download | mixed
 - download_enabled:
 - local_library_paths:
 - target_direction:
+- target_count:
+- zotero_enabled:
+- obsidian_enabled:
+- zotero_collection_or_mapping:
+- obsidian_vault_or_output_root:
+- allowed_obsidian_write_paths:
 - proposed_collection_bucket:
 ```
 

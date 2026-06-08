@@ -119,7 +119,24 @@ This creates:
 - source/download/Zotero/ingest manifests
 - handoff and status files
 
-### 4. Fill in dependency status before long work
+### 4. Answer the startup scope questions
+
+Before any search, download, Zotero, Obsidian, or PDF-reading work, the Controller Console must ask the user to confirm:
+
+1. Paper direction or research boundary.
+2. Target number of papers for the first batch.
+3. Source mode: local PDFs, new search/download, or mixed.
+4. Whether new PDF download/acquisition is enabled, and whether access is open-only or authorized browser/manual.
+5. Language scope: English, Chinese, or both.
+6. Whether Zotero should be connected.
+7. Whether Obsidian/RAG-ready notes should be created.
+8. Zotero collection or mapping document, if Zotero is enabled.
+9. Obsidian vault/project root and allowed write paths, if Obsidian is enabled.
+10. Existing direction documents, literature indexes, PDF folders, manifests, or mapping files.
+
+Record these answers in `00_controller/project_profile.md` and set `user_scope_confirmed: true` before dispatching specialist work.
+
+### 5. Fill in dependency status before long work
 
 Open the generated `00_controller/dependency_setup.md` and record what is available:
 
@@ -132,7 +149,7 @@ Open the generated `00_controller/dependency_setup.md` and record what is availa
 - Browser, Chrome, and Computer Use tools: source navigation and authorized download mechanics.
 - `codex-lit` Python environment and `env_check.py` output.
 
-### 5. Dispatch small batches
+### 6. Dispatch small batches
 
 The controller should dispatch bounded tasks, wait for durable handoff output, review, then route the next phase. A typical first batch is 3-5 short papers or 1-2 long reports/theses.
 

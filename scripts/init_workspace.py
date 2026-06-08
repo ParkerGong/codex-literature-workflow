@@ -15,6 +15,8 @@ FILES = {
 - controller_console: TBD
 - controller_thread_id: TBD
 - long_task_goal: pending for long workflows
+- user_scope_confirmed: false
+- startup_questions_missing: direction, target_count, source_input_mode, download_enabled/access_mode, language_scope, zotero_enabled, obsidian_enabled, local inputs, output paths, collection/vault mapping
 - language_scope: both
 - direction_source: TBD
 - direction_docs: TBD
@@ -25,7 +27,13 @@ FILES = {
 - download_enabled: TBD
 - local_library_paths: TBD
 - target_direction: TBD
+- target_count: TBD
+- inclusion_rules: TBD
+- exclusion_rules: TBD
 - proposed_collection_bucket: TBD
+- zotero_collection_or_mapping: TBD
+- obsidian_vault_or_output_root: TBD
+- allowed_obsidian_write_paths: TBD
 - zotero_enabled: false
 - obsidian_enabled: false
 - visual_check: selected-pages
@@ -164,6 +172,23 @@ FILES = {
 
 One session must be explicitly designated as the Controller Console before long work starts. The Controller Console owns goal, scope, records, dependency setup, specialist-session routing, and final acceptance.
 
+## Required User Questions Before Work
+
+Before any search, download, Zotero, Obsidian, or PDF-reading phase, ask the user to confirm:
+
+1. What is the paper direction or research boundary?
+2. How many papers should the first batch target?
+3. Are sources already local PDFs, new search/download, or mixed?
+4. Should new PDF download/acquisition be enabled? If yes, is only open access allowed, or may authorized browser/manual access be used?
+5. What language scope should be used: English, Chinese, or both?
+6. Should Zotero be connected for parent items, collections, and linked PDF attachments?
+7. Should Obsidian/RAG-ready notes be created?
+8. If Zotero is enabled, what collection, collection mapping, or mapping document should be used?
+9. If Obsidian is enabled, what vault/project root and allowed write paths should be used?
+10. Are there existing local direction documents, literature indexes, PDF folders, manifests, or Zotero/Obsidian mapping files?
+
+Record answers in `project_profile.md`. Set `user_scope_confirmed: true` only after required answers are present. Do not dispatch long specialist work while `user_scope_confirmed=false`.
+
 ## Specialist Session Plan
 
 | Session | Needed | Thread ID | Status | Creation action | Notes |
@@ -178,6 +203,7 @@ One session must be explicitly designated as the Controller Console before long 
 You are the Controller Console for codex-obsidian-read.
 Do not do all work yourself.
 Initialize controller records, verify dependencies, choose or create fixed specialist sessions, then dispatch small bounded tasks.
+Before dispatch, ask the user to confirm paper direction, target count, source mode, download/access permission, Zotero connection, Obsidian connection, local inputs, output paths, and mapping needs.
 Use academic-research-suite as the default literature discovery/screening companion.
 Use research-lr-ra only as auxiliary/fallback.
 Only the Controller Console may mark outputs accepted.
@@ -199,6 +225,8 @@ Rules:
   - ObsidianAgent for PDF-first reading, selected visual checks, and Obsidian/RAG-ready notes.
 - If a specialist session does not exist, create it or ask the user to create it, then record the thread/session ID.
 - Before any long batch, initialize controller records and dependency_setup.md.
+- Before any search/download/Zotero/Obsidian/PDF-reading work, ask the user for paper direction, expected paper count, source input mode, download/access permission, language scope, Zotero connection, Obsidian connection, local input paths, output paths, and collection/vault mapping needs.
+- Record those answers in project_profile.md and set user_scope_confirmed=true before dispatch.
 - Use academic-research-suite as the default research companion for literature discovery and screening.
 - Use research-lr-ra only as auxiliary/fallback when ARS is unavailable or a narrow LR task fits it better.
 - Do not bypass paywalls, logins, CAPTCHAs, or institutional access controls.

@@ -16,7 +16,22 @@ Expected:
 - one PDF probe if a sample PDF is provided;
 - no Zotero or Obsidian writes.
 
-## Smoke Test 2: Open-Only Literature Batch
+## Smoke Test 2: Startup Scope Gate
+
+Prompt:
+
+```text
+Use codex-obsidian-read. I want papers.
+```
+
+Expected:
+
+- no search, download, Zotero, Obsidian, or PDF-reading work starts;
+- the Controller Console asks for paper direction, target paper count, source input mode, download/access permission, language scope, Zotero connection, Obsidian connection, local input paths, output/write paths, and collection/vault mapping needs;
+- `project_profile.md` keeps `user_scope_confirmed=false` until answers are recorded;
+- no specialist dispatch happens before scope confirmation.
+
+## Smoke Test 3: Open-Only Literature Batch
 
 Prompt:
 
@@ -32,7 +47,7 @@ Expected:
 - no browser-auth access;
 - no Zotero/Obsidian writes.
 
-## Smoke Test 3: Full Optional Pipeline
+## Smoke Test 4: Full Optional Pipeline
 
 Prompt:
 
@@ -50,7 +65,7 @@ Expected:
 - controller and agent worklogs;
 - batch report and controller acceptance checklist.
 
-## Smoke Test 4: Strict Profile Records Only
+## Smoke Test 5: Strict Profile Records Only
 
 Prompt:
 
@@ -67,7 +82,7 @@ Expected:
 - Obsidian note frontmatter includes `zotero_collection` and `md_note_path`;
 - sub-agent report stops at `Waiting review`, not accepted.
 
-## Smoke Test 5: Chinese Database Route Logging
+## Smoke Test 6: Chinese Database Route Logging
 
 Prompt:
 
@@ -82,7 +97,7 @@ Expected:
 - no credentials or private account data are stored;
 - LiteratureAgent worklog records queries, database routes, and blockers.
 
-## Smoke Test 6: Closed-Source Download Fallback
+## Smoke Test 7: Closed-Source Download Fallback
 
 Prompt:
 
@@ -102,6 +117,7 @@ Expected:
 ## Acceptance Criteria
 
 - Fixed-session pattern is used; no session-per-paper behavior.
+- Required startup scope is confirmed before specialist work.
 - Optional Zotero/Obsidian switches are respected.
 - Download is optional and skipped for `local-library` mode.
 - Search and access provenance is dated.

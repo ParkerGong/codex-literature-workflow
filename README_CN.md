@@ -119,7 +119,24 @@ python3 scripts/init_workspace.py --root /path/to/literature/project
 - source/download/Zotero/ingest manifests
 - handoff 和状态文件
 
-### 4. 长任务前填写依赖状态
+### 4. 回答启动前 scope 问题
+
+在任何检索、下载、Zotero、Obsidian 或 PDF 精读开始前，总控台必须向用户确认：
+
+1. 论文方向或研究边界。
+2. 第一批期望找多少篇。
+3. 来源模式：已有本地 PDF、新检索/下载、或混合。
+4. 是否启用新 PDF 下载/获取；若启用，是仅开放获取，还是允许授权浏览器/manual 访问。
+5. 语言范围：英文、中文、或中英都要。
+6. 是否接入 Zotero。
+7. 是否创建 Obsidian/RAG-ready 笔记。
+8. 如果启用 Zotero，使用哪个 collection 或 mapping 文档。
+9. 如果启用 Obsidian，vault/project root 和允许写入路径是什么。
+10. 是否已有方向文档、文献索引、本地 PDF 文件夹、manifest、或 Zotero/Obsidian mapping 文件。
+
+把这些答案记录到 `00_controller/project_profile.md`，并在派发 specialist 工作前设置 `user_scope_confirmed: true`。
+
+### 5. 长任务前填写依赖状态
 
 打开生成的 `00_controller/dependency_setup.md`，记录这些依赖是否可用：
 
@@ -132,7 +149,7 @@ python3 scripts/init_workspace.py --root /path/to/literature/project
 - Browser、Chrome、Computer Use：浏览和授权下载机制。
 - `codex-lit` Python 环境和 `env_check.py` 输出。
 
-### 5. 小批量派发
+### 6. 小批量派发
 
 总控台应该派发小批量任务，等待 durable handoff，审查后再进入下一阶段。第一批建议是 3-5 篇短论文，或 1-2 篇长报告/学位论文。
 

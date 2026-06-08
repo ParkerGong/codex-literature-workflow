@@ -4,24 +4,28 @@ This document walks through the whole skill as an auditable runbook. Use it when
 
 ## 0. Controller Opens The Run
 
-The controller starts by creating or reusing one task ID. It does not immediately search the web or read PDFs.
+The controller starts by creating or reusing one task ID. It does not immediately search the web, read PDFs, write Zotero, or write Obsidian notes.
 
 Controller decisions:
 
 1. Select `project_profile`.
-2. Ask whether the user has local direction documents, literature-review indexes, or collection mappings. If yes, read those paths. If no, ask for the research direction or have LiteratureAgent draft a direction map.
-3. Set `language_scope`: English, Chinese, or both.
-4. Ask whether sources are already downloaded: `local-library`, `search-and-download`, or `mixed`.
-5. Ask whether new downloads are enabled. If a local library is enough, set `download_enabled=false`.
-6. Ask whether Zotero and Obsidian should be enabled. Zotero remains optional; if enabled, strict verification applies.
-7. Set access mode: open-only first, authorized browser/manual only with user permission.
-8. Set authorized download backend. When installed, use `sciencedirect-live-session-fetcher` as the preferred backend for authenticated publisher downloads before generic Chrome or Computer Use.
-9. Set closed-source fallback policy, batch size, render cap, and visual-check mode.
-10. Record allowed reads, allowed writes, forbidden paths, quota policy, process-check policy, temp cleanup policy, and worklog paths.
+2. Ask required startup questions and set `user_scope_confirmed=true` only after answers are recorded.
+3. Ask for the paper direction or research boundary.
+4. Ask for the expected paper count for the first batch.
+5. Ask whether the user has local direction documents, literature-review indexes, PDF folders, manifests, or collection mappings. If yes, read those paths. If no, ask for the research direction or have LiteratureAgent draft a direction map after scope confirmation.
+6. Set `language_scope`: English, Chinese, or both.
+7. Ask whether sources are already downloaded: `local-library`, `search-and-download`, or `mixed`.
+8. Ask whether new downloads are enabled. If a local library is enough, set `download_enabled=false`.
+9. Ask whether Zotero and Obsidian should be enabled. Zotero remains optional; if enabled, strict verification applies. Obsidian requires a vault/project root and allowed write paths.
+10. Set access mode: open-only first, authorized browser/manual only with user permission.
+11. Set authorized download backend. When installed, use `sciencedirect-live-session-fetcher` as the preferred backend for authenticated publisher downloads before generic Chrome or Computer Use.
+12. Set closed-source fallback policy, batch size, render cap, and visual-check mode.
+13. Record allowed reads, allowed writes, forbidden paths, quota policy, process-check policy, temp cleanup policy, and worklog paths.
 
 Durable outputs:
 
 - `project_profile.md`
+- `initialization.md`
 - `controller_worklog.md`
 - `agent_worklogs/<Agent>.md`
 - `controller_kanban.md`

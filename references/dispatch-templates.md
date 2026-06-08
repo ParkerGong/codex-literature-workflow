@@ -17,6 +17,9 @@ Every dispatch has a Markdown recording rule:
 - project_profile: <generic|dissertation-strict|custom>
 - controller_console: <thread/session id>
 - controller_goal_status: <active|not-needed|pending>
+- user_scope_confirmed: <true|false>
+- target_direction:
+- target_count:
 - direction_source:
 - direction_docs:
 - collection_mapping_source:
@@ -25,6 +28,11 @@ Every dispatch has a Markdown recording rule:
 - research_companion_auxiliary: research-lr-ra
 - download_enabled: <true|false>
 - local_library_paths:
+- language_scope: <english|chinese|both>
+- zotero_enabled: <true|false>
+- obsidian_enabled: <true|false>
+- zotero_collection_or_mapping:
+- obsidian_vault_or_output_root:
 - fixed target session:
 - target session status: <idle|recovering|blocked>
 - quota status: <reliable value|quota unknown|not applicable>
@@ -45,6 +53,7 @@ Every dispatch has a Markdown recording rule:
 
 Do not dispatch a new long batch when the previous batch is still `Working` or `Waiting review`.
 Do not dispatch any long batch until one session is explicitly designated as the Controller Console and the required specialist session is created or recorded.
+Do not dispatch search, download, Zotero, Obsidian, or PDF-reading work until `user_scope_confirmed=true`.
 
 ## LiteratureAgent Dispatch
 
@@ -59,6 +68,8 @@ Register, screen, or acquire literature for: <TOPIC_OR_DIRECTION>.
 
 ## Options
 
+- user_scope_confirmed: <true|false>
+- target_direction: <direction>
 - source_input_mode: <local-library|search-and-download|mixed>
 - research_companion_default: academic-research-suite
 - research_companion_auxiliary: research-lr-ra
@@ -94,6 +105,7 @@ Register, screen, or acquire literature for: <TOPIC_OR_DIRECTION>.
 
 ## Forbidden
 
+- Do not start if `user_scope_confirmed` is not true.
 - Do not bypass access controls.
 - Use `academic-research-suite` as the default research companion for search strategy, query expansion, source verification, and screening logic when searching is enabled.
 - Use `research-lr-ra` only as an auxiliary/fallback for legacy LR assistant work, research-gap mapping, representative-work selection, or a narrow subtask where the controller explicitly allows it.

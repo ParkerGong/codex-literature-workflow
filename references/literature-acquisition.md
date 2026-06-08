@@ -4,9 +4,12 @@ This phase turns a topic, direction, existing PDF library, or mixed source set i
 
 ## Direction Intake
 
-The controller should ask or infer:
+Before LiteratureAgent starts, the controller must ask the user to confirm missing startup scope fields and record them in `project_profile.md`. Do not start search, download, Zotero, Obsidian, or PDF-reading work while `user_scope_confirmed=false`.
+
+The controller should ask or infer from the latest user message:
 
 - topic/direction and research boundary;
+- expected paper count for the first batch;
 - language scope: English, Chinese, or both;
 - publication types: papers, surveys, theses, standards, reports;
 - time window and venues/databases;
@@ -15,7 +18,10 @@ The controller should ask or infer:
 - source input mode: local library, search/download, or mixed;
 - local PDF folder or manifest path when available;
 - whether new downloads are enabled;
+- access mode: open-only, authorized browser, or manual-user;
 - whether Zotero/Obsidian outputs are enabled.
+- Zotero collection or mapping document when Zotero is enabled;
+- Obsidian vault/project root and allowed write paths when Obsidian is enabled.
 
 If the user gives a broad direction, LiteratureAgent first writes a direction map before downloading.
 

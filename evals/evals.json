@@ -48,6 +48,12 @@
       "prompt": "Initialize codex-obsidian-read for a long Zotero and Obsidian literature workflow. Require the user to designate a Controller Console session, attach a goal, create or reuse LiteratureAgent, ZoteroAgent, and ObsidianAgent sessions as needed, then stop before doing discovery.",
       "expected_output": "Initialization records include Controller Console designation, goal status or goal prompt, specialist session plan, session_registry.md entries, dependency_setup.md, and a first dispatch plan. No long search, download, Zotero, or Obsidian work begins until controller and required specialist sessions are recorded.",
       "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "Start a new codex-obsidian-read workflow where the user only says they want papers. Before doing any search, ask the required startup scope questions.",
+      "expected_output": "The controller asks for paper direction, target paper count, source input mode, download/access permission, language scope, Zotero connection, Obsidian connection, local input paths, output/write paths, and Zotero/Obsidian mapping needs. user_scope_confirmed remains false and no LiteratureAgent/ZoteroAgent/ObsidianAgent work is dispatched until answers are recorded.",
+      "files": []
     }
   ]
 }

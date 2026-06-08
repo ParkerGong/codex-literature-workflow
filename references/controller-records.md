@@ -95,6 +95,13 @@ Use a small vocabulary consistently:
 - Task ID:
 - Project profile:
 - Goal/mode:
+- User scope confirmed: true | false
+- Target direction:
+- Target count:
+- Source input mode:
+- Download/access mode:
+- Zotero enabled:
+- Obsidian enabled:
 - Quota status: reliable <value> | quota unknown | not applicable
 - Quota decision:
 - Process check policy:
