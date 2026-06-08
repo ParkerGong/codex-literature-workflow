@@ -1,4 +1,6 @@
-# Codex Obsidian Read: Agent-Native Literature Workflow for Zotero and Obsidian
+# codex-literature-workflow
+
+Agent-native literature workflow for Codex, Zotero, and Obsidian.
 
 [![Preview](https://img.shields.io/badge/status-early%20preview-orange)](#early-preview-notice)
 [![Python](https://img.shields.io/badge/python-3.12%2B-blue)](environment.yml)
@@ -7,7 +9,7 @@
 
 **English** | [简体中文](README_CN.md)
 
-Codex Obsidian Read is an early-stage Codex skill for turning a small research direction into a supervised literature workflow: discover papers, screen sources, legally or manually acquire PDFs, register local files, connect them to Zotero, perform PDF-first reading, and build Obsidian/RAG-ready local knowledge notes.
+`codex-literature-workflow` is an early-stage Codex skill for turning a small research direction into a supervised literature workflow: discover papers, screen sources, legally or manually acquire PDFs, register local files, connect them to Zotero, perform PDF-first reading, and build Obsidian/RAG-ready local knowledge notes.
 
 The project exists because agent-led literature work has many sharp edges: source provenance gets lost, browser snippets become false evidence, PDFs are misidentified, Zotero attachments silently become URL fields, Obsidian notes drift away from page evidence, and long Codex conversations lose state. This skill packages a controller-led process to make those failure modes visible and recoverable.
 
@@ -15,6 +17,7 @@ The project exists because agent-led literature work has many sharp edges: sourc
 
 This repository is an **early preview** for developers who urgently need to test this workflow idea. It provides a framework, records, prompts, scripts, and dependency recommendations. It does **not** provide functional guarantees.
 
+- Project statement: this project is meant to offer the most basic starting solution for users who are not yet sure how to use Codex for literature assistance and local literature management. Many intermediate layers in this repository may be redundant, over-specific, or close to reinventing existing tools. Please do **not** treat this repository as a model of excellent open-source project design.
 - Developed primarily on macOS.
 - Windows has not been tested.
 - Browser, Zotero, Obsidian, and external skill integrations depend on your local Codex setup.
@@ -44,14 +47,14 @@ Use a named non-`venv` environment so browser fetching, PDF parsing, rendering, 
 
 ```bash
 micromamba env create -f environment.yml
-micromamba activate codex-lit
+micromamba activate codex-literature
 python3 scripts/env_check.py --json
 ```
 
 If the environment already exists:
 
 ```bash
-micromamba activate codex-lit
+micromamba activate codex-literature
 micromamba env update -f environment.yml
 python3 -m pip install -r requirements.txt
 python3 scripts/env_check.py --json
@@ -64,7 +67,7 @@ Before starting a long workflow, explicitly tell one Codex session that it is th
 Recommended short prompt:
 
 ```text
-You are the Controller Console for codex-obsidian-read.
+You are the Controller Console for codex-literature-workflow.
 Do not do all work yourself.
 Initialize controller records, verify dependencies, choose or create fixed specialist sessions, then dispatch small bounded tasks.
 Use academic-research-suite as the default literature discovery/screening companion.
@@ -79,7 +82,7 @@ Recommended long-task goal prompt:
 ```text
 Goal: Build a source-grounded Zotero and Obsidian-ready literature workspace for <TOPIC_OR_DIRECTION>.
 
-You are the Controller Console for codex-obsidian-read.
+You are the Controller Console for codex-literature-workflow.
 
 Rules:
 - Keep this session as the only controller and acceptance owner.
@@ -147,7 +150,7 @@ Open the generated `00_controller/dependency_setup.md` and record what is availa
 - `zotero-linked-attachments`: attach PDF/MD files to Zotero as linked files.
 - Obsidian helpers such as `wiki-query`, `wiki-ingest`, or `obsidian-wiki-ingest`: local KB lookup and note/registry integration.
 - Browser, Chrome, and Computer Use tools: source navigation and authorized download mechanics.
-- `codex-lit` Python environment and `env_check.py` output.
+- `codex-literature` Python environment and `env_check.py` output.
 
 ### 6. Dispatch small batches
 
@@ -224,7 +227,7 @@ Run lightweight checks before committing changes:
 python3 -m py_compile scripts/*.py
 python3 -m json.tool evals/evals.json >/dev/null
 python3 scripts/env_check.py --json
-python3 scripts/init_workspace.py --root /private/tmp/codex_obsidian_read_smoke --force
+python3 scripts/init_workspace.py --root /private/tmp/codex_literature_workflow_smoke --force
 ```
 
 ## Roadmap

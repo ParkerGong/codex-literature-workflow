@@ -1,4 +1,6 @@
-# Codex Obsidian Read：面向 Zotero 与 Obsidian 的 Codex 文献工作流
+# codex-literature-workflow
+
+面向 Codex、Zotero 与 Obsidian 的 agent-native 文献工作流。
 
 [![Preview](https://img.shields.io/badge/status-early%20preview-orange)](#早期预览声明)
 [![Python](https://img.shields.io/badge/python-3.12%2B-blue)](environment.yml)
@@ -7,7 +9,7 @@
 
 [English](README.md) | **简体中文**
 
-Codex Obsidian Read 是一个早期阶段的 Codex skill，用来把一个小研究方向组织成可恢复、可审计的文献流程：找文献、筛选、合法或授权下载 PDF、本地登记、接入 Zotero、PDF-first 精读，并生成 Obsidian/RAG-ready 的本地知识库笔记。
+`codex-literature-workflow` 是一个早期阶段的 Codex skill，用来把一个小研究方向组织成可恢复、可审计的文献流程：找文献、筛选、合法或授权下载 PDF、本地登记、接入 Zotero、PDF-first 精读，并生成 Obsidian/RAG-ready 的本地知识库笔记。
 
 这个项目的出发点很朴素：让 Codex 能围绕一个小方向构建起 Obsidian 文献库，并接入 Zotero，方便研究者继续自己阅读、校对和扩展。因为 Codex 做文献流程时很容易踩坑，比如来源记录丢失、浏览器摘要被误当成论文事实、PDF 下载错、Zotero 附件只写成 URL、Obsidian 笔记脱离页码证据、长对话状态丢失，所以这里把流程拆成“总控台 + 固定 specialist session + durable Markdown 记录”。
 
@@ -15,6 +17,7 @@ Codex Obsidian Read 是一个早期阶段的 Codex skill，用来把一个小研
 
 这是一个 **early preview**，只为急需测试这套流程的开发者提供框架思路、记录模板、提示词、脚本和依赖建议。当前不做功能性保证。
 
+- 项目声明：这个项目旨在为尚不清楚如何让 Codex 做文献辅助与本地文献管理的用户提供一个最基础的起步方案。仓库里的很多中间层工具可能存在重复造轮子、过度具体化或替代已有工具的嫌疑。请不要把这个项目作为优秀开源项目设计的参考。
 - 主要基于 macOS 开发。
 - Windows 环境尚未测试。
 - Browser、Zotero、Obsidian 和外部 skill 的可用性取决于你的本地 Codex 环境。
@@ -44,14 +47,14 @@ Codex Obsidian Read 是一个早期阶段的 Codex skill，用来把一个小研
 
 ```bash
 micromamba env create -f environment.yml
-micromamba activate codex-lit
+micromamba activate codex-literature
 python3 scripts/env_check.py --json
 ```
 
 如果环境已经存在：
 
 ```bash
-micromamba activate codex-lit
+micromamba activate codex-literature
 micromamba env update -f environment.yml
 python3 -m pip install -r requirements.txt
 python3 scripts/env_check.py --json
@@ -64,7 +67,7 @@ python3 scripts/env_check.py --json
 推荐短提示词：
 
 ```text
-你是 codex-obsidian-read 的 Controller Console。
+你是 codex-literature-workflow 的 Controller Console。
 不要自己吞掉所有工作。
 先初始化 controller records，检查依赖，选择或创建固定 specialist sessions，然后派发小范围任务。
 文献发现和筛选默认使用 academic-research-suite。
@@ -79,7 +82,7 @@ research-lr-ra 只作为辅助或兜底。
 ```text
 Goal: Build a source-grounded Zotero and Obsidian-ready literature workspace for <TOPIC_OR_DIRECTION>.
 
-You are the Controller Console for codex-obsidian-read.
+You are the Controller Console for codex-literature-workflow.
 
 Rules:
 - Keep this session as the only controller and acceptance owner.
@@ -147,7 +150,7 @@ python3 scripts/init_workspace.py --root /path/to/literature/project
 - `zotero-linked-attachments`：把 PDF/MD 作为 linked-file 挂到 Zotero。
 - `wiki-query`、`wiki-ingest`、`obsidian-wiki-ingest`：已有知识库查询和 Obsidian/RAG 写入。
 - Browser、Chrome、Computer Use：浏览和授权下载机制。
-- `codex-lit` Python 环境和 `env_check.py` 输出。
+- `codex-literature` Python 环境和 `env_check.py` 输出。
 
 ### 6. 小批量派发
 
@@ -224,7 +227,7 @@ Obsidian 集成采用 file-first 方式。总控台应先确定 vault 或项目�
 python3 -m py_compile scripts/*.py
 python3 -m json.tool evals/evals.json >/dev/null
 python3 scripts/env_check.py --json
-python3 scripts/init_workspace.py --root /private/tmp/codex_obsidian_read_smoke --force
+python3 scripts/init_workspace.py --root /private/tmp/codex_literature_workflow_smoke --force
 ```
 
 ## Roadmap

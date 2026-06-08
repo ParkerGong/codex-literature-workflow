@@ -11,8 +11,8 @@ For repeated Codex literature work, prefer one dedicated, permanent named enviro
 Recommended pattern on macOS with `micromamba` or Miniforge:
 
 ```bash
-micromamba create -n codex-lit -c conda-forge python=3.12 pip poppler tesseract
-micromamba activate codex-lit
+micromamba create -n codex-literature -c conda-forge python=3.12 pip poppler tesseract
+micromamba activate codex-literature
 python3 -m pip install --upgrade pip setuptools wheel
 python3 -m pip install -r requirements.txt
 ```
@@ -20,8 +20,8 @@ python3 -m pip install -r requirements.txt
 Record the resulting interpreter path in host-project controller notes:
 
 ```text
-python: ~/.local/share/mamba/envs/codex-lit/bin/python
-requirements: codex-obsidian-read/requirements.txt
+python: ~/.local/share/mamba/envs/codex-literature/bin/python
+requirements: codex-literature-workflow/requirements.txt
 ```
 
 If `micromamba` is not available and you want a strict non-`venv` layout, use a dedicated pyenv Python interpreter and install into that interpreter's own site-packages:
@@ -38,7 +38,7 @@ Record that interpreter path explicitly:
 
 ```text
 python: /Users/<user>/.pyenv/versions/3.12.8/bin/python
-requirements: codex-obsidian-read/requirements.txt
+requirements: codex-literature-workflow/requirements.txt
 ```
 
 Avoid installing into macOS system Python. Homebrew Python may also reject global pip installs through externally managed environment protections; a dedicated pyenv interpreter is cleaner and easier to repair.
@@ -62,7 +62,7 @@ python3 -m pip install -r requirements.txt
 Recommended location:
 
 ```bash
-/private/tmp/codex_obsidian_read_venv
+/private/tmp/codex_literature_workflow_venv
 ```
 
 Recommended packages:
@@ -81,13 +81,13 @@ Use this fallback when a host project explicitly wants an isolated disposable en
 Create a temporary environment with:
 
 ```bash
-python3 scripts/setup_env.py --venv /private/tmp/codex_obsidian_read_venv
+python3 scripts/setup_env.py --venv /private/tmp/codex_literature_workflow_venv
 ```
 
 Install recommended packages only when network/dependency installation is allowed:
 
 ```bash
-python3 scripts/setup_env.py --venv /private/tmp/codex_obsidian_read_venv --install
+python3 scripts/setup_env.py --venv /private/tmp/codex_literature_workflow_venv --install
 ```
 
 The setup script prints the Python and pip paths to use for later `env_check.py` and `pdf_probe.py` runs.
@@ -113,7 +113,7 @@ Expected checks:
 Use this for a single PDF or a small test batch:
 
 ```bash
-python3 scripts/pdf_probe.py paper.pdf --pages 1,3,9 --out /private/tmp/codex_obsidian_read_probe
+python3 scripts/pdf_probe.py paper.pdf --pages 1,3,9 --out /private/tmp/codex_literature_workflow_probe
 ```
 
 It should:

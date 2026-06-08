@@ -1,11 +1,15 @@
 ---
-name: codex-obsidian-read
+name: codex-literature-workflow
 description: "End-to-end literature workflow for Codex: turn a topic, direction, or existing local PDF library into screened sources, optional legal/authorized PDF acquisition, optional Zotero linked-file attachment, PDF-first reading with optional visual page checks, and optional Obsidian/RAG-ready notes. Use this skill whenever the user asks to find, download, organize, read, summarize, attach to Zotero, or convert papers into an Obsidian knowledge base, especially when multiple fixed Codex sessions should cooperate under a controller."
 ---
 
-# Codex Obsidian Read
+# Codex Literature Workflow
 
 Use this skill to coordinate a literature workflow without turning one agent into an uncontrolled mega-agent. A controller owns scope, fixed-session routing, status, and acceptance. Specialist sessions do the phase work.
+
+## Project Statement
+
+This is a basic early-preview framework for users who are not yet sure how to use Codex for literature assistance and local literature management. Many intermediate layers here may be redundant, over-specific, or close to reinventing existing tools. Do not treat this repository as a model of excellent open-source project design.
 
 ## First Decision
 
@@ -80,7 +84,7 @@ Before dispatching, set these options explicitly in the controller note:
 | `batch_size` | integer | `3-5` short papers, `1-2` theses or long reports |
 | `access_mode` | `open-only`, `authorized-browser`, `manual-user` | `open-only` unless the user authorizes browser/session access |
 | `authorized_download_backend` | `sciencedirect-live-session-fetcher`, `chrome-control`, `computer-use`, `manual` | `sciencedirect-live-session-fetcher` when installed and `access_mode=authorized-browser` |
-| `python_environment` | named permanent env path or `pending` | `codex-lit` permanent non-venv environment |
+| `python_environment` | named permanent env path or `pending` | `codex-literature` permanent non-venv environment |
 
 Read `references/project-profiles.md` before using a non-generic profile. A strict host profile may add required records and gates, while Zotero and Obsidian can still remain user-selected modules.
 
@@ -90,7 +94,7 @@ Read `references/project-profiles.md` before using a non-generic profile. A stri
 2. **User scope intake gate**: ask required startup questions and record answers before work begins: direction, target count, source input mode, download/access permission, language scope, Zotero enablement, Obsidian enablement, local input paths, output paths, and collection/vault mapping needs.
 3. **Profile and scope gate**: create or reuse a controller task ID; choose `project_profile`; define topic/direction, source input mode, whether downloads are enabled, language, inclusion/exclusion rules, optional or required Zotero/Obsidian outputs, allowed writes, forbidden paths, quota/process/temp policies, and acceptance criteria.
 4. **Controller and agent records**: initialize or update Markdown state files before any long work: controller worklog, per-agent worklogs, kanban, session registry, dispatch log, dependency setup, source manifest, download log, ingest queue/status, and per-task handoff.
-5. **Dependency and environment check**: read `references/dependencies.md`; recommend the permanent `codex-lit` environment from `environment.yml`; run `scripts/env_check.py`; record companion-skill and Python/CLI readiness before long batches.
+5. **Dependency and environment check**: read `references/dependencies.md`; recommend the permanent `codex-literature` environment from `environment.yml`; run `scripts/env_check.py`; record companion-skill and Python/CLI readiness before long batches.
 6. **Source intake**: if `source_input_mode=local-library`, register existing PDFs and skip download; if `mixed`, register local PDFs first, then search only for gaps.
 7. **Search and screening when needed**: use `academic-research-suite` by default for literature discovery, query expansion, and screening strategy; use `research-lr-ra` only as an auxiliary/fallback; produce a dated candidate table with query strings, sources, URLs/DOIs, access route, relevance score, and exclusion reasons.
 8. **Optional acquisition and local registration**: only when `download_enabled=true`, download legal/authorized PDFs. For authenticated publisher pages, prefer `sciencedirect-live-session-fetcher` with one live authorized browser session before generic Chrome/Computer Use fallback; verify title/body/pages; write a manifest row and mark bad PDFs honestly.

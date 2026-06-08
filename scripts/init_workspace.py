@@ -39,7 +39,7 @@ FILES = {
 - visual_check: selected-pages
 - access_mode: open-only
 - authorized_download_backend: sciencedirect-live-session-fetcher when installed
-- python_environment: codex-lit permanent non-venv environment
+- python_environment: codex-literature permanent non-venv environment
 - dependency_setup_status: pending
 - batch_size: TBD
 - allowed_read_paths: TBD
@@ -200,7 +200,7 @@ Record answers in `project_profile.md`. Set `user_scope_confirmed: true` only af
 ## Recommended Controller Prompt
 
 ```text
-You are the Controller Console for codex-obsidian-read.
+You are the Controller Console for codex-literature-workflow.
 Do not do all work yourself.
 Initialize controller records, verify dependencies, choose or create fixed specialist sessions, then dispatch small bounded tasks.
 Before dispatch, ask the user to confirm paper direction, target count, source mode, download/access permission, Zotero connection, Obsidian connection, local inputs, output paths, and mapping needs.
@@ -214,7 +214,7 @@ Only the Controller Console may mark outputs accepted.
 ```text
 Goal: Build a source-grounded Zotero and Obsidian-ready literature workspace for <TOPIC_OR_DIRECTION>.
 
-You are the Controller Console for codex-obsidian-read.
+You are the Controller Console for codex-literature-workflow.
 
 Rules:
 - Keep this session as the only controller and acceptance owner.
@@ -255,7 +255,7 @@ Start by creating or updating the controller workspace records, dependency setup
 | --- | --- | --- | --- |
 | academic-research-suite | default paper discovery, deep/systematic review planning, query expansion, source verification, citation/integrity checks | pending | use before research-lr-ra for literature discovery |
 | research-lr-ra | auxiliary/fallback LR assistant, research-gap mapping, representative-work selection | pending | not the default when ARS is available |
-| codex-obsidian-read | controller for discovery -> screening -> download -> local registration -> Zotero -> PDF-first reading -> Obsidian/RAG | active | this initialized workspace |
+| codex-literature-workflow | controller for discovery -> screening -> download -> local registration -> Zotero -> PDF-first reading -> Obsidian/RAG | active | this initialized workspace |
 | sciencedirect-live-session-fetcher | preferred authorized-browser PDF backend | pending | only when access_mode=authorized-browser and user has authorized access |
 | zotero:Zotero | local Zotero lookup/export/import and verification | pending | enable only when Zotero outputs are requested |
 | zotero-linked-attachments | linked-file PDF/MD attachment to Zotero | pending | do not write zotero.sqlite directly |
@@ -268,14 +268,14 @@ Recommended permanent non-venv environment:
 
 ```bash
 micromamba env create -f {{SKILL_ROOT}}/environment.yml
-micromamba activate codex-lit
+micromamba activate codex-literature
 python3 {{SKILL_ROOT}}/scripts/env_check.py --json
 ```
 
 If already created:
 
 ```bash
-micromamba activate codex-lit
+micromamba activate codex-literature
 micromamba env update -f {{SKILL_ROOT}}/environment.yml
 python3 -m pip install -r {{SKILL_ROOT}}/requirements.txt
 python3 {{SKILL_ROOT}}/scripts/env_check.py --json

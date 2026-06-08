@@ -1,57 +1,57 @@
 {
-  "skill_name": "codex-obsidian-read",
+  "skill_name": "codex-literature-workflow",
   "evals": [
     {
       "id": 1,
-      "prompt": "Use codex-obsidian-read to check the PDF reading environment only. Do not search the web, use Zotero, or write Obsidian notes.",
+      "prompt": "Use codex-literature-workflow to check the PDF reading environment only. Do not search the web, use Zotero, or write Obsidian notes.",
       "expected_output": "Environment report with package and CLI availability, plus no Zotero or Obsidian writes.",
       "files": []
     },
     {
       "id": 2,
-      "prompt": "Use codex-obsidian-read to find 2 open-access English papers on edge intelligence for rail transit. Download only legal open PDFs and write a candidate table and manifest. Keep Zotero and Obsidian disabled.",
+      "prompt": "Use codex-literature-workflow to find 2 open-access English papers on edge intelligence for rail transit. Download only legal open PDFs and write a candidate table and manifest. Keep Zotero and Obsidian disabled.",
       "expected_output": "Dated candidate table, access-route evidence, verified local PDF records, no browser-auth, no Zotero/Obsidian output.",
       "files": []
     },
     {
       "id": 3,
-      "prompt": "Use codex-obsidian-read on two already-downloaded PDFs with source_input_mode=local-library and download_enabled=false. Ask whether Zotero and Obsidian should be enabled. If Zotero is enabled, attach PDFs as linked files if Zotero is available, then create PDF-first notes with selected visual pages. Do not attach Markdown notes to Zotero yet.",
+      "prompt": "Use codex-literature-workflow on two already-downloaded PDFs with source_input_mode=local-library and download_enabled=false. Ask whether Zotero and Obsidian should be enabled. If Zotero is enabled, attach PDFs as linked files if Zotero is available, then create PDF-first notes with selected visual pages. Do not attach Markdown notes to Zotero yet.",
       "expected_output": "Local PDFs registered with access_route=local-library, download skipped, controller-mediated dispatches, optional Zotero verification or pending status, Obsidian notes with page evidence, visual status, controller/agent worklogs, and batch report.",
       "files": []
     },
     {
       "id": 4,
-      "prompt": "Use codex-obsidian-read with project_profile=dissertation-strict on one already-downloaded PDF. Do not search the web. First ask whether there is a local direction/mapping document and whether Zotero/Obsidian should be enabled. Initialize controller records and write pending/disabled Zotero statuses honestly.",
+      "prompt": "Use codex-literature-workflow with project_profile=dissertation-strict on one already-downloaded PDF. Do not search the web. First ask whether there is a local direction/mapping document and whether Zotero/Obsidian should be enabled. Initialize controller records and write pending/disabled Zotero statuses honestly.",
       "expected_output": "Project profile, controller/agent worklogs, quota status, temp artifact ledger, source manifest, optional Zotero link index with collection/PDF/MD status, Obsidian note frontmatter with zotero_collection and md_note_path, and Waiting review handoff.",
       "files": []
     },
     {
       "id": 5,
-      "prompt": "Use codex-obsidian-read to screen Chinese papers about a topic. Do not download unless open or already authorized. Record CNKI/Wanfang/VIP route details and manual blockers.",
+      "prompt": "Use codex-literature-workflow to screen Chinese papers about a topic. Do not download unless open or already authorized. Record CNKI/Wanfang/VIP route details and manual blockers.",
       "expected_output": "Candidate table with Chinese database route fields, distinct CNKI/Wanfang/VIP/manual/unavailable access routes, no private credential data, and LiteratureAgent worklog entries.",
       "files": []
     },
     {
       "id": 6,
-      "prompt": "Use codex-obsidian-read to acquire one authorized closed-source paper with download_enabled=true and closed_source_fallback=chrome-then-computer-use-once. Use authenticated Chrome if allowed; if Chrome gets stuck at verification, try Computer Use once, then stop and write the blocker if unresolved.",
+      "prompt": "Use codex-literature-workflow to acquire one authorized closed-source paper with download_enabled=true and closed_source_fallback=chrome-then-computer-use-once. Use authenticated Chrome if allowed; if Chrome gets stuck at verification, try Computer Use once, then stop and write the blocker if unresolved.",
       "expected_output": "Browser permission recorded, Chrome attempted before Computer Use, at most one Computer Use fallback recorded, unresolved verification marked captcha-blocked or manual-user, no private credential data stored, and any accepted PDF quality-checked.",
       "files": []
     },
     {
       "id": 7,
       "prompt": "Initialize a controller workspace for a mixed literature workflow. Do not search yet. Record the recommended dependency setup, default research companion, auxiliary LR companion, and permanent Python environment recommendation.",
-      "expected_output": "Controller records include dependency_setup.md; academic-research-suite is the default research companion for discovery/screening; research-lr-ra is auxiliary/fallback only; environment.yml/requirements.txt and env_check.py are recommended for the permanent codex-lit Python environment; long search/download work is deferred until dependency status is recorded.",
+      "expected_output": "Controller records include dependency_setup.md; academic-research-suite is the default research companion for discovery/screening; research-lr-ra is auxiliary/fallback only; environment.yml/requirements.txt and env_check.py are recommended for the permanent codex-literature Python environment; long search/download work is deferred until dependency status is recorded.",
       "files": []
     },
     {
       "id": 8,
-      "prompt": "Initialize codex-obsidian-read for a long Zotero and Obsidian literature workflow. Require the user to designate a Controller Console session, attach a goal, create or reuse LiteratureAgent, ZoteroAgent, and ObsidianAgent sessions as needed, then stop before doing discovery.",
+      "prompt": "Initialize codex-literature-workflow for a long Zotero and Obsidian literature workflow. Require the user to designate a Controller Console session, attach a goal, create or reuse LiteratureAgent, ZoteroAgent, and ObsidianAgent sessions as needed, then stop before doing discovery.",
       "expected_output": "Initialization records include Controller Console designation, goal status or goal prompt, specialist session plan, session_registry.md entries, dependency_setup.md, and a first dispatch plan. No long search, download, Zotero, or Obsidian work begins until controller and required specialist sessions are recorded.",
       "files": []
     },
     {
       "id": 9,
-      "prompt": "Start a new codex-obsidian-read workflow where the user only says they want papers. Before doing any search, ask the required startup scope questions.",
+      "prompt": "Start a new codex-literature-workflow workflow where the user only says they want papers. Before doing any search, ask the required startup scope questions.",
       "expected_output": "The controller asks for paper direction, target paper count, source input mode, download/access permission, language scope, Zotero connection, Obsidian connection, local input paths, output/write paths, and Zotero/Obsidian mapping needs. user_scope_confirmed remains false and no LiteratureAgent/ZoteroAgent/ObsidianAgent work is dispatched until answers are recorded.",
       "files": []
     }

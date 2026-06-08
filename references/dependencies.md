@@ -12,7 +12,7 @@ For paper discovery and screening, the default hierarchy is:
 | --- | --- | --- |
 | Literature discovery, deep research, systematic review planning, query expansion, citation/integrity checks | `academic-research-suite` | none; use generic rubric only if unavailable |
 | Legacy LR assistant work, research-gap mapping, representative-work selection | `research-lr-ra` | auxiliary only when ARS is unavailable, explicitly requested, or better suited to a narrow LR subtask |
-| End-to-end orchestration from discovery to Zotero/Obsidian | this skill, `codex-obsidian-read` | do not collapse all phases into one unsupervised agent |
+| End-to-end orchestration from discovery to Zotero/Obsidian | this skill, `codex-literature-workflow` | do not collapse all phases into one unsupervised agent |
 | Local Zotero search/export/import | `zotero:Zotero` | Zotero Desktop/API only when enabled |
 | PDF/MD linked-file attachment to Zotero | `zotero-linked-attachments` | manual pending status if Zotero is unavailable |
 | Existing Obsidian/RAG knowledge lookup | `wiki-query`, `wiki-ingest`, or `obsidian-wiki-ingest` when installed | use only for local KB gap/context, not external paper discovery |
@@ -26,14 +26,14 @@ Recommended permanent non-venv environment:
 
 ```bash
 micromamba env create -f environment.yml
-micromamba activate codex-lit
+micromamba activate codex-literature
 python3 scripts/env_check.py --json
 ```
 
 If the environment already exists:
 
 ```bash
-micromamba activate codex-lit
+micromamba activate codex-literature
 micromamba env update -f environment.yml
 python3 -m pip install -r requirements.txt
 python3 scripts/env_check.py --json

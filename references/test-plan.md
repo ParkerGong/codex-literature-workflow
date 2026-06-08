@@ -7,7 +7,7 @@ Do not rely on this skill for large literature expansion until it passes a small
 Prompt:
 
 ```text
-Use codex-obsidian-read to check whether this machine can extract PDF text and render selected pages. Do not search the web, do not use Zotero, and do not write Obsidian notes.
+Use codex-literature-workflow to check whether this machine can extract PDF text and render selected pages. Do not search the web, do not use Zotero, and do not write Obsidian notes.
 ```
 
 Expected:
@@ -21,7 +21,7 @@ Expected:
 Prompt:
 
 ```text
-Use codex-obsidian-read. I want papers.
+Use codex-literature-workflow. I want papers.
 ```
 
 Expected:
@@ -36,7 +36,7 @@ Expected:
 Prompt:
 
 ```text
-Use codex-obsidian-read to find 2-3 open-access English papers about <topic>. Download only legal open PDFs, write a candidate table and manifest, but do not use Zotero or Obsidian.
+Use codex-literature-workflow to find 2-3 open-access English papers about <topic>. Download only legal open PDFs, write a candidate table and manifest, but do not use Zotero or Obsidian.
 ```
 
 Expected:
@@ -52,7 +52,7 @@ Expected:
 Prompt:
 
 ```text
-Use codex-obsidian-read on 2 papers I already downloaded with source_input_mode=local-library and download_enabled=false. Ask whether Zotero and Obsidian should be enabled. If Zotero is enabled, attach PDFs as linked files if Zotero is available, then create PDF-first Obsidian notes with selected visual pages. Do not attach Markdown notes to Zotero yet.
+Use codex-literature-workflow on 2 papers I already downloaded with source_input_mode=local-library and download_enabled=false. Ask whether Zotero and Obsidian should be enabled. If Zotero is enabled, attach PDFs as linked files if Zotero is available, then create PDF-first Obsidian notes with selected visual pages. Do not attach Markdown notes to Zotero yet.
 ```
 
 Expected:
@@ -70,7 +70,7 @@ Expected:
 Prompt:
 
 ```text
-Use codex-obsidian-read with project_profile=dissertation-strict on one already-downloaded PDF. Do not search the web. First ask whether there is a local direction/mapping document and whether Zotero/Obsidian should be enabled. Initialize controller records. If Zotero is disabled, keep Zotero fields empty/pending for later. If Zotero is enabled but unavailable, write pending statuses rather than launching apps.
+Use codex-literature-workflow with project_profile=dissertation-strict on one already-downloaded PDF. Do not search the web. First ask whether there is a local direction/mapping document and whether Zotero/Obsidian should be enabled. Initialize controller records. If Zotero is disabled, keep Zotero fields empty/pending for later. If Zotero is enabled but unavailable, write pending statuses rather than launching apps.
 ```
 
 Expected:
@@ -87,7 +87,7 @@ Expected:
 Prompt:
 
 ```text
-Use codex-obsidian-read to screen Chinese papers about <topic>. Do not download unless open or already authorized. Record CNKI/Wanfang/VIP route details and manual blockers.
+Use codex-literature-workflow to screen Chinese papers about <topic>. Do not download unless open or already authorized. Record CNKI/Wanfang/VIP route details and manual blockers.
 ```
 
 Expected:
@@ -102,7 +102,7 @@ Expected:
 Prompt:
 
 ```text
-Use codex-obsidian-read to acquire one authorized closed-source paper. Set download_enabled=true and closed_source_fallback=chrome-then-computer-use-once. Use my authenticated Chrome session if allowed. If Chrome gets stuck at verification, try Computer Use once, then stop and write the blocker if still unresolved.
+Use codex-literature-workflow to acquire one authorized closed-source paper. Set download_enabled=true and closed_source_fallback=chrome-then-computer-use-once. Use my authenticated Chrome session if allowed. If Chrome gets stuck at verification, try Computer Use once, then stop and write the blocker if still unresolved.
 ```
 
 Expected:

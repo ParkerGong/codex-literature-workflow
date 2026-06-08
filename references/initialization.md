@@ -59,7 +59,7 @@ Do not create one session per paper. Reuse fixed specialist sessions for batches
 7. Run or request the permanent environment check:
 
 ```bash
-micromamba activate codex-lit
+micromamba activate codex-literature
 python3 <skill-root>/scripts/env_check.py --json
 ```
 
@@ -73,7 +73,7 @@ python3 <skill-root>/scripts/env_check.py --json
 ## Recommended Controller Prompt
 
 ```text
-You are the Controller Console for codex-obsidian-read.
+You are the Controller Console for codex-literature-workflow.
 Do not do all work yourself.
 Initialize controller records, verify dependencies, choose or create fixed specialist sessions, then dispatch small bounded tasks.
 Before dispatch, ask the user to confirm paper direction, target count, source mode, download/access permission, Zotero connection, Obsidian connection, local inputs, output paths, and mapping needs.
@@ -87,7 +87,7 @@ Only the Controller Console may mark outputs accepted.
 ```text
 Goal: Build a source-grounded Zotero and Obsidian-ready literature workspace for <TOPIC_OR_DIRECTION>.
 
-You are the Controller Console for codex-obsidian-read.
+You are the Controller Console for codex-literature-workflow.
 
 Rules:
 - Keep this session as the only controller and acceptance owner.

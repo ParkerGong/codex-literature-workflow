@@ -64,20 +64,28 @@ The controller or specialist checks the local environment before search/download
 Commands:
 
 ```bash
+micromamba activate codex-literature
 python scripts/env_check.py --json
-python scripts/setup_env.py --venv /private/tmp/codex_obsidian_read_venv
 ```
 
-If package installation is allowed:
+If the permanent environment has not been created yet, initialize it from the skill repository:
 
 ```bash
-python scripts/setup_env.py --venv /private/tmp/codex_obsidian_read_venv --install
+micromamba env create -f environment.yml
+micromamba activate codex-literature
+python -m pip install -r requirements.txt
+```
+
+Use a temporary venv only as an explicit disposable fallback:
+
+```bash
+python scripts/setup_env.py --venv /private/tmp/codex_literature_workflow_venv --install
 ```
 
 PDF probing is text-first and selected-page only:
 
 ```bash
-python scripts/pdf_probe.py <paper.pdf> --pages 1,3,9 --out /private/tmp/codex_obsidian_read_probe
+python scripts/pdf_probe.py <paper.pdf> --pages 1,3,9 --out /private/tmp/codex_literature_workflow_probe
 ```
 
 The run records whether Python packages, Poppler tools, OCR tools, browser tools, and temp paths are available. If quota is unknown, write `quota unknown` rather than a guessed number.

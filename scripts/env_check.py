@@ -71,7 +71,7 @@ def main():
     if args.json:
         print(json.dumps(report, indent=2, ensure_ascii=False))
     else:
-        print("Codex Obsidian Read environment check")
+        print("Codex Literature Workflow environment check")
         print(f"Python: {sys.executable}")
         for item in report["packages"]:
             state = "ok" if item["available"] else "missing"
