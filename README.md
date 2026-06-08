@@ -84,7 +84,6 @@ Public/open-source companion skills should be installed from their GitHub reposi
 | `zotero-linked-attachments` | optional unless Zotero linked files are requested | vendored in this repo at `companion-skills/zotero-linked-attachments` | attach local PDF/MD files as Zotero linked-file attachments |
 | `sciencedirect-live-session-fetcher` from `Given-Dream/sciencedirect-live-session-fetcher` | optional; recommended for authorized-browser publisher download tests | <https://github.com/Given-Dream/sciencedirect-live-session-fetcher> | reuse a live authorized browser session for publisher PDF routes |
 | Browser / Chrome / Computer Use plugins | optional but useful | OpenAI/Codex plugin capabilities; see <https://help.openai.com/en/articles/20001256> | browser navigation, authenticated sessions, UI fallback |
-| `pdf` skill | optional but useful | bundled/local Codex skill; no separate public upstream URL confirmed | selected-page rendering and PDF QA |
 | `wiki-query`, `wiki-ingest`, or `obsidian-wiki-ingest` | optional unless local KB integration is requested | examples to verify before install: <https://github.com/Ar9av/obsidian-wiki>, <https://github.com/AgriciDaniel/claude-obsidian> | existing knowledge-base lookup and Obsidian/RAG-style note integration |
 
 If a companion is unavailable, record it in `00_controller/dependency_setup.md` and use the documented fallback path. Do not silently pretend that an unavailable companion was used.
@@ -220,7 +219,7 @@ The controller should dispatch bounded tasks, wait for durable handoff output, r
 | Local PDF library intake | LiteratureAgent, no download by default |
 | Authorized publisher download | `sciencedirect-live-session-fetcher`, then Chrome/Computer Use/manual fallback |
 | Zotero item and attachment work | `zotero:Zotero` and `zotero-linked-attachments` |
-| PDF text/render checks | bundled scripts plus `pdf` skill when available |
+| PDF text/render checks | bundled scripts and the configured Python environment |
 | Obsidian/RAG note output | ObsidianAgent plus local wiki/Obsidian helpers |
 | Git checkpoints | Controller Console only; local commits, no automatic push |
 | Final acceptance | Controller Console only |

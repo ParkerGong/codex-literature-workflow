@@ -84,7 +84,6 @@ python3 scripts/env_check.py --json
 | `zotero-linked-attachments` | 需要 Zotero linked files 时启用 | 已 vendored 到本仓库 `companion-skills/zotero-linked-attachments` | 把本地 PDF/MD 作为 Zotero linked-file 附件 |
 | 来自 `Given-Dream/sciencedirect-live-session-fetcher` 的 `sciencedirect-live-session-fetcher` | 可选；授权浏览器下载测试时推荐 | <https://github.com/Given-Dream/sciencedirect-live-session-fetcher> | 复用 live authorized browser session 获取出版社 PDF |
 | Browser / Chrome / Computer Use plugins | 可选但很有用 | OpenAI/Codex plugin capabilities；见 <https://help.openai.com/en/articles/20001256> | 浏览器导航、认证 session、UI fallback |
-| `pdf` skill | 可选但很有用 | bundled/local Codex skill；尚未确认独立公开 upstream URL | 选页渲染和 PDF QA |
 | `wiki-query`、`wiki-ingest` 或 `obsidian-wiki-ingest` | 需要本地 KB 集成时启用 | 安装前需核验的公开示例：<https://github.com/Ar9av/obsidian-wiki>、<https://github.com/AgriciDaniel/claude-obsidian> | 已有知识库查询与 Obsidian/RAG 风格笔记接入 |
 
 如果某个 companion 不可用，把状态记录到 `00_controller/dependency_setup.md`，并走文档中的 fallback 路径。不要假装已经使用了不可用的 companion。
@@ -220,7 +219,7 @@ checkpoint commit 是本地恢复点，不等于 push 到 GitHub。总控台必�
 | 本地 PDF 库登记 | LiteratureAgent，默认不下载 |
 | 授权出版社下载 | `sciencedirect-live-session-fetcher`，再到 Chrome/Computer Use/manual |
 | Zotero 条目和附件 | `zotero:Zotero` 与 `zotero-linked-attachments` |
-| PDF 文本/渲染检查 | 内置脚本，必要时配合 `pdf` skill |
+| PDF 文本/渲染检查 | 内置脚本和配置好的 Python 环境 |
 | Obsidian/RAG 笔记 | ObsidianAgent 与本地 wiki/Obsidian helper |
 | Git checkpoints | 仅 Controller Console；本地 commit，不自动 push |
 | 最终验收 | 仅 Controller Console |
