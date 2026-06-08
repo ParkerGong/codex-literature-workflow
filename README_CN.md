@@ -5,7 +5,7 @@
 [![Preview](https://img.shields.io/badge/status-early%20preview-orange)](#早期预览声明)
 [![Python](https://img.shields.io/badge/python-3.12%2B-blue)](environment.yml)
 [![macOS](https://img.shields.io/badge/platform-macOS%20tested-lightgrey)](#早期预览声明)
-[![License](https://img.shields.io/badge/license-not%20selected-red)](#license)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 [English](README.md) | **简体中文**
 
@@ -254,6 +254,7 @@ Obsidian 集成采用 file-first 方式。总控台应先确定 vault 或项目�
 |-- SKILL.md
 |-- README.md
 |-- README_CN.md
+|-- LICENSE
 |-- agents/
 |   `-- openai.yaml
 |-- companion-skills/
@@ -304,4 +305,4 @@ python3 scripts/init_workspace.py --root /private/tmp/codex_literature_workflow_
 
 ## License
 
-尚未选择许可证。正式开源前请补充许可证，否则其他人没有明确复用授权。
+本项目使用 MIT License 开源。见 [LICENSE](LICENSE)。

@@ -5,7 +5,7 @@ Agent-native literature workflow for Codex, Zotero, and Obsidian.
 [![Preview](https://img.shields.io/badge/status-early%20preview-orange)](#early-preview-notice)
 [![Python](https://img.shields.io/badge/python-3.12%2B-blue)](environment.yml)
 [![macOS](https://img.shields.io/badge/platform-macOS%20tested-lightgrey)](#early-preview-notice)
-[![License](https://img.shields.io/badge/license-not%20selected-red)](#license)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 **English** | [简体中文](README_CN.md)
 
@@ -254,6 +254,7 @@ Recommended setup:
 |-- SKILL.md
 |-- README.md
 |-- README_CN.md
+|-- LICENSE
 |-- agents/
 |   `-- openai.yaml
 |-- companion-skills/
@@ -304,4 +305,4 @@ Please do not submit private PDFs, credentials, Zotero databases, browser cookie
 
 ## License
 
-No license has been selected yet. Add one before publishing if you want others to have explicit reuse rights.
+This project is licensed under the MIT License. See [LICENSE](LICENSE).
