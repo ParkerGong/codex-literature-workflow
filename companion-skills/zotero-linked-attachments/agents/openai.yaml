@@ -1,0 +1,3 @@
+display_name: Zotero Linked Attachments
+short_description: Link local PDFs and Markdown notes to Zotero.
+default_prompt: Attach local PDF or Markdown files to Zotero parent items as linked_file attachments, then verify them through the Zotero local API.

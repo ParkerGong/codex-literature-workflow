@@ -288,18 +288,31 @@ Before long work, recommend installing or enabling companions that match the req
 | Companion | Setup recommendation | Origin/source URL | Required when | Fallback if missing |
 | --- | --- | --- | --- | --- |
 | academic-research-suite | install/enable first | Codex adapter: https://github.com/Imbad0202/academic-research-skills-codex ; upstream suite: https://github.com/Imbad0202/academic-research-skills | external literature discovery or screening | generic screening rubric; mark ARS unavailable |
-| research-lr-ra | install/enable as auxiliary only | no public upstream URL confirmed; treat as local/private unless published | legacy LR workflow or narrow research-gap mapping | skip unless explicitly needed |
+| research-lr-ra | install vendored copy as auxiliary only | vendored in this repo at {{SKILL_ROOT}}/companion-skills/research-lr-ra | legacy LR workflow or narrow research-gap mapping | skip unless explicitly needed |
 | zotero:Zotero plugin/connector | enable before Zotero phases | OpenAI/Codex plugin capability: https://help.openai.com/en/articles/20001256 | Zotero lookup/import/export/verification requested | mark Zotero pending/manual |
-| zotero-linked-attachments | install/enable before linked-file phases | no public upstream URL confirmed; treat as local/private unless published | PDF/MD linked-file attachments requested | record pending/manual attachment |
+| zotero-linked-attachments | install vendored copy before linked-file phases | vendored in this repo at {{SKILL_ROOT}}/companion-skills/zotero-linked-attachments | PDF/MD linked-file attachments requested | record pending/manual attachment |
 | sciencedirect-live-session-fetcher | install before authorized-browser publisher download tests | https://github.com/Given-Dream/sciencedirect-live-session-fetcher | access_mode=authorized-browser and publisher route fits | Chrome control, Computer Use once, then manual-user |
 | Browser / Chrome / Computer Use plugins | enable when browser/session access is needed | OpenAI/Codex plugin capabilities: https://help.openai.com/en/articles/20001256 | authenticated browsing, visible UI fallback, or manual verification | stop for user/manual action |
 | pdf skill | enable when selected visual checks or PDF QA matter | bundled/local Codex skill; no separate public upstream URL confirmed | figure/table/page-render evidence needed | text-only reading plus TODO for visual evidence |
 | wiki-query / wiki-ingest / obsidian-wiki-ingest | install/enable only when local KB/Obsidian integration is requested | examples to verify before install: https://github.com/Ar9av/obsidian-wiki ; https://github.com/AgriciDaniel/claude-obsidian | existing KB lookup or Obsidian/RAG output | file-first Markdown notes with pending KB integration |
 
+Open-source companions should be installed from GitHub when a public upstream is known. This project vendors maintainer-built companion skills only.
+
+Vendored maintainer companion install:
+
+```bash
+python3 {{SKILL_ROOT}}/scripts/install_companion_skills.py
+```
+
+Use `--force` only when intentionally replacing an existing local skill copy.
+
 Record:
 
 - academic_research_suite_install_action:
 - research_lr_ra_install_action:
+- vendored_companion_install_time:
+- vendored_companion_install_dest:
+- vendored_companion_install_status:
 - sciencedirect_fetcher_install_action:
 - zotero_plugin_enablement:
 - zotero_linked_attachments_install_action:

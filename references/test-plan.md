@@ -27,7 +27,7 @@ Initialize codex-literature-workflow setup for a mixed Zotero and Obsidian workf
 Expected:
 
 - `dependency_setup.md` recommends checking/installing or enabling `academic-research-suite`, auxiliary `research-lr-ra`, `zotero:Zotero`, `zotero-linked-attachments`, `sciencedirect-live-session-fetcher`, Browser/Chrome/Computer Use, `pdf`, and local wiki/Obsidian helpers when relevant;
-- public origin/source URLs are recorded where known; local/private or OpenAI plugin-only dependencies are labeled honestly instead of invented;
+- public origin/source URLs are recorded where known; maintainer-built vendored companions are labeled with their `companion-skills/` paths; OpenAI plugin-only dependencies are labeled honestly instead of invented;
 - missing companions are recorded as pending/unavailable with explicit fallback behavior;
 - ARS remains the default discovery/screening companion and RLR remains auxiliary only;
 - no long literature work starts until dependency status and fallbacks are recorded.

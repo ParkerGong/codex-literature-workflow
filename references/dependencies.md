@@ -27,18 +27,28 @@ During setup, the Controller Console should explicitly recommend installing or e
 | Companion | Setup recommendation | Origin/source URL | Required when | Fallback if missing |
 | --- | --- | --- | --- | --- |
 | `academic-research-suite` | install/enable first | Codex adapter: <https://github.com/Imbad0202/academic-research-skills-codex>; upstream suite: <https://github.com/Imbad0202/academic-research-skills> | any external literature discovery or screening | generic screening rubric, but mark ARS unavailable |
-| `research-lr-ra` | install/enable as auxiliary only | no public upstream URL confirmed; treat as local/private unless published | legacy LR workflow or narrow research-gap mapping | skip unless the controller explicitly needs it |
+| `research-lr-ra` | install vendored copy as auxiliary only | vendored in this repo at `companion-skills/research-lr-ra` | legacy LR workflow or narrow research-gap mapping | skip unless the controller explicitly needs it |
 | `zotero:Zotero` plugin/connector | enable before Zotero phases | OpenAI/Codex plugin capability: <https://help.openai.com/en/articles/20001256> | Zotero lookup/import/export/verification requested | mark Zotero pending/manual |
-| `zotero-linked-attachments` | install/enable before linked-file phases | no public upstream URL confirmed; treat as local/private unless published | PDF/MD linked-file attachments requested | record pending/manual attachment |
+| `zotero-linked-attachments` | install vendored copy before linked-file phases | vendored in this repo at `companion-skills/zotero-linked-attachments` | PDF/MD linked-file attachments requested | record pending/manual attachment |
 | `sciencedirect-live-session-fetcher` from `Given-Dream/sciencedirect-live-session-fetcher` | install before authorized-browser publisher download tests | <https://github.com/Given-Dream/sciencedirect-live-session-fetcher> | `access_mode=authorized-browser` and publisher route fits | Chrome control, Computer Use once, then manual-user |
 | Browser / Chrome / Computer Use plugins | enable when browser/session access is needed | OpenAI/Codex plugin capabilities: <https://help.openai.com/en/articles/20001256> | authenticated browsing, visible UI fallback, or manual verification | stop for user/manual action |
 | `pdf` skill | enable when selected visual checks or PDF QA matter | bundled/local Codex skill; no separate public upstream URL confirmed | figure/table/page-render evidence needed | text-only reading plus TODO for visual evidence |
 | `wiki-query`, `wiki-ingest`, or `obsidian-wiki-ingest` | install/enable only when local KB/Obsidian integration is requested | public examples to verify before install: <https://github.com/Ar9av/obsidian-wiki>, <https://github.com/AgriciDaniel/claude-obsidian> | existing KB lookup or Obsidian/RAG note output | file-first Markdown notes with pending KB integration |
 
+Open-source companions should be installed from their GitHub repositories when a public upstream is known. This repository vendors only the maintainer-built companion skills needed by the preview workflow.
+
+Vendored maintainer companion install:
+
+```bash
+python3 scripts/install_companion_skills.py
+```
+
+Use `--force` only when intentionally replacing an existing local skill copy.
+
 Suggested setup prompt for a new Codex session:
 
 ```text
-Before running codex-literature-workflow, check whether these companions are installed or enabled: academic-research-suite, research-lr-ra, zotero:Zotero, zotero-linked-attachments, sciencedirect-live-session-fetcher, Browser/Chrome/Computer Use, pdf, and local wiki/Obsidian helpers. Recommend installation for missing companions that match the requested workflow, then record ready/pending/unavailable status in 00_controller/dependency_setup.md. Do not begin long literature work until the missing-dependency fallback is explicit.
+Before running codex-literature-workflow, check whether these companions are installed or enabled: academic-research-suite, research-lr-ra, zotero:Zotero, zotero-linked-attachments, sciencedirect-live-session-fetcher, Browser/Chrome/Computer Use, pdf, and local wiki/Obsidian helpers. Recommend GitHub installation for public companions, use scripts/install_companion_skills.py for vendored maintainer-built companions, then record ready/pending/unavailable status in 00_controller/dependency_setup.md. Do not begin long literature work until the missing-dependency fallback is explicit.
 ```
 
 ## Python Environment

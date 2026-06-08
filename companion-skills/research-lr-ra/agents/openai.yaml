@@ -1,0 +1,4 @@
+interface:
+  display_name: "Research LR RA"
+  short_description: "Run topic-to-Zotero LR workflows."
+  default_prompt: "Use the Research LR RA workflow to turn my topic into a literature map, priority reading list, and research gap memo."
