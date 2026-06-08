@@ -11,6 +11,10 @@ Use this skill to coordinate a literature workflow without turning one agent int
 
 This is a basic early-preview framework for users who are not yet sure how to use Codex for literature assistance and local literature management. Many intermediate layers here may be redundant, over-specific, or close to reinventing existing tools. Do not treat this repository as a model of excellent open-source project design.
 
+This skill was temporarily summarized by Codex from a small workflow we previously tested ourselves. It is only for developers who urgently need to test the process. It provides no functional guarantee and should be tested only in an **INDEPENDENT, NON-IMPACTING, DEDICATED TEST SPACE** to avoid catastrophic data loss, accidental overwrites, or accidental publication of private files.
+
+The only maintainer-tested path is: follow a research direction, find relevant literature, download open-access papers, connect records to Zotero, and create an Obsidian-style local knowledge base. Other paths are unverified preview behavior. If a bug appears, first discuss the failure with the user's Codex session and inspect generated controller records before filing an issue.
+
 ## First Decision
 
 Identify the requested shape:

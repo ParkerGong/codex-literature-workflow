@@ -1,6 +1,6 @@
 # Provenance And Companion Skills
 
-This skill packages a workflow pattern. It does not vendor third-party or private skill code unless a repository maintainer explicitly adds that code with license review.
+This skill packages a workflow pattern that Codex temporarily summarized from small maintainer-side local tests. It does not vendor third-party or private skill code unless a repository maintainer explicitly adds that code with license review.
 
 ## Observed Companion Skills
 
@@ -36,6 +36,8 @@ Release notes or project documentation should state:
 ```text
 This skill combines controller-mediated literature workflow patterns, authorized browser-based publisher PDF acquisition, Zotero linked-file attachment practices, PDF-first selected-page reading, and Obsidian/RAG-ready note conventions. It was derived from locally tested Codex workflows and is designed to interoperate with optional sciencedirect-live-session-fetcher, Browser, Chrome, Computer Use, Zotero, PDF, and wiki-ingest skills when available.
 ```
+
+Also state that the maintainer-tested path is currently limited to following a research direction, finding relevant literature, downloading open-access papers, connecting records to Zotero, and creating an Obsidian-style local knowledge base.
 
 Before publishing, replace local filesystem origins with public repository URLs for any bundled dependency that is actually included.
 

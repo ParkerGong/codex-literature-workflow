@@ -13,6 +13,16 @@ Agent-native literature workflow for Codex, Zotero, and Obsidian.
 
 The project exists because agent-led literature work has many sharp edges: source provenance gets lost, browser snippets become false evidence, PDFs are misidentified, Zotero attachments silently become URL fields, Obsidian notes drift away from page evidence, and long Codex conversations lose state. This skill packages a controller-led process to make those failure modes visible and recoverable.
 
+## Critical Disclaimer
+
+This project is a temporary early-preview skill that was summarized by Codex from our own previous small internal tests. It is provided only for developers who urgently need to test this workflow idea. It provides no functional guarantee, no safety guarantee, and no promise that it will behave correctly in your Codex, Zotero, browser, filesystem, or Obsidian environment.
+
+Test this skill only in an **INDEPENDENT, NON-IMPACTING, DEDICATED TEST SPACE**. Do not run it directly against existing production vaults, important Zotero libraries, private PDF collections, browser profiles, or research repositories unless you have backups and understand the risks. This warning exists to avoid catastrophic data loss, accidental overwrites, or accidental publication of private files.
+
+The only workflow currently tested by the maintainer is: follow a research direction, find relevant literature, download **open-access** papers, connect records to Zotero, and create an Obsidian-style local knowledge base. Other workflows are unverified preview paths.
+
+If you hit a bug, first discuss the failure with your own Codex session and inspect the generated controller records before opening an issue. This project currently provides no functional guarantee.
+
 ## Early Preview Notice
 
 This repository is an **early preview** for developers who urgently need to test this workflow idea. It provides a framework, records, prompts, scripts, and dependency recommendations. It does **not** provide functional guarantees.
