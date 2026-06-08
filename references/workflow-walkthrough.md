@@ -72,7 +72,9 @@ The controller inspects changed paths, runs the configured privacy scan on inten
 
 ## 2. Environment Is Checked
 
-The controller or specialist checks the local environment before search/download/PDF-reading batches.
+The controller checks companion skill/plugin readiness and the local Python environment before search/download/PDF-reading batches.
+
+Companion setup is recorded in `dependency_setup.md`: `academic-research-suite`, auxiliary `research-lr-ra`, Zotero plugin/connector, `zotero-linked-attachments`, `sciencedirect-live-session-fetcher`, Browser/Chrome/Computer Use, `pdf`, and local wiki/Obsidian helpers are marked ready, pending, unavailable, or not needed with explicit fallback behavior.
 
 Commands:
 

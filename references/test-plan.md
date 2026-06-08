@@ -16,6 +16,21 @@ Expected:
 - one PDF probe if a sample PDF is provided;
 - no Zotero or Obsidian writes.
 
+## Smoke Test 1b: Companion Install Checklist
+
+Prompt:
+
+```text
+Initialize codex-literature-workflow setup for a mixed Zotero and Obsidian workflow. Do not search yet. Recommend external skill/plugin dependencies that should be installed or enabled.
+```
+
+Expected:
+
+- `dependency_setup.md` recommends checking/installing or enabling `academic-research-suite`, auxiliary `research-lr-ra`, `zotero:Zotero`, `zotero-linked-attachments`, `sciencedirect-live-session-fetcher`, Browser/Chrome/Computer Use, `pdf`, and local wiki/Obsidian helpers when relevant;
+- missing companions are recorded as pending/unavailable with explicit fallback behavior;
+- ARS remains the default discovery/screening companion and RLR remains auxiliary only;
+- no long literature work starts until dependency status and fallbacks are recorded.
+
 ## Smoke Test 2: Startup Scope Gate
 
 Prompt:
@@ -135,6 +150,7 @@ Expected:
 
 - Fixed-session pattern is used; no session-per-paper behavior.
 - Required startup scope is confirmed before specialist work.
+- Setup recommends installing/enabling the external companion skills/plugins needed by the requested workflow and records missing-dependency fallbacks.
 - Optional Zotero/Obsidian switches are respected.
 - Download is optional and skipped for `local-library` mode.
 - Search and access provenance is dated.

@@ -59,7 +59,7 @@ Do not create one session per paper. Reuse fixed specialist sessions for batches
 5. Read and fill `00_controller/project_profile.md`; do not continue until `user_scope_confirmed=true`.
 6. Verify the target project root is a Git repository. If it is not, stop and ask the user to initialize Git or designate the correct Git root before long work.
 7. Create the first forced local Git checkpoint after initialization and scope records are written. Record it in `00_controller/git_checkpoints.md`.
-8. Read and fill `00_controller/dependency_setup.md`.
+8. Read `references/dependencies.md`, recommend installing or enabling missing companion skills/plugins that match the requested workflow, and fill `00_controller/dependency_setup.md`.
 9. Run or request the permanent environment check:
 
 ```bash

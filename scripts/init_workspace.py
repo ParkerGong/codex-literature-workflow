@@ -281,6 +281,32 @@ Start by creating or updating the controller workspace records, dependency setup
 | wiki-query / wiki-ingest / obsidian-wiki-ingest | existing KB lookup and Obsidian/RAG writes | pending | not external paper discovery authority |
 | browser / chrome / computer-use | browsing and authorized download mechanics | pending | snippets are not paper facts |
 
+## Recommended Install Or Enable Checklist
+
+Before long work, recommend installing or enabling companions that match the requested workflow:
+
+| Companion | Setup recommendation | Required when | Fallback if missing |
+| --- | --- | --- | --- |
+| academic-research-suite | install/enable first | external literature discovery or screening | generic screening rubric; mark ARS unavailable |
+| research-lr-ra | install/enable as auxiliary only | legacy LR workflow or narrow research-gap mapping | skip unless explicitly needed |
+| zotero:Zotero plugin/connector | enable before Zotero phases | Zotero lookup/import/export/verification requested | mark Zotero pending/manual |
+| zotero-linked-attachments | install/enable before linked-file phases | PDF/MD linked-file attachments requested | record pending/manual attachment |
+| sciencedirect-live-session-fetcher | install before authorized-browser publisher download tests | access_mode=authorized-browser and publisher route fits | Chrome control, Computer Use once, then manual-user |
+| Browser / Chrome / Computer Use plugins | enable when browser/session access is needed | authenticated browsing, visible UI fallback, or manual verification | stop for user/manual action |
+| pdf skill | enable when selected visual checks or PDF QA matter | figure/table/page-render evidence needed | text-only reading plus TODO for visual evidence |
+| wiki-query / wiki-ingest / obsidian-wiki-ingest | install/enable only when local KB/Obsidian integration is requested | existing KB lookup or Obsidian/RAG output | file-first Markdown notes with pending KB integration |
+
+Record:
+
+- academic_research_suite_install_action:
+- research_lr_ra_install_action:
+- sciencedirect_fetcher_install_action:
+- zotero_plugin_enablement:
+- zotero_linked_attachments_install_action:
+- browser_chrome_computer_use_enablement:
+- pdf_skill_enablement:
+- wiki_obsidian_helper_install_action:
+
 ## Python Environment
 
 Recommended permanent non-venv environment:

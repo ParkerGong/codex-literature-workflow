@@ -70,7 +70,24 @@ python3 -m pip install -r requirements.txt
 python3 scripts/env_check.py --json
 ```
 
-### 2. Choose the Controller Console
+### 2. Install or enable companion skills/plugins
+
+Before a real test run, ask Codex to install or enable the companion skills/plugins that match the workflow you want to test:
+
+| Companion | Recommended status | Used for |
+| --- | --- | --- |
+| `academic-research-suite` | strongly recommended | default literature discovery, screening strategy, query expansion, citation/integrity checks |
+| `research-lr-ra` | optional auxiliary | legacy LR support and narrow research-gap mapping when ARS is unavailable or explicitly better |
+| `zotero:Zotero` plugin/connector | optional unless Zotero output is requested | local Zotero lookup, import/export, collections, verification |
+| `zotero-linked-attachments` | optional unless Zotero linked files are requested | attach local PDF/MD files as Zotero linked-file attachments |
+| `sciencedirect-live-session-fetcher` from `Given-Dream/sciencedirect-live-session-fetcher` | optional; recommended for authorized-browser publisher download tests | reuse a live authorized browser session for publisher PDF routes |
+| Browser / Chrome / Computer Use plugins | optional but useful | browser navigation, authenticated sessions, UI fallback |
+| `pdf` skill | optional but useful | selected-page rendering and PDF QA |
+| `wiki-query`, `wiki-ingest`, or `obsidian-wiki-ingest` | optional unless local KB integration is requested | existing knowledge-base lookup and Obsidian/RAG-style note integration |
+
+If a companion is unavailable, record it in `00_controller/dependency_setup.md` and use the documented fallback path. Do not silently pretend that an unavailable companion was used.
+
+### 3. Choose the Controller Console
 
 Before starting a long workflow, explicitly tell one Codex session that it is the Controller Console.
 
@@ -120,7 +137,7 @@ Rules:
 Start by creating or updating the controller workspace records, dependency setup record, session registry, and first small dispatch plan.
 ```
 
-### 3. Initialize controller records in the target literature project
+### 4. Initialize controller records in the target literature project
 
 Run this from the skill repository:
 
@@ -139,7 +156,7 @@ This creates:
 - source/download/Zotero/ingest manifests
 - handoff and status files
 
-### 4. Answer the startup scope questions
+### 5. Answer the startup scope questions
 
 Before any search, download, Zotero, Obsidian, or PDF-reading work, the Controller Console must ask the user to confirm:
 
@@ -157,7 +174,7 @@ Before any search, download, Zotero, Obsidian, or PDF-reading work, the Controll
 
 Record these answers in `00_controller/project_profile.md` and set `user_scope_confirmed: true` before dispatching specialist work.
 
-### 5. Keep forced local Git checkpoints
+### 6. Keep forced local Git checkpoints
 
 For long workflows, Git checkpointing is mandatory. The Controller Console must create a local commit:
 
@@ -167,7 +184,7 @@ For long workflows, Git checkpointing is mandatory. The Controller Console must 
 
 Checkpoint commits are local recovery points. The controller must inspect `git status`, run a privacy scan over intended text files, stage explicit safe paths only, and record the result in `00_controller/git_checkpoints.md`. It must not use `git add .`, and it must never push to GitHub unless the user separately asks for that.
 
-### 6. Fill in dependency status before long work
+### 7. Fill in dependency status before long work
 
 Open the generated `00_controller/dependency_setup.md` and record what is available:
 
@@ -180,7 +197,7 @@ Open the generated `00_controller/dependency_setup.md` and record what is availa
 - Browser, Chrome, and Computer Use tools: source navigation and authorized download mechanics.
 - `codex-literature` Python environment and `env_check.py` output.
 
-### 7. Dispatch small batches
+### 8. Dispatch small batches
 
 The controller should dispatch bounded tasks, wait for durable handoff output, review, checkpoint, then route the next phase. A typical first batch is 3-5 short papers or 1-2 long reports/theses.
 

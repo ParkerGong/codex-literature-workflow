@@ -20,6 +20,27 @@ For paper discovery and screening, the default hierarchy is:
 
 `research-paper-writing` and `dissertation-spine` are writing, argument, chapter, and evidence-maturity skills. Do not use them as default paper-discovery tools.
 
+## Recommended Install Or Enable Checklist
+
+During setup, the Controller Console should explicitly recommend installing or enabling the companions that match the user's requested workflow. Record the status in `00_controller/dependency_setup.md`.
+
+| Companion | Setup recommendation | Required when | Fallback if missing |
+| --- | --- | --- | --- |
+| `academic-research-suite` | install/enable first | any external literature discovery or screening | generic screening rubric, but mark ARS unavailable |
+| `research-lr-ra` | install/enable as auxiliary only | legacy LR workflow or narrow research-gap mapping | skip unless the controller explicitly needs it |
+| `zotero:Zotero` plugin/connector | enable before Zotero phases | Zotero lookup/import/export/verification requested | mark Zotero pending/manual |
+| `zotero-linked-attachments` | install/enable before linked-file phases | PDF/MD linked-file attachments requested | record pending/manual attachment |
+| `sciencedirect-live-session-fetcher` from `Given-Dream/sciencedirect-live-session-fetcher` | install before authorized-browser publisher download tests | `access_mode=authorized-browser` and publisher route fits | Chrome control, Computer Use once, then manual-user |
+| Browser / Chrome / Computer Use plugins | enable when browser/session access is needed | authenticated browsing, visible UI fallback, or manual verification | stop for user/manual action |
+| `pdf` skill | enable when selected visual checks or PDF QA matter | figure/table/page-render evidence needed | text-only reading plus TODO for visual evidence |
+| `wiki-query`, `wiki-ingest`, or `obsidian-wiki-ingest` | install/enable only when local KB/Obsidian integration is requested | existing KB lookup or Obsidian/RAG note output | file-first Markdown notes with pending KB integration |
+
+Suggested setup prompt for a new Codex session:
+
+```text
+Before running codex-literature-workflow, check whether these companions are installed or enabled: academic-research-suite, research-lr-ra, zotero:Zotero, zotero-linked-attachments, sciencedirect-live-session-fetcher, Browser/Chrome/Computer Use, pdf, and local wiki/Obsidian helpers. Recommend installation for missing companions that match the requested workflow, then record ready/pending/unavailable status in 00_controller/dependency_setup.md. Do not begin long literature work until the missing-dependency fallback is explicit.
+```
+
 ## Python Environment
 
 Recommended permanent non-venv environment:

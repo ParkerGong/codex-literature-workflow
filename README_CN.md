@@ -70,7 +70,24 @@ python3 -m pip install -r requirements.txt
 python3 scripts/env_check.py --json
 ```
 
-### 2. 指定总控台 session
+### 2. 安装或启用 companion skills/plugins
+
+正式测试前，先让 Codex 安装或启用与你要测试的流程匹配的外部 skills/plugins：
+
+| Companion | 推荐状态 | 用途 |
+| --- | --- | --- |
+| `academic-research-suite` | 强烈推荐 | 默认文献发现、筛选策略、query expansion、引用/完整性检查 |
+| `research-lr-ra` | 可选辅助 | ARS 不可用或某个窄 LR 子任务更适合时，用于旧 LR 支持和 research-gap mapping |
+| `zotero:Zotero` plugin/connector | 需要 Zotero 输出时启用 | 本地 Zotero 查询、导入/导出、collection 和验证 |
+| `zotero-linked-attachments` | 需要 Zotero linked files 时启用 | 把本地 PDF/MD 作为 Zotero linked-file 附件 |
+| 来自 `Given-Dream/sciencedirect-live-session-fetcher` 的 `sciencedirect-live-session-fetcher` | 可选；授权浏览器下载测试时推荐 | 复用 live authorized browser session 获取出版社 PDF |
+| Browser / Chrome / Computer Use plugins | 可选但很有用 | 浏览器导航、认证 session、UI fallback |
+| `pdf` skill | 可选但很有用 | 选页渲染和 PDF QA |
+| `wiki-query`、`wiki-ingest` 或 `obsidian-wiki-ingest` | 需要本地 KB 集成时启用 | 已有知识库查询与 Obsidian/RAG 风格笔记接入 |
+
+如果某个 companion 不可用，把状态记录到 `00_controller/dependency_setup.md`，并走文档中的 fallback 路径。不要假装已经使用了不可用的 companion。
+
+### 3. 指定总控台 session
 
 长任务开始前，先明确告诉一个 Codex session：你是总控台。
 
@@ -120,7 +137,7 @@ Rules:
 Start by creating or updating the controller workspace records, dependency setup record, session registry, and first small dispatch plan.
 ```
 
-### 3. 初始化目标项目的 controller records
+### 4. 初始化目标项目的 controller records
 
 在本 skill 仓库中运行：
 
@@ -139,7 +156,7 @@ python3 scripts/init_workspace.py --root /path/to/literature/project
 - source/download/Zotero/ingest manifests
 - handoff 和状态文件
 
-### 4. 回答启动前 scope 问题
+### 5. 回答启动前 scope 问题
 
 在任何检索、下载、Zotero、Obsidian 或 PDF 精读开始前，总控台必须向用户确认：
 
@@ -157,7 +174,7 @@ python3 scripts/init_workspace.py --root /path/to/literature/project
 
 把这些答案记录到 `00_controller/project_profile.md`，并在派发 specialist 工作前设置 `user_scope_confirmed: true`。
 
-### 5. 强制定期本地 Git checkpoint
+### 6. 强制定期本地 Git checkpoint
 
 长任务默认必须做 Git checkpoint。总控台需要创建本地 commit：
 
@@ -167,7 +184,7 @@ python3 scripts/init_workspace.py --root /path/to/literature/project
 
 checkpoint commit 是本地恢复点，不等于 push 到 GitHub。总控台必须检查 `git status`，对准备提交的文本文件做隐私扫描，只 stage 明确安全的路径，并把结果记录到 `00_controller/git_checkpoints.md`。不要使用 `git add .`，除非用户另行明确要求，否则绝不自动 push。
 
-### 6. 长任务前填写依赖状态
+### 7. 长任务前填写依赖状态
 
 打开生成的 `00_controller/dependency_setup.md`，记录这些依赖是否可用：
 
@@ -180,7 +197,7 @@ checkpoint commit 是本地恢复点，不等于 push 到 GitHub。总控台必�
 - Browser、Chrome、Computer Use：浏览和授权下载机制。
 - `codex-literature` Python 环境和 `env_check.py` 输出。
 
-### 7. 小批量派发
+### 8. 小批量派发
 
 总控台应该派发小批量任务，等待 durable handoff，审查、checkpoint 后再进入下一阶段。第一批建议是 3-5 篇短论文，或 1-2 篇长报告/学位论文。
 
