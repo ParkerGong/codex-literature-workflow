@@ -9,6 +9,10 @@ Agent-native literature workflow for Codex, Zotero, and Obsidian.
 
 **English** | [简体中文](README_CN.md)
 
+## Public Interest Statement
+
+This is a public-interest project for people who want to use Codex for literature management, connect Zotero for easier reading, and build a private Obsidian knowledge base, but do not know where to start. It provides only the most basic workflow idea. Many steps in this workflow are still token-expensive and need optimization, so please do **not** treat this project as authoritative canon.
+
 `codex-literature-workflow` is an early-stage Codex skill for turning a small research direction into a supervised literature workflow: discover papers, screen sources, legally or manually acquire PDFs, register local files, connect them to Zotero, perform PDF-first reading, and build Obsidian/RAG-ready local knowledge notes.
 
 The project exists because agent-led literature work has many sharp edges: source provenance gets lost, browser snippets become false evidence, PDFs are misidentified, Zotero attachments silently become URL fields, Obsidian notes drift away from page evidence, and long Codex conversations lose state. This skill packages a controller-led process to make those failure modes visible and recoverable.

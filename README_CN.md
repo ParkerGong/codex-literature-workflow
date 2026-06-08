@@ -9,6 +9,10 @@
 
 [English](README.md) | **简体中文**
 
+## 公益声明
+
+本项目是公益性质的，旨在为想用 Codex 进行文献管理、连接 Zotero 方便阅读、制作 Obsidian 私人知识库，但不知道如何开始的朋友，提供一个最最基础的工作流。此工作流只是提供思路，项目里面存在很多十分消耗 token 的环节都需优化，因此请不要把这个项目“奉为圣旨”。
+
 `codex-literature-workflow` 是一个早期阶段的 Codex skill，用来把一个小研究方向组织成可恢复、可审计的文献流程：找文献、筛选、合法或授权下载 PDF、本地登记、接入 Zotero、PDF-first 精读，并生成 Obsidian/RAG-ready 的本地知识库笔记。
 
 这个项目的出发点很朴素：让 Codex 能围绕一个小方向构建起 Obsidian 文献库，并接入 Zotero，方便研究者继续自己阅读、校对和扩展。因为 Codex 做文献流程时很容易踩坑，比如来源记录丢失、浏览器摘要被误当成论文事实、PDF 下载错、Zotero 附件只写成 URL、Obsidian 笔记脱离页码证据、长对话状态丢失，所以这里把流程拆成“总控台 + 固定 specialist session + durable Markdown 记录”。
