@@ -1,0 +1,6 @@
+pypdf
+pdfplumber
+pymupdf
+pillow
+requests
+beautifulsoup4

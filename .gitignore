@@ -1,0 +1,32 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local environment
+.env
+.env.*
+!.env.example
+.venv/
+venv/
+
+# Generated workflow artifacts
+00_controller/
+tmp/
+outputs/
+downloads/
+pdfs/
+papers/
+texts/
+renders/
+probe_report.json
+*.log
+
+# Literature files should be attached or referenced locally, not committed.
+*.pdf

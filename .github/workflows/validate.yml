@@ -1,0 +1,28 @@
+name: Validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile helper scripts
+        run: python3 -m py_compile scripts/*.py
+
+      - name: Validate eval JSON
+        run: python3 -m json.tool evals/evals.json >/dev/null
+
+      - name: Run environment report
+        run: python3 scripts/env_check.py --json
