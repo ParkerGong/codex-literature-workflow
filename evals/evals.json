@@ -42,6 +42,12 @@
       "prompt": "Initialize a controller workspace for a mixed literature workflow. Do not search yet. Record the recommended dependency setup, default research companion, auxiliary LR companion, and permanent Python environment recommendation.",
       "expected_output": "Controller records include dependency_setup.md; academic-research-suite is the default research companion for discovery/screening; research-lr-ra is auxiliary/fallback only; environment.yml/requirements.txt and env_check.py are recommended for the permanent codex-lit Python environment; long search/download work is deferred until dependency status is recorded.",
       "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "Initialize codex-obsidian-read for a long Zotero and Obsidian literature workflow. Require the user to designate a Controller Console session, attach a goal, create or reuse LiteratureAgent, ZoteroAgent, and ObsidianAgent sessions as needed, then stop before doing discovery.",
+      "expected_output": "Initialization records include Controller Console designation, goal status or goal prompt, specialist session plan, session_registry.md entries, dependency_setup.md, and a first dispatch plan. No long search, download, Zotero, or Obsidian work begins until controller and required specialist sessions are recorded.",
+      "files": []
     }
   ]
 }

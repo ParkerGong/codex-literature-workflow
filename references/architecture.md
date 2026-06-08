@@ -12,6 +12,8 @@ This workflow is controller-mediated. The controller keeps the global state smal
 | ObsidianAgent | PDF-first reading, selective visual checks, notes, concepts, source registry, batch report | web discovery, Zotero database writes, controller acceptance |
 | User | research direction, login/CAPTCHA/payment/institutional consent, final approval | none |
 
+Before using these roles for a long task, designate one session as the Controller Console and attach the long-task goal. Read `initialization.md` for the exact setup sequence.
+
 Use existing long-running sessions when possible. Do not create a new session per paper or per small batch.
 
 ## Controller State Files

@@ -15,6 +15,8 @@ Every dispatch has a Markdown recording rule:
 # Controller Pre-Dispatch: <TASK_ID>
 
 - project_profile: <generic|dissertation-strict|custom>
+- controller_console: <thread/session id>
+- controller_goal_status: <active|not-needed|pending>
 - direction_source:
 - direction_docs:
 - collection_mapping_source:
@@ -42,6 +44,7 @@ Every dispatch has a Markdown recording rule:
 ```
 
 Do not dispatch a new long batch when the previous batch is still `Working` or `Waiting review`.
+Do not dispatch any long batch until one session is explicitly designated as the Controller Console and the required specialist session is created or recorded.
 
 ## LiteratureAgent Dispatch
 

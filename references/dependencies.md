@@ -2,6 +2,8 @@
 
 Use this reference during project initialization, before long source discovery, download, Zotero, or Obsidian/RAG batches. The controller should record dependency status in `00_controller/dependency_setup.md`.
 
+Read `initialization.md` first so one session is designated as the Controller Console before dependency checks and specialist dispatches.
+
 ## Skill Routing Dependencies
 
 For paper discovery and screening, the default hierarchy is:

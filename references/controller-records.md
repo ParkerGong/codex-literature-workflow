@@ -6,6 +6,7 @@ Long literature workflows drift when state lives only in chat. Before dispatchin
 
 | File | Purpose | Owner |
 | --- | --- | --- |
+| `00_controller/initialization.md` | Controller Console designation, goal status, and specialist session creation plan | Controller |
 | `00_controller/project_profile.md` | selected profile, options, host-project policy overrides | Controller |
 | `00_controller/controller_worklog.md` | chronological controller decisions, dispatches, acceptance, and recovery notes | Controller |
 | `00_controller/agent_worklogs/<Agent>.md` | per-agent read/write/action ledger for context recovery | each fixed specialist |

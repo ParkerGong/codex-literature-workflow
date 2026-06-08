@@ -13,6 +13,7 @@ Identify the requested shape:
 
 | User asks for | Read |
 | --- | --- |
+| New project initialization, Controller Console, session topology, goal prompt | `references/initialization.md` |
 | Full pipeline, agent roles, fixed sessions, goal mode | `references/architecture.md` |
 | Project profile, strict Zotero/Obsidian defaults, host-project policy overrides | `references/project-profiles.md` |
 | Controller kanban, durable Markdown task records, anti-drift status files | `references/controller-records.md` |
@@ -26,10 +27,12 @@ Identify the requested shape:
 | Where this workflow borrows ideas from | `references/provenance-and-companion-skills.md` |
 | Testing the skill on a small batch | `references/test-plan.md` |
 
-If the user only wants one phase, load only the relevant reference. If the user wants the full workflow, load `architecture.md`, `dependencies.md`, `environment.md`, and the relevant optional references.
+If the user only wants one phase, load only the relevant reference. If the user wants the full workflow, load `initialization.md`, `architecture.md`, `dependencies.md`, `environment.md`, and the relevant optional references.
 
 ## Skill Routing Defaults
 
+- A long workflow must begin by explicitly naming one session as the Controller Console. The controller owns the goal, records, specialist-session routing, and final acceptance.
+- The Controller Console must create or reuse fixed specialist sessions. If a required specialist session does not exist, create it or ask the user to create it, then record the thread/session ID in `session_registry.md`.
 - For external paper discovery, literature review planning, query expansion, citation/integrity checks, and research-question convergence, use `academic-research-suite` as the default research companion.
 - Use `research-lr-ra` only as an auxiliary or legacy literature-review assistant when ARS is unavailable, explicitly requested, or a narrow LR subtask is better served by its local workflow.
 - Use this skill as the controller for end-to-end work that continues from discovery into screening, authorized download, local registration, Zotero linked-file attachment, PDF-first reading, and Obsidian/RAG-ready notes.
@@ -57,6 +60,8 @@ Before dispatching, set these options explicitly in the controller note:
 | Option | Values | Default |
 | --- | --- | --- |
 | `project_profile` | `generic`, `dissertation-strict`, custom profile name | `generic` |
+| `controller_console` | current session ID or `pending` | required before long work |
+| `long_task_goal` | active goal text or `not-needed` | required for long workflows |
 | `direction_source` | `local-docs`, `user-prompt`, `agent-generated` | ask at start for full/strict runs |
 | `collection_mapping_source` | `local-docs`, `user-prompt`, `agent-proposed`, `none` | ask at start when Zotero/Obsidian grouping matters |
 | `research_companion_default` | `academic-research-suite` | `academic-research-suite` |
@@ -77,16 +82,17 @@ Read `references/project-profiles.md` before using a non-generic profile. A stri
 
 ## Phase Map
 
-1. **Profile and scope gate**: create or reuse a controller task ID; choose `project_profile`; define topic/direction, source input mode, whether downloads are enabled, language, inclusion/exclusion rules, optional or required Zotero/Obsidian outputs, allowed writes, forbidden paths, quota/process/temp policies, and acceptance criteria.
-2. **Controller and agent records**: initialize or update Markdown state files before any long work: controller worklog, per-agent worklogs, kanban, session registry, dispatch log, dependency setup, source manifest, download log, ingest queue/status, and per-task handoff.
-3. **Dependency and environment check**: read `references/dependencies.md`; recommend the permanent `codex-lit` environment from `environment.yml`; run `scripts/env_check.py`; record companion-skill and Python/CLI readiness before long batches.
-4. **Source intake**: if `source_input_mode=local-library`, register existing PDFs and skip download; if `mixed`, register local PDFs first, then search only for gaps.
-5. **Search and screening when needed**: use `academic-research-suite` by default for literature discovery, query expansion, and screening strategy; use `research-lr-ra` only as an auxiliary/fallback; produce a dated candidate table with query strings, sources, URLs/DOIs, access route, relevance score, and exclusion reasons.
-6. **Optional acquisition and local registration**: only when `download_enabled=true`, download legal/authorized PDFs. For authenticated publisher pages, prefer `sciencedirect-live-session-fetcher` with one live authorized browser session before generic Chrome/Computer Use fallback; verify title/body/pages; write a manifest row and mark bad PDFs honestly.
-7. **Optional Zotero**: create or locate parent items, attach PDFs/MD notes as linked files, and verify via API or logged Zotero Desktop Run JavaScript results.
-8. **PDF-first reading**: extract text; classify reading level; render only selected claim-bearing pages; record visual evidence or TODO.
-9. **Optional Obsidian/RAG ingest**: create source records, literature notes, concept/claim updates if directly supported, and a batch report.
-10. **Controller acceptance**: check files, provenance, duplicate handling, temp cleanup, and status consistency; only the controller marks output accepted.
+1. **Controller and goal gate**: explicitly designate the Controller Console; for long workflows, attach the recommended goal prompt from `references/initialization.md`; create or reuse fixed specialist sessions and record them.
+2. **Profile and scope gate**: create or reuse a controller task ID; choose `project_profile`; define topic/direction, source input mode, whether downloads are enabled, language, inclusion/exclusion rules, optional or required Zotero/Obsidian outputs, allowed writes, forbidden paths, quota/process/temp policies, and acceptance criteria.
+3. **Controller and agent records**: initialize or update Markdown state files before any long work: controller worklog, per-agent worklogs, kanban, session registry, dispatch log, dependency setup, source manifest, download log, ingest queue/status, and per-task handoff.
+4. **Dependency and environment check**: read `references/dependencies.md`; recommend the permanent `codex-lit` environment from `environment.yml`; run `scripts/env_check.py`; record companion-skill and Python/CLI readiness before long batches.
+5. **Source intake**: if `source_input_mode=local-library`, register existing PDFs and skip download; if `mixed`, register local PDFs first, then search only for gaps.
+6. **Search and screening when needed**: use `academic-research-suite` by default for literature discovery, query expansion, and screening strategy; use `research-lr-ra` only as an auxiliary/fallback; produce a dated candidate table with query strings, sources, URLs/DOIs, access route, relevance score, and exclusion reasons.
+7. **Optional acquisition and local registration**: only when `download_enabled=true`, download legal/authorized PDFs. For authenticated publisher pages, prefer `sciencedirect-live-session-fetcher` with one live authorized browser session before generic Chrome/Computer Use fallback; verify title/body/pages; write a manifest row and mark bad PDFs honestly.
+8. **Optional Zotero**: create or locate parent items, attach PDFs/MD notes as linked files, and verify via API or logged Zotero Desktop Run JavaScript results.
+9. **PDF-first reading**: extract text; classify reading level; render only selected claim-bearing pages; record visual evidence or TODO.
+10. **Optional Obsidian/RAG ingest**: create source records, literature notes, concept/claim updates if directly supported, and a batch report.
+11. **Controller acceptance**: check files, provenance, duplicate handling, temp cleanup, and status consistency; only the controller marks output accepted.
 
 ## Required Handoff Shape
 
@@ -114,6 +120,8 @@ Every phase must leave a durable handoff:
 
 Stop and ask the controller or user when:
 
+- no Controller Console has been explicitly designated for long work;
+- the active controller cannot create or record required fixed specialist sessions;
 - no legal/authorized PDF is available;
 - the PDF is wrong, incomplete, encrypted, scan-only without OCR, or mostly unreadable;
 - browser access requires login, CAPTCHA, payment, or institutional consent not yet granted; for IEEE/ScienceDirect-style authorized routes, first verify whether the live browser already shows institutional access and a PDF button before treating personal sign-in as required;

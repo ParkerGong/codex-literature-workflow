@@ -12,7 +12,9 @@ FILES = {
 - project_profile: generic
 - task_id: TBD
 - selected_at: TBD
-- controller: TBD
+- controller_console: TBD
+- controller_thread_id: TBD
+- long_task_goal: pending for long workflows
 - language_scope: both
 - direction_source: TBD
 - direction_docs: TBD
@@ -147,14 +149,75 @@ FILES = {
 | Task ID | Accepted outputs | Evidence notes |
 | --- | --- | --- |
 """,
+    "00_controller/initialization.md": """# Initialization
+
+## Controller Console
+
+- controller_console:
+- controller_thread_id:
+- controller_goal_status: pending | active | not-needed
+- controller_goal_text:
+- initialized_at:
+- initialized_by:
+
+## Required Rule
+
+One session must be explicitly designated as the Controller Console before long work starts. The Controller Console owns goal, scope, records, dependency setup, specialist-session routing, and final acceptance.
+
+## Specialist Session Plan
+
+| Session | Needed | Thread ID | Status | Creation action | Notes |
+| --- | --- | --- | --- | --- | --- |
+| LiteratureAgent | yes | TBD | missing | create or reuse before search/intake | default research companion: academic-research-suite |
+| ZoteroAgent | when zotero_enabled=true | TBD | missing | create/reuse only if Zotero enabled | use Zotero plugin/MCP and linked attachments |
+| ObsidianAgent | when obsidian_enabled=true | TBD | missing | create/reuse only if Obsidian/RAG enabled | write only approved vault/project paths |
+
+## Recommended Controller Prompt
+
+```text
+You are the Controller Console for codex-obsidian-read.
+Do not do all work yourself.
+Initialize controller records, verify dependencies, choose or create fixed specialist sessions, then dispatch small bounded tasks.
+Use academic-research-suite as the default literature discovery/screening companion.
+Use research-lr-ra only as auxiliary/fallback.
+Only the Controller Console may mark outputs accepted.
+```
+
+## Recommended Long-Task Goal Prompt
+
+```text
+Goal: Build a source-grounded Zotero and Obsidian-ready literature workspace for <TOPIC_OR_DIRECTION>.
+
+You are the Controller Console for codex-obsidian-read.
+
+Rules:
+- Keep this session as the only controller and acceptance owner.
+- Do not perform every phase yourself unless a phase is tiny.
+- Create or reuse fixed specialist sessions:
+  - LiteratureAgent for ARS-led search, screening, legal/authorized acquisition, and source manifests.
+  - ZoteroAgent for Zotero parent items, collections, linked PDF/MD attachments, and verification.
+  - ObsidianAgent for PDF-first reading, selected visual checks, and Obsidian/RAG-ready notes.
+- If a specialist session does not exist, create it or ask the user to create it, then record the thread/session ID.
+- Before any long batch, initialize controller records and dependency_setup.md.
+- Use academic-research-suite as the default research companion for literature discovery and screening.
+- Use research-lr-ra only as auxiliary/fallback when ARS is unavailable or a narrow LR task fits it better.
+- Do not bypass paywalls, logins, CAPTCHAs, or institutional access controls.
+- Do not write zotero.sqlite directly.
+- Do not claim paper facts from snippets or model memory.
+- Every phase must write a durable handoff and update its worklog.
+- Stop at Waiting review for specialist outputs; controller acceptance is separate.
+
+Start by creating or updating the controller workspace records, dependency setup record, session registry, and first small dispatch plan.
+```
+""",
     "00_controller/session_registry.md": """# Session Registry
 
 | Session name | Thread ID | Role | Status | Main artifacts | Next use |
 | --- | --- | --- | --- | --- | --- |
-| Controller | TBD | Controller | active | controller files | route and accept tasks |
-| LiteratureAgent | TBD | Literature | idle | candidate/source/download manifests | search and acquisition; default research companion is academic-research-suite; research-lr-ra is auxiliary/fallback |
-| ZoteroAgent | TBD | Zotero | idle | zotero_link_index, verification | parent items and attachments |
-| ObsidianAgent | TBD | Obsidian | idle | notes, ingest reports | PDF-first notes |
+| Controller Console | TBD | Controller | active after explicit designation | controller files, goal, dispatch log | route and accept tasks |
+| LiteratureAgent | TBD | Literature | missing until created/reused | candidate/source/download manifests | search and acquisition; default research companion is academic-research-suite; research-lr-ra is auxiliary/fallback |
+| ZoteroAgent | TBD | Zotero | optional missing | zotero_link_index, verification | parent items and attachments |
+| ObsidianAgent | TBD | Obsidian | optional missing | notes, ingest reports | PDF-first notes |
 """,
     "00_controller/dependency_setup.md": """# Dependency Setup
 
