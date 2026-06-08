@@ -285,16 +285,16 @@ Start by creating or updating the controller workspace records, dependency setup
 
 Before long work, recommend installing or enabling companions that match the requested workflow:
 
-| Companion | Setup recommendation | Required when | Fallback if missing |
-| --- | --- | --- | --- |
-| academic-research-suite | install/enable first | external literature discovery or screening | generic screening rubric; mark ARS unavailable |
-| research-lr-ra | install/enable as auxiliary only | legacy LR workflow or narrow research-gap mapping | skip unless explicitly needed |
-| zotero:Zotero plugin/connector | enable before Zotero phases | Zotero lookup/import/export/verification requested | mark Zotero pending/manual |
-| zotero-linked-attachments | install/enable before linked-file phases | PDF/MD linked-file attachments requested | record pending/manual attachment |
-| sciencedirect-live-session-fetcher | install before authorized-browser publisher download tests | access_mode=authorized-browser and publisher route fits | Chrome control, Computer Use once, then manual-user |
-| Browser / Chrome / Computer Use plugins | enable when browser/session access is needed | authenticated browsing, visible UI fallback, or manual verification | stop for user/manual action |
-| pdf skill | enable when selected visual checks or PDF QA matter | figure/table/page-render evidence needed | text-only reading plus TODO for visual evidence |
-| wiki-query / wiki-ingest / obsidian-wiki-ingest | install/enable only when local KB/Obsidian integration is requested | existing KB lookup or Obsidian/RAG output | file-first Markdown notes with pending KB integration |
+| Companion | Setup recommendation | Origin/source URL | Required when | Fallback if missing |
+| --- | --- | --- | --- | --- |
+| academic-research-suite | install/enable first | Codex adapter: https://github.com/Imbad0202/academic-research-skills-codex ; upstream suite: https://github.com/Imbad0202/academic-research-skills | external literature discovery or screening | generic screening rubric; mark ARS unavailable |
+| research-lr-ra | install/enable as auxiliary only | no public upstream URL confirmed; treat as local/private unless published | legacy LR workflow or narrow research-gap mapping | skip unless explicitly needed |
+| zotero:Zotero plugin/connector | enable before Zotero phases | OpenAI/Codex plugin capability: https://help.openai.com/en/articles/20001256 | Zotero lookup/import/export/verification requested | mark Zotero pending/manual |
+| zotero-linked-attachments | install/enable before linked-file phases | no public upstream URL confirmed; treat as local/private unless published | PDF/MD linked-file attachments requested | record pending/manual attachment |
+| sciencedirect-live-session-fetcher | install before authorized-browser publisher download tests | https://github.com/Given-Dream/sciencedirect-live-session-fetcher | access_mode=authorized-browser and publisher route fits | Chrome control, Computer Use once, then manual-user |
+| Browser / Chrome / Computer Use plugins | enable when browser/session access is needed | OpenAI/Codex plugin capabilities: https://help.openai.com/en/articles/20001256 | authenticated browsing, visible UI fallback, or manual verification | stop for user/manual action |
+| pdf skill | enable when selected visual checks or PDF QA matter | bundled/local Codex skill; no separate public upstream URL confirmed | figure/table/page-render evidence needed | text-only reading plus TODO for visual evidence |
+| wiki-query / wiki-ingest / obsidian-wiki-ingest | install/enable only when local KB/Obsidian integration is requested | examples to verify before install: https://github.com/Ar9av/obsidian-wiki ; https://github.com/AgriciDaniel/claude-obsidian | existing KB lookup or Obsidian/RAG output | file-first Markdown notes with pending KB integration |
 
 Record:
 

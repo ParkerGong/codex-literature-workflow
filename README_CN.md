@@ -74,16 +74,16 @@ python3 scripts/env_check.py --json
 
 正式测试前，先让 Codex 安装或启用与你要测试的流程匹配的外部 skills/plugins：
 
-| Companion | 推荐状态 | 用途 |
-| --- | --- | --- |
-| `academic-research-suite` | 强烈推荐 | 默认文献发现、筛选策略、query expansion、引用/完整性检查 |
-| `research-lr-ra` | 可选辅助 | ARS 不可用或某个窄 LR 子任务更适合时，用于旧 LR 支持和 research-gap mapping |
-| `zotero:Zotero` plugin/connector | 需要 Zotero 输出时启用 | 本地 Zotero 查询、导入/导出、collection 和验证 |
-| `zotero-linked-attachments` | 需要 Zotero linked files 时启用 | 把本地 PDF/MD 作为 Zotero linked-file 附件 |
-| 来自 `Given-Dream/sciencedirect-live-session-fetcher` 的 `sciencedirect-live-session-fetcher` | 可选；授权浏览器下载测试时推荐 | 复用 live authorized browser session 获取出版社 PDF |
-| Browser / Chrome / Computer Use plugins | 可选但很有用 | 浏览器导航、认证 session、UI fallback |
-| `pdf` skill | 可选但很有用 | 选页渲染和 PDF QA |
-| `wiki-query`、`wiki-ingest` 或 `obsidian-wiki-ingest` | 需要本地 KB 集成时启用 | 已有知识库查询与 Obsidian/RAG 风格笔记接入 |
+| Companion | 推荐状态 | 原始/来源 URL | 用途 |
+| --- | --- | --- | --- |
+| `academic-research-suite` | 强烈推荐 | Codex adapter: <https://github.com/Imbad0202/academic-research-skills-codex>；upstream suite: <https://github.com/Imbad0202/academic-research-skills> | 默认文献发现、筛选策略、query expansion、引用/完整性检查 |
+| `research-lr-ra` | 可选辅助 | 尚未确认公开 upstream URL；除非维护者发布，否则按本地/私有 skill 处理 | ARS 不可用或某个窄 LR 子任务更适合时，用于旧 LR 支持和 research-gap mapping |
+| `zotero:Zotero` plugin/connector | 需要 Zotero 输出时启用 | OpenAI/Codex plugin capability；见 <https://help.openai.com/en/articles/20001256> | 本地 Zotero 查询、导入/导出、collection 和验证 |
+| `zotero-linked-attachments` | 需要 Zotero linked files 时启用 | 尚未确认公开 upstream URL；除非维护者发布，否则按本地/私有 skill 处理 | 把本地 PDF/MD 作为 Zotero linked-file 附件 |
+| 来自 `Given-Dream/sciencedirect-live-session-fetcher` 的 `sciencedirect-live-session-fetcher` | 可选；授权浏览器下载测试时推荐 | <https://github.com/Given-Dream/sciencedirect-live-session-fetcher> | 复用 live authorized browser session 获取出版社 PDF |
+| Browser / Chrome / Computer Use plugins | 可选但很有用 | OpenAI/Codex plugin capabilities；见 <https://help.openai.com/en/articles/20001256> | 浏览器导航、认证 session、UI fallback |
+| `pdf` skill | 可选但很有用 | bundled/local Codex skill；尚未确认独立公开 upstream URL | 选页渲染和 PDF QA |
+| `wiki-query`、`wiki-ingest` 或 `obsidian-wiki-ingest` | 需要本地 KB 集成时启用 | 安装前需核验的公开示例：<https://github.com/Ar9av/obsidian-wiki>、<https://github.com/AgriciDaniel/claude-obsidian> | 已有知识库查询与 Obsidian/RAG 风格笔记接入 |
 
 如果某个 companion 不可用，把状态记录到 `00_controller/dependency_setup.md`，并走文档中的 fallback 路径。不要假装已经使用了不可用的 companion。
 

@@ -74,16 +74,16 @@ python3 scripts/env_check.py --json
 
 Before a real test run, ask Codex to install or enable the companion skills/plugins that match the workflow you want to test:
 
-| Companion | Recommended status | Used for |
-| --- | --- | --- |
-| `academic-research-suite` | strongly recommended | default literature discovery, screening strategy, query expansion, citation/integrity checks |
-| `research-lr-ra` | optional auxiliary | legacy LR support and narrow research-gap mapping when ARS is unavailable or explicitly better |
-| `zotero:Zotero` plugin/connector | optional unless Zotero output is requested | local Zotero lookup, import/export, collections, verification |
-| `zotero-linked-attachments` | optional unless Zotero linked files are requested | attach local PDF/MD files as Zotero linked-file attachments |
-| `sciencedirect-live-session-fetcher` from `Given-Dream/sciencedirect-live-session-fetcher` | optional; recommended for authorized-browser publisher download tests | reuse a live authorized browser session for publisher PDF routes |
-| Browser / Chrome / Computer Use plugins | optional but useful | browser navigation, authenticated sessions, UI fallback |
-| `pdf` skill | optional but useful | selected-page rendering and PDF QA |
-| `wiki-query`, `wiki-ingest`, or `obsidian-wiki-ingest` | optional unless local KB integration is requested | existing knowledge-base lookup and Obsidian/RAG-style note integration |
+| Companion | Recommended status | Origin/source URL | Used for |
+| --- | --- | --- | --- |
+| `academic-research-suite` | strongly recommended | Codex adapter: <https://github.com/Imbad0202/academic-research-skills-codex>; upstream suite: <https://github.com/Imbad0202/academic-research-skills> | default literature discovery, screening strategy, query expansion, citation/integrity checks |
+| `research-lr-ra` | optional auxiliary | no public upstream URL confirmed; treat as local/private unless the maintainer publishes it | legacy LR support and narrow research-gap mapping when ARS is unavailable or explicitly better |
+| `zotero:Zotero` plugin/connector | optional unless Zotero output is requested | OpenAI/Codex plugin capability; see <https://help.openai.com/en/articles/20001256> | local Zotero lookup, import/export, collections, verification |
+| `zotero-linked-attachments` | optional unless Zotero linked files are requested | no public upstream URL confirmed; treat as local/private unless the maintainer publishes it | attach local PDF/MD files as Zotero linked-file attachments |
+| `sciencedirect-live-session-fetcher` from `Given-Dream/sciencedirect-live-session-fetcher` | optional; recommended for authorized-browser publisher download tests | <https://github.com/Given-Dream/sciencedirect-live-session-fetcher> | reuse a live authorized browser session for publisher PDF routes |
+| Browser / Chrome / Computer Use plugins | optional but useful | OpenAI/Codex plugin capabilities; see <https://help.openai.com/en/articles/20001256> | browser navigation, authenticated sessions, UI fallback |
+| `pdf` skill | optional but useful | bundled/local Codex skill; no separate public upstream URL confirmed | selected-page rendering and PDF QA |
+| `wiki-query`, `wiki-ingest`, or `obsidian-wiki-ingest` | optional unless local KB integration is requested | examples to verify before install: <https://github.com/Ar9av/obsidian-wiki>, <https://github.com/AgriciDaniel/claude-obsidian> | existing knowledge-base lookup and Obsidian/RAG-style note integration |
 
 If a companion is unavailable, record it in `00_controller/dependency_setup.md` and use the documented fallback path. Do not silently pretend that an unavailable companion was used.
 
