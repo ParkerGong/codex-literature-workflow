@@ -14,6 +14,8 @@ PACKAGES = [
     "pillow",
     "requests",
     "beautifulsoup4",
+    "selenium",
+    "websocket-client",
 ]
 
 

@@ -42,7 +42,21 @@ Check the local environment:
 python3 scripts/env_check.py
 ```
 
-Create a dedicated temporary Python environment:
+Install the combined runtime requirements in a dedicated permanent Python interpreter:
+
+```bash
+python3 -m pip install -r requirements.txt
+```
+
+For a permanent non-`venv` environment with PDF command-line tools included, use `micromamba` or Miniforge:
+
+```bash
+micromamba env create -f environment.yml
+micromamba activate codex-lit
+python scripts/env_check.py
+```
+
+Create a dedicated temporary Python environment only when a host project wants isolation:
 
 ```bash
 python3 scripts/setup_env.py --venv /private/tmp/codex_obsidian_read_venv

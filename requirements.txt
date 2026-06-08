@@ -1,6 +1,14 @@
-pypdf
-pdfplumber
-pymupdf
-pillow
-requests
-beautifulsoup4
+# PDF text extraction, selected-page rendering, and image checks.
+pypdf>=4.3.0
+pdfplumber>=0.11.4
+pymupdf>=1.24.0
+pillow>=10.4.0
+
+# Metadata lookup and HTML parsing helpers.
+requests>=2.32.0
+beautifulsoup4>=4.12.0
+
+# Live authorized browser-session PDF fetching.
+# From Given-Dream/sciencedirect-live-session-fetcher requirements.txt.
+selenium>=4.28.0
+websocket-client>=1.8.0

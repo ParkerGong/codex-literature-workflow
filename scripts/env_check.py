@@ -15,6 +15,8 @@ PACKAGES = {
     "PIL": "Pillow",
     "requests": "requests",
     "bs4": "beautifulsoup4",
+    "selenium": "selenium",
+    "websocket": "websocket-client",
 }
 
 COMMANDS = ["pdftoppm", "pdftotext", "tesseract"]

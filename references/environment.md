@@ -2,7 +2,60 @@
 
 Always check the environment before search/download batches or PDF reading batches. Keep project repositories clean: put temporary environments, rendered pages, and text dumps outside the repo unless the user asks otherwise.
 
-## Dedicated Python Environment
+## Permanent Non-Venv Python Environment
+
+For repeated Codex literature work, prefer one dedicated, permanent named environment instead of creating a fresh project venv for every batch. This keeps browser-session fetching, PDF reading, rendering, Poppler/Tesseract command-line tools, and Zotero/Obsidian-adjacent helpers available from a stable path.
+
+Recommended pattern on macOS with `micromamba` or Miniforge:
+
+```bash
+micromamba create -n codex-lit -c conda-forge python=3.12 pip poppler tesseract
+micromamba activate codex-lit
+python3 -m pip install --upgrade pip setuptools wheel
+python3 -m pip install -r requirements.txt
+```
+
+Record the resulting interpreter path in host-project controller notes:
+
+```text
+python: ~/.local/share/mamba/envs/codex-lit/bin/python
+requirements: codex-obsidian-read/requirements.txt
+```
+
+If `micromamba` is not available and you want a strict non-`venv` layout, use a dedicated pyenv Python interpreter and install into that interpreter's own site-packages:
+
+```bash
+pyenv install 3.12.8
+pyenv shell 3.12.8
+python3 -m pip install --upgrade pip setuptools wheel
+python3 -m pip install -r requirements.txt
+pyenv prefix
+```
+
+Record that interpreter path explicitly:
+
+```text
+python: /Users/<user>/.pyenv/versions/3.12.8/bin/python
+requirements: codex-obsidian-read/requirements.txt
+```
+
+Avoid installing into macOS system Python. Homebrew Python may also reject global pip installs through externally managed environment protections; a dedicated pyenv interpreter is cleaner and easier to repair.
+
+## Requirements
+
+The combined Python requirements cover:
+
+- `sciencedirect-live-session-fetcher`: `selenium`, `websocket-client`.
+- PDF text and rendering: `pypdf`, `pdfplumber`, `pymupdf`, `pillow`.
+- Web metadata and parsing helpers: `requests`, `beautifulsoup4`.
+
+Install from the repository root:
+
+```bash
+python3 -m pip install -r requirements.txt
+```
+
+## Temporary Venv Fallback
 
 Recommended location:
 
@@ -18,19 +71,21 @@ Recommended packages:
 - `pillow`: image verification and compression.
 - `requests`: optional metadata/API calls.
 - `beautifulsoup4`: optional HTML metadata extraction.
+- `selenium`: visible browser automation for mixed-publisher routes.
+- `websocket-client`: Chrome/Edge DevTools remote-debugging attachment.
 
-Do not install globally by default. If dependency download is blocked by sandbox/network policy, ask for approval.
+Use this fallback when a host project explicitly wants an isolated disposable environment. If dependency download is blocked by sandbox/network policy, ask for approval.
 
-Create the environment with:
+Create a temporary environment with:
 
 ```bash
-python scripts/setup_env.py --venv /private/tmp/codex_obsidian_read_venv
+python3 scripts/setup_env.py --venv /private/tmp/codex_obsidian_read_venv
 ```
 
 Install recommended packages only when network/dependency installation is allowed:
 
 ```bash
-python scripts/setup_env.py --venv /private/tmp/codex_obsidian_read_venv --install
+python3 scripts/setup_env.py --venv /private/tmp/codex_obsidian_read_venv --install
 ```
 
 The setup script prints the Python and pip paths to use for later `env_check.py` and `pdf_probe.py` runs.
@@ -40,13 +95,13 @@ The setup script prints the Python and pip paths to use for later `env_check.py`
 Run:
 
 ```bash
-python scripts/env_check.py --json
+python3 scripts/env_check.py --json
 ```
 
 Expected checks:
 
 - Python version.
-- Import availability and versions for `pypdf`, `pdfplumber`, `fitz`, `PIL`, `requests`, `bs4`.
+- Import availability and versions for `pypdf`, `pdfplumber`, `fitz`, `PIL`, `requests`, `bs4`, `selenium`, and `websocket`.
 - CLI availability for `pdftoppm`, `pdftotext`, `tesseract`.
 - Writable temp directory.
 - Browser tools or GUI automation availability, if relevant in the host environment.
@@ -56,7 +111,7 @@ Expected checks:
 Use this for a single PDF or a small test batch:
 
 ```bash
-python scripts/pdf_probe.py paper.pdf --pages 1,3,9 --out /private/tmp/codex_obsidian_read_probe
+python3 scripts/pdf_probe.py paper.pdf --pages 1,3,9 --out /private/tmp/codex_obsidian_read_probe
 ```
 
 It should:
