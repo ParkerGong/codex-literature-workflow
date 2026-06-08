@@ -36,6 +36,12 @@
       "prompt": "Use codex-obsidian-read to acquire one authorized closed-source paper with download_enabled=true and closed_source_fallback=chrome-then-computer-use-once. Use authenticated Chrome if allowed; if Chrome gets stuck at verification, try Computer Use once, then stop and write the blocker if unresolved.",
       "expected_output": "Browser permission recorded, Chrome attempted before Computer Use, at most one Computer Use fallback recorded, unresolved verification marked captcha-blocked or manual-user, no private credential data stored, and any accepted PDF quality-checked.",
       "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "Initialize a controller workspace for a mixed literature workflow. Do not search yet. Record the recommended dependency setup, default research companion, auxiliary LR companion, and permanent Python environment recommendation.",
+      "expected_output": "Controller records include dependency_setup.md; academic-research-suite is the default research companion for discovery/screening; research-lr-ra is auxiliary/fallback only; environment.yml/requirements.txt and env_check.py are recommended for the permanent codex-lit Python environment; long search/download work is deferred until dependency status is recorded.",
+      "files": []
     }
   ]
 }

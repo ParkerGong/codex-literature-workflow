@@ -7,10 +7,17 @@ The skill is designed for long-running work where durable state matters: a contr
 ## What It Provides
 
 - A skill entry point in `SKILL.md`.
-- Workflow runbooks in `references/`.
+- Workflow runbooks in `references/`, including dependency setup and companion skill routing.
 - Python helper scripts in `scripts/` for environment checks, workspace scaffolding, dependency setup, and PDF probing.
 - Example eval prompts in `evals/evals.json`.
 - Agent metadata in `agents/openai.yaml`.
+
+## Research Skill Routing
+
+- Default paper discovery and screening companion: `academic-research-suite`.
+- Auxiliary/fallback LR companion: `research-lr-ra`.
+- End-to-end controller for discovery, download, local registration, Zotero, PDF-first reading, and Obsidian/RAG output: this skill.
+- Zotero, Obsidian/wiki, browser, Chrome, Computer Use, and `sciencedirect-live-session-fetcher` are integration/download helpers, not the default external paper-discovery authority.
 
 ## Repository Layout
 
@@ -21,9 +28,11 @@ The skill is designed for long-running work where durable state matters: a contr
 |   `-- openai.yaml
 |-- evals/
 |   `-- evals.json
+|-- environment.yml
 |-- references/
 |   |-- architecture.md
 |   |-- controller-records.md
+|   |-- dependencies.md
 |   |-- environment.md
 |   `-- ...
 |-- scripts/
@@ -53,7 +62,7 @@ For a permanent non-`venv` environment with PDF command-line tools included, use
 ```bash
 micromamba env create -f environment.yml
 micromamba activate codex-lit
-python scripts/env_check.py
+python3 scripts/env_check.py
 ```
 
 Create a dedicated temporary Python environment only when a host project wants isolation:
@@ -73,6 +82,8 @@ Initialize controller workspace records in a target project:
 ```bash
 python3 scripts/init_workspace.py --root /path/to/literature/project
 ```
+
+This writes `00_controller/dependency_setup.md`, which records recommended external skills, Python environment paths, and missing dependency status.
 
 Probe selected pages from a PDF:
 

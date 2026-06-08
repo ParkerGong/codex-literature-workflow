@@ -16,6 +16,7 @@ Identify the requested shape:
 | Full pipeline, agent roles, fixed sessions, goal mode | `references/architecture.md` |
 | Project profile, strict Zotero/Obsidian defaults, host-project policy overrides | `references/project-profiles.md` |
 | Controller kanban, durable Markdown task records, anti-drift status files | `references/controller-records.md` |
+| Dependency setup, companion skill hierarchy, permanent Python environment | `references/dependencies.md` |
 | Environment setup, Python, PDF text/render tooling | `references/environment.md` |
 | Topic/direction discovery, local PDF library intake, web search, open/closed PDF acquisition | `references/literature-acquisition.md` |
 | Zotero import or linked-file attachment | `references/zotero-optional.md` |
@@ -25,7 +26,14 @@ Identify the requested shape:
 | Where this workflow borrows ideas from | `references/provenance-and-companion-skills.md` |
 | Testing the skill on a small batch | `references/test-plan.md` |
 
-If the user only wants one phase, load only the relevant reference. If the user wants the full workflow, load `architecture.md`, `environment.md`, and the relevant optional references.
+If the user only wants one phase, load only the relevant reference. If the user wants the full workflow, load `architecture.md`, `dependencies.md`, `environment.md`, and the relevant optional references.
+
+## Skill Routing Defaults
+
+- For external paper discovery, literature review planning, query expansion, citation/integrity checks, and research-question convergence, use `academic-research-suite` as the default research companion.
+- Use `research-lr-ra` only as an auxiliary or legacy literature-review assistant when ARS is unavailable, explicitly requested, or a narrow LR subtask is better served by its local workflow.
+- Use this skill as the controller for end-to-end work that continues from discovery into screening, authorized download, local registration, Zotero linked-file attachment, PDF-first reading, and Obsidian/RAG-ready notes.
+- Use Zotero, Zotero linked-file, Obsidian/wiki, Browser, Chrome, Computer Use, and `sciencedirect-live-session-fetcher` for their integration phases; do not treat them as the default paper-discovery authority.
 
 ## Non-Negotiables
 
@@ -51,6 +59,8 @@ Before dispatching, set these options explicitly in the controller note:
 | `project_profile` | `generic`, `dissertation-strict`, custom profile name | `generic` |
 | `direction_source` | `local-docs`, `user-prompt`, `agent-generated` | ask at start for full/strict runs |
 | `collection_mapping_source` | `local-docs`, `user-prompt`, `agent-proposed`, `none` | ask at start when Zotero/Obsidian grouping matters |
+| `research_companion_default` | `academic-research-suite` | `academic-research-suite` |
+| `research_companion_auxiliary` | `research-lr-ra`, `none` | `research-lr-ra` |
 | `source_input_mode` | `local-library`, `search-and-download`, `mixed` | ask at start |
 | `download_enabled` | `true`, `false` | `false` for `local-library`, ask otherwise |
 | `local_library_paths` | paths or manifest | required for `local-library` or `mixed` |
@@ -61,16 +71,17 @@ Before dispatching, set these options explicitly in the controller note:
 | `batch_size` | integer | `3-5` short papers, `1-2` theses or long reports |
 | `access_mode` | `open-only`, `authorized-browser`, `manual-user` | `open-only` unless the user authorizes browser/session access |
 | `authorized_download_backend` | `sciencedirect-live-session-fetcher`, `chrome-control`, `computer-use`, `manual` | `sciencedirect-live-session-fetcher` when installed and `access_mode=authorized-browser` |
+| `python_environment` | named permanent env path or `pending` | `codex-lit` permanent non-venv environment |
 
 Read `references/project-profiles.md` before using a non-generic profile. A strict host profile may add required records and gates, while Zotero and Obsidian can still remain user-selected modules.
 
 ## Phase Map
 
 1. **Profile and scope gate**: create or reuse a controller task ID; choose `project_profile`; define topic/direction, source input mode, whether downloads are enabled, language, inclusion/exclusion rules, optional or required Zotero/Obsidian outputs, allowed writes, forbidden paths, quota/process/temp policies, and acceptance criteria.
-2. **Controller and agent records**: initialize or update Markdown state files before any long work: controller worklog, per-agent worklogs, kanban, session registry, dispatch log, source manifest, download log, ingest queue/status, and per-task handoff.
-3. **Environment check**: run `scripts/env_check.py`; create a dedicated Python environment with `scripts/setup_env.py` only if needed and approved.
+2. **Controller and agent records**: initialize or update Markdown state files before any long work: controller worklog, per-agent worklogs, kanban, session registry, dispatch log, dependency setup, source manifest, download log, ingest queue/status, and per-task handoff.
+3. **Dependency and environment check**: read `references/dependencies.md`; recommend the permanent `codex-lit` environment from `environment.yml`; run `scripts/env_check.py`; record companion-skill and Python/CLI readiness before long batches.
 4. **Source intake**: if `source_input_mode=local-library`, register existing PDFs and skip download; if `mixed`, register local PDFs first, then search only for gaps.
-5. **Search and screening when needed**: use the literature-review companion workflow when available; produce a dated candidate table with query strings, sources, URLs/DOIs, access route, relevance score, and exclusion reasons.
+5. **Search and screening when needed**: use `academic-research-suite` by default for literature discovery, query expansion, and screening strategy; use `research-lr-ra` only as an auxiliary/fallback; produce a dated candidate table with query strings, sources, URLs/DOIs, access route, relevance score, and exclusion reasons.
 6. **Optional acquisition and local registration**: only when `download_enabled=true`, download legal/authorized PDFs. For authenticated publisher pages, prefer `sciencedirect-live-session-fetcher` with one live authorized browser session before generic Chrome/Computer Use fallback; verify title/body/pages; write a manifest row and mark bad PDFs honestly.
 7. **Optional Zotero**: create or locate parent items, attach PDFs/MD notes as linked files, and verify via API or logged Zotero Desktop Run JavaScript results.
 8. **PDF-first reading**: extract text; classify reading level; render only selected claim-bearing pages; record visual evidence or TODO.

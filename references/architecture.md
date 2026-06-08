@@ -100,14 +100,14 @@ When installed, prefer these companion skills for each phase:
 
 | Phase | Preferred companion |
 | --- | --- |
-| Broad literature planning, search strings, inclusion/exclusion logic | `academic-research-suite` or `research-lr-ra` |
+| Broad literature planning, search strings, inclusion/exclusion logic | `academic-research-suite` by default; `research-lr-ra` auxiliary/fallback only |
 | Browser search/download with current user session | `chrome:control-chrome`, then `computer-use` fallback |
 | Zotero linked-file attachment | `zotero-linked-attachments` or the Zotero plugin |
 | PDF rendering and selected-page QA | `pdf` |
 | Obsidian/wiki note conventions | `wiki-ingest` or `obsidian-wiki-ingest` |
 | Skill editing/testing | `skill-creator` |
 
-If these are not installed, follow this skill's generic Markdown runbooks.
+If these are not installed, follow this skill's generic Markdown runbooks and record the missing dependency in `dependency_setup.md`.
 
 ## Batch Sizing
 

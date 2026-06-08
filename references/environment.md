@@ -2,6 +2,8 @@
 
 Always check the environment before search/download batches or PDF reading batches. Keep project repositories clean: put temporary environments, rendered pages, and text dumps outside the repo unless the user asks otherwise.
 
+Read `dependencies.md` first during new project initialization so companion skills, permanent Python environment paths, and missing install actions are recorded together.
+
 ## Permanent Non-Venv Python Environment
 
 For repeated Codex literature work, prefer one dedicated, permanent named environment instead of creating a fresh project venv for every batch. This keeps browser-session fetching, PDF reading, rendering, Poppler/Tesseract command-line tools, and Zotero/Obsidian-adjacent helpers available from a stable path.

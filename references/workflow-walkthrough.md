@@ -101,8 +101,8 @@ The controller dispatches the fixed LiteratureAgent with a small batch.
 
 LiteratureAgent uses a literature-review companion skill when available:
 
-- `academic-research-suite` for deep/systematic review planning and query expansion;
-- `research-lr-ra` for literature review search strategy and research-gap mapping.
+- `academic-research-suite` by default for discovery, deep/systematic review planning, query expansion, and source verification;
+- `research-lr-ra` only as an auxiliary/fallback for legacy LR assistant work, research-gap mapping, or representative-work selection.
 
 If no companion exists, LiteratureAgent still uses the screening rubric in `literature-acquisition.md`.
 

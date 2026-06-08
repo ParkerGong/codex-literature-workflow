@@ -3,6 +3,9 @@ import argparse
 from pathlib import Path
 
 
+SKILL_ROOT = Path(__file__).resolve().parents[1]
+
+
 FILES = {
     "00_controller/project_profile.md": """# Project Profile
 
@@ -14,6 +17,8 @@ FILES = {
 - direction_source: TBD
 - direction_docs: TBD
 - collection_mapping_source: TBD
+- research_companion_default: academic-research-suite
+- research_companion_auxiliary: research-lr-ra
 - source_input_mode: TBD
 - download_enabled: TBD
 - local_library_paths: TBD
@@ -23,6 +28,9 @@ FILES = {
 - obsidian_enabled: false
 - visual_check: selected-pages
 - access_mode: open-only
+- authorized_download_backend: sciencedirect-live-session-fetcher when installed
+- python_environment: codex-lit permanent non-venv environment
+- dependency_setup_status: pending
 - batch_size: TBD
 - allowed_read_paths: TBD
 - allowed_write_paths: TBD
@@ -144,9 +152,54 @@ FILES = {
 | Session name | Thread ID | Role | Status | Main artifacts | Next use |
 | --- | --- | --- | --- | --- | --- |
 | Controller | TBD | Controller | active | controller files | route and accept tasks |
-| LiteratureAgent | TBD | Literature | idle | candidate/source/download manifests | search and acquisition |
+| LiteratureAgent | TBD | Literature | idle | candidate/source/download manifests | search and acquisition; default research companion is academic-research-suite; research-lr-ra is auxiliary/fallback |
 | ZoteroAgent | TBD | Zotero | idle | zotero_link_index, verification | parent items and attachments |
 | ObsidianAgent | TBD | Obsidian | idle | notes, ingest reports | PDF-first notes |
+""",
+    "00_controller/dependency_setup.md": """# Dependency Setup
+
+## Recommended Routing
+
+| Dependency | Role | Status | Notes |
+| --- | --- | --- | --- |
+| academic-research-suite | default paper discovery, deep/systematic review planning, query expansion, source verification, citation/integrity checks | pending | use before research-lr-ra for literature discovery |
+| research-lr-ra | auxiliary/fallback LR assistant, research-gap mapping, representative-work selection | pending | not the default when ARS is available |
+| codex-obsidian-read | controller for discovery -> screening -> download -> local registration -> Zotero -> PDF-first reading -> Obsidian/RAG | active | this initialized workspace |
+| sciencedirect-live-session-fetcher | preferred authorized-browser PDF backend | pending | only when access_mode=authorized-browser and user has authorized access |
+| zotero:Zotero | local Zotero lookup/export/import and verification | pending | enable only when Zotero outputs are requested |
+| zotero-linked-attachments | linked-file PDF/MD attachment to Zotero | pending | do not write zotero.sqlite directly |
+| wiki-query / wiki-ingest / obsidian-wiki-ingest | existing KB lookup and Obsidian/RAG writes | pending | not external paper discovery authority |
+| browser / chrome / computer-use | browsing and authorized download mechanics | pending | snippets are not paper facts |
+
+## Python Environment
+
+Recommended permanent non-venv environment:
+
+```bash
+micromamba env create -f {{SKILL_ROOT}}/environment.yml
+micromamba activate codex-lit
+python3 {{SKILL_ROOT}}/scripts/env_check.py --json
+```
+
+If already created:
+
+```bash
+micromamba activate codex-lit
+micromamba env update -f {{SKILL_ROOT}}/environment.yml
+python3 -m pip install -r {{SKILL_ROOT}}/requirements.txt
+python3 {{SKILL_ROOT}}/scripts/env_check.py --json
+```
+
+Record:
+
+- python_interpreter:
+- requirements_path: {{SKILL_ROOT}}/requirements.txt
+- environment_yml_path: {{SKILL_ROOT}}/environment.yml
+- env_check_time:
+- env_check_summary:
+- missing_packages:
+- missing_cli_tools:
+- next_install_action:
 """,
     "00_controller/dispatch_log.md": """# Dispatch Log
 
@@ -208,6 +261,7 @@ def main():
         if path.exists() and not args.force:
             skipped.append(str(path))
             continue
+        content = content.replace("{{SKILL_ROOT}}", str(SKILL_ROOT))
         path.write_text(content, encoding="utf-8")
         created.append(str(path))
 

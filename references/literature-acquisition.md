@@ -71,10 +71,10 @@ Do not rename, move, or overwrite the user's original PDFs unless the controller
 
 ## Screening Skill Choice
 
-When available, use a literature-review skill for search and screening rather than improvising:
+When available, use `academic-research-suite` as the default companion for search and screening rather than improvising.
 
-- Use `academic-research-suite` for deep research, systematic literature review planning, query expansion, and evidence-maturity decisions.
-- Use `research-lr-ra` for literature review assistant work, search strategy, research-gap mapping, and representative-work selection.
+- Use `academic-research-suite` for external paper discovery, deep research, systematic literature review planning, query expansion, source verification, citation/integrity checks, and evidence-maturity decisions.
+- Use `research-lr-ra` only as an auxiliary or fallback for legacy LR assistant work, research-gap mapping, representative-work selection, or a narrow subtask where its workflow is explicitly more suitable.
 - Use browser/chrome/computer-use only for source discovery and authorized download mechanics; do not let browser snippets become paper facts.
 
 If no companion skill is available, LiteratureAgent still follows the screening rubric below.

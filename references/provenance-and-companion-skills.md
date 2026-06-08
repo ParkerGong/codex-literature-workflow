@@ -15,13 +15,15 @@ These skills or plugins informed the workflow design and can be called when inst
 | `browser:control-in-app-browser` | optional OpenAI bundled Browser plugin | local/web navigation when browser connector is available |
 | `chrome:control-chrome` | optional OpenAI bundled Chrome plugin | authenticated browser sessions and existing Chrome tabs |
 | `computer-use:computer-use` | optional OpenAI bundled Computer Use plugin | GUI fallback for downloads or Zotero Desktop when connectors fail |
-| `research-lr-ra` / `academic-research-suite` | optional research workflow skills | literature review planning and search discipline |
+| `academic-research-suite` | default optional research workflow skill | external paper discovery, deep/systematic review planning, query expansion, source verification, citation/integrity checks |
+| `research-lr-ra` | auxiliary optional research workflow skill | legacy LR assistant work, research-gap mapping, representative-work selection when ARS is unavailable or a narrow subtask fits better |
 | `sciencedirect-live-session-fetcher` | optional public skill from `Given-Dream/sciencedirect-live-session-fetcher` | preferred authorized-browser backend for ScienceDirect/Elsevier, IEEE Xplore, and publisher PDF routes exposed inside a live browser session |
 
 ## Packaging Policy
 
 - Keep this repository usable without private paths.
 - Treat companion skills as optional accelerators.
+- For literature discovery and search strategy, default to `academic-research-suite`; keep `research-lr-ra` as auxiliary/fallback rather than an equal default.
 - For authorized publisher downloads, prefer `sciencedirect-live-session-fetcher` when installed, but keep the generic Chrome/Computer Use/manual fallback path documented for environments where it is unavailable.
 - If a companion skill is unavailable, follow the generic instructions in this package.
 - If vendoring code from another skill or repository, preserve its license, attribution, and upstream URL.

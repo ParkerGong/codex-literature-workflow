@@ -19,6 +19,8 @@ Every dispatch has a Markdown recording rule:
 - direction_docs:
 - collection_mapping_source:
 - source_input_mode: <local-library|search-and-download|mixed>
+- research_companion_default: academic-research-suite
+- research_companion_auxiliary: research-lr-ra
 - download_enabled: <true|false>
 - local_library_paths:
 - fixed target session:
@@ -32,6 +34,7 @@ Every dispatch has a Markdown recording rule:
 - forbidden paths:
 - batch size:
 - controller worklog:
+- dependency setup record:
 - target agent worklog:
 - acceptance owner: Controller only
 - previous batch status:
@@ -54,6 +57,8 @@ Register, screen, or acquire literature for: <TOPIC_OR_DIRECTION>.
 ## Options
 
 - source_input_mode: <local-library|search-and-download|mixed>
+- research_companion_default: academic-research-suite
+- research_companion_auxiliary: research-lr-ra
 - download_enabled: <true|false>
 - local_library_paths: <paths or none>
 - language_scope: <english|chinese|both>
@@ -70,6 +75,7 @@ Register, screen, or acquire literature for: <TOPIC_OR_DIRECTION>.
 
 - Existing direction notes/manifests: <paths or none>
 - Existing local PDFs/manifests: <paths or none>
+- Dependency setup record: <00_controller/dependency_setup.md>
 - Inclusion rules:
 - Exclusion rules:
 - Worklog path: <00_controller/agent_worklogs/LiteratureAgent.md>
@@ -86,6 +92,8 @@ Register, screen, or acquire literature for: <TOPIC_OR_DIRECTION>.
 ## Forbidden
 
 - Do not bypass access controls.
+- Use `academic-research-suite` as the default research companion for search strategy, query expansion, source verification, and screening logic when searching is enabled.
+- Use `research-lr-ra` only as an auxiliary/fallback for legacy LR assistant work, research-gap mapping, representative-work selection, or a narrow subtask where the controller explicitly allows it.
 - Do not search or download when `source_input_mode=local-library` unless the controller explicitly changes scope.
 - Do not write Zotero sqlite.
 - Do not create Obsidian notes.
