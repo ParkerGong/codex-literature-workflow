@@ -1,19 +1,17 @@
 ---
 name: codex-literature-workflow
-description: "End-to-end literature workflow for Codex: turn a topic, direction, or existing local PDF library into screened sources, optional legal/authorized PDF acquisition, optional Zotero linked-file attachment, PDF-first reading with optional visual page checks, and optional Obsidian/RAG-ready notes. Use this skill whenever the user asks to find, download, organize, read, summarize, attach to Zotero, or convert papers into an Obsidian knowledge base, especially when multiple fixed Codex sessions should cooperate under a controller."
+description: "Controller-led, end-to-end literature operations that coordinate source intake or discovery, lawful PDF acquisition, Zotero linked attachments, PDF-first reading, manifest-backed Obsidian notes, and optional QMD refresh with durable handoffs. Use when a request spans multiple phases, asks to build, repair, test, or audit a Zotero-Obsidian literature pipeline, migrates a local PDF library through the workflow, or needs fixed specialist sessions. Route isolated paper search, single-PDF reading, and one-off Zotero attachment to phase-specific skills."
 ---
 
 # Codex Literature Workflow
 
-Use this skill to coordinate a literature workflow without turning one agent into an uncontrolled mega-agent. A controller owns scope, fixed-session routing, status, and acceptance. Specialist sessions do the phase work.
+Use this skill to coordinate a multi-phase literature workflow. Keep one controller responsible for scope, durable state, routing, and acceptance. Give bounded phases to fixed specialist sessions when the runtime supports them.
 
-## Project Statement
+## Release Scope
 
-This is a basic early-preview framework for users who are not yet sure how to use Codex for literature assistance and local literature management. Many intermediate layers here may be redundant, over-specific, or close to reinventing existing tools. Do not treat this repository as a model of excellent open-source project design.
+Treat deterministic setup, environment reporting, PDF probing, controller-record initialization, companion installation, and Zotero mapping verification as the supported core. Treat live publisher access, Zotero Desktop writes, production-vault writes, and optional QMD as environment-dependent integrations that require their own readiness checks.
 
-This skill was temporarily summarized by Codex from a small workflow we previously tested ourselves. It is only for developers who urgently need to test the process. It provides no functional guarantee and should be tested only in an **INDEPENDENT, NON-IMPACTING, DEDICATED TEST SPACE** to avoid catastrophic data loss, accidental overwrites, or accidental publication of private files.
-
-The only maintainer-tested path is: follow a research direction, find relevant literature, download open-access papers, connect records to Zotero, and create an Obsidian-style local knowledge base. Other paths are unverified preview behavior. If a bug appears, first discuss the failure with the user's Codex session and inspect generated controller records before filing an issue.
+Use a dedicated test workspace for first runs. Back up existing controller records, Zotero libraries, and Obsidian vaults before enabling writes. Never convert an external integration failure into a false success.
 
 ## First Decision
 
@@ -28,38 +26,46 @@ Identify the requested shape:
 | Dependency setup, companion skill hierarchy, permanent Python environment | `references/dependencies.md` |
 | Environment setup, Python, PDF text/render tooling | `references/environment.md` |
 | Topic/direction discovery, local PDF library intake, web search, open/closed PDF acquisition | `references/literature-acquisition.md` |
-| Zotero import or linked-file attachment | `references/zotero-optional.md` |
+| Zotero parent-item preparation or linked-file attachment | `references/zotero-optional.md` |
 | Obsidian/RAG-ready notes, visual page checks | `references/obsidian-optional.md` |
+| Obsidian Wiki / LLM Wiki manifest-backed ingest | `references/obsidian-wiki-ingest.md` |
+| QMD or fallback local RAG refresh | `references/qmd-rag.md` |
 | Prompts to send to sub-sessions | `references/dispatch-templates.md` |
 | End-to-end flow walkthrough for audit or onboarding | `references/workflow-walkthrough.md` |
 | Where this workflow borrows ideas from | `references/provenance-and-companion-skills.md` |
 | Testing the skill on a small batch | `references/test-plan.md` |
 
-If the user only wants one phase, load only the relevant reference. If the user wants the full workflow, load `initialization.md`, `architecture.md`, `dependencies.md`, `environment.md`, and the relevant optional references.
+If the user only wants one phase, route to the phase-specific skill and load only the relevant reference. For a full workflow, load `initialization.md`, `architecture.md`, `dependencies.md`, and `environment.md`; load Zotero, Obsidian, and QMD references only after those modules are enabled.
 
 ## Skill Routing Defaults
 
-- A long workflow must begin by explicitly naming one session as the Controller Console. The controller owns the goal, records, specialist-session routing, and final acceptance.
-- The Controller Console must create or reuse fixed specialist sessions. If a required specialist session does not exist, create it or ask the user to create it, then record the thread/session ID in `session_registry.md`.
+- For a long multi-phase workflow, explicitly name the current session as the Controller Console unless the user already designated another session. Record the controller identity before dispatch.
+- Create or reuse fixed specialist sessions when multi-agent/thread tools are available. If they are unavailable, execute bounded phases sequentially and preserve the same handoff/status contract.
+- Create a persistent product goal only when the user explicitly requests goal tracking. Otherwise record `long_task_goal: not-needed` and continue.
 - For external paper discovery, literature review planning, query expansion, citation/integrity checks, and research-question convergence, use `academic-research-suite` as the default research companion.
 - Use `research-lr-ra` only as an auxiliary or legacy literature-review assistant when ARS is unavailable, explicitly requested, or a narrow LR subtask is better served by its local workflow.
 - During setup, recommend installing or enabling missing companions that match the requested workflow: install open-source companions from their GitHub repositories when available, install the vendored maintainer-built companions `research-lr-ra` and `zotero-linked-attachments` with `scripts/install_companion_skills.py`, and enable plugin-only companions such as `zotero:Zotero`, Browser/Chrome/Computer Use, and `pdf` through the Codex/plugin environment.
 - Use this skill as the controller for end-to-end work that continues from discovery into screening, authorized download, local registration, Zotero linked-file attachment, PDF-first reading, and Obsidian/RAG-ready notes.
+- Treat Obsidian Wiki / LLM Wiki style manifest-backed ingestion as the formal knowledge-base phase when Obsidian is enabled: one canonical source gets one formal literature note plus manifest/source-registry/Zotero-index updates.
+- Treat QMD as optional search/index infrastructure, not as the source of truth. Vault Markdown, `.manifest.json`, source registry, Zotero link index, and controller records remain authoritative.
 - Use Zotero, Zotero linked-file, Obsidian/wiki, Browser, Chrome, Computer Use, and `sciencedirect-live-session-fetcher` for their integration phases; do not treat them as the default paper-discovery authority.
 
 ## Non-Negotiables
 
-- Before any search, download, Zotero, Obsidian, or PDF-reading work, ask the user to confirm the required startup scope: research direction, target paper count, source input mode, download/access permission, language scope, Zotero enablement, Obsidian enablement, local input paths, output/write paths, collection/vault mapping needs, and target Git checkpoint root. If the latest user message already answered a field, record it instead of asking again.
+- For a full multi-phase run, confirm research direction, target count, source mode, download/access permission, language, enabled modules, local inputs, allowed outputs, mappings, and checkpoint policy. Reuse answers already present in the user's request.
+- For a single read-only check or one bounded phase, ask only for missing inputs, write permission, and integration permission relevant to that phase. Do not block an environment check on unrelated Zotero, Obsidian, or Git questions.
 - Do not write directly to `zotero.sqlite`.
 - Do not bypass paywalls, logins, CAPTCHA, or institutional access controls.
 - Do not claim paper facts from model memory or web snippets.
 - Do not create a fresh session per paper. Reuse fixed specialist sessions when available.
 - Do not assume papers must be downloaded. If the user already has a local PDF library, register and verify those files, then continue to optional Zotero/Obsidian stages.
 - Do not render whole PDFs by default. Use text-first reading and selected pages.
+- Do not make QMD mandatory. If QMD is unavailable, skip the refresh, record `qmd_status`, and continue with the manifest-backed vault as the source of truth.
+- Do not run `qmd embed`, `qmd query`, or `qmd vsearch` unless the user explicitly approves model downloads/embedding compute or the selected project profile says embeddings are allowed.
 - Keep temporary text dumps and page images outside the project repo unless the user explicitly wants them preserved.
 - Every accepted item needs provenance: query/source date, URL/DOI when available, local PDF path, Zotero key or pending status, page evidence, and unresolved TODO/RISK.
 - The controller and every fixed specialist agent must write a Markdown worklog before and after meaningful work. Context recovery starts by reading these worklogs and the current handoff.
-- The Controller Console must perform forced local Git checkpoint commits during long workflows: after initialization/scope/dependency/session records, after every 3 meaningful file-writing steps or accepted handoffs, before risky bulk writes, and before pausing or handing off. If the target root is not a Git repo, stop and ask the user to initialize or designate one before long work.
+- Create local Git checkpoints only when the user or selected host profile has enabled them. When enabled, inspect explicit paths, scan for private data, commit at the configured interval, and never auto-push.
 - Do not invent quota or environment status. If a host project has a quota pause rule, record `quota unknown` when unreadable and pause long work at the configured threshold.
 - Do not run routine process-residue sweeps unless the host project asks for them or there are real symptoms of stuck processes.
 - Do not delete temporary artifacts by default in strict projects. Prefer a recorded soft move to a configured temp trash folder.
@@ -71,10 +77,10 @@ Before dispatching, set these options explicitly in the controller note:
 | Option | Values | Default |
 | --- | --- | --- |
 | `project_profile` | `generic`, `dissertation-strict`, custom profile name | `generic` |
-| `controller_console` | current session ID or `pending` | required before long work |
-| `long_task_goal` | active goal text or `not-needed` | required for long workflows |
+| `controller_console` | current session ID or `pending` | current session for long workflows unless another is designated |
+| `long_task_goal` | active goal text or `not-needed` | `not-needed` unless explicitly requested |
 | `user_scope_confirmed` | `true`, `false` | `false` until required startup questions are answered |
-| `git_checkpoint_required` | `true`, `false` | `true` for long workflows |
+| `git_checkpoint_required` | `true`, `false` | `false` for `generic`; ask or follow an enabled strict profile |
 | `git_checkpoint_interval` | integer meaningful file-writing steps or accepted handoffs | `3` |
 | `git_push_policy` | `manual-only`, `disabled`, `explicit-user-request` | `manual-only`; never push automatically |
 | `target_direction` | user-provided direction, local-doc direction, or pending | ask before work |
@@ -89,6 +95,9 @@ Before dispatching, set these options explicitly in the controller note:
 | `language_scope` | `english`, `chinese`, `both` | user request, otherwise `both` |
 | `zotero_enabled` | `true`, `false` | ask at start for full/strict runs; otherwise `false` unless requested |
 | `obsidian_enabled` | `true`, `false` | `false` unless a knowledge base is requested |
+| `qmd_enabled` | `true`, `false`, `auto` | `false` unless local vault indexing is requested or an existing host profile sets `auto` |
+| `qmd_collection` | collection name or `pending` | ask or infer from project/vault slug |
+| `qmd_embed_allowed` | `true`, `false` | `false` unless explicitly approved |
 | `visual_check` | `off`, `selected-pages`, `vision-model` | `selected-pages` for figure/table/curve-heavy papers |
 | `batch_size` | integer | `3-5` short papers, `1-2` theses or long reports |
 | `access_mode` | `open-only`, `authorized-browser`, `manual-user` | `open-only` unless the user authorizes browser/session access |
@@ -99,19 +108,20 @@ Read `references/project-profiles.md` before using a non-generic profile. A stri
 
 ## Phase Map
 
-1. **Controller and goal gate**: explicitly designate the Controller Console; for long workflows, attach the recommended goal prompt from `references/initialization.md`; create or reuse fixed specialist sessions and record them.
-2. **User scope intake gate**: ask required startup questions and record answers before work begins: direction, target count, source input mode, download/access permission, language scope, Zotero enablement, Obsidian enablement, local input paths, output paths, and collection/vault mapping needs.
+1. **Controller gate**: designate the Controller Console for long multi-phase work; record a goal only when the user requested one; create or reuse fixed specialist sessions when supported.
+2. **User scope intake gate**: for full runs, record direction, target count, source mode, download/access permission, language, enabled modules, local inputs, output paths, mappings, and checkpoint policy. For a bounded phase, collect only relevant missing fields.
 3. **Profile and scope gate**: create or reuse a controller task ID; choose `project_profile`; define topic/direction, source input mode, whether downloads are enabled, language, inclusion/exclusion rules, optional or required Zotero/Obsidian outputs, allowed writes, forbidden paths, quota/process/temp policies, and acceptance criteria.
 4. **Controller and agent records**: initialize or update Markdown state files before any long work: controller worklog, per-agent worklogs, kanban, session registry, dispatch log, dependency setup, source manifest, download log, ingest queue/status, and per-task handoff.
-5. **Git checkpoint gate**: read `references/controller-records.md`; verify the target root is a Git repo; run a local checkpoint commit after initialization/scope/dependency/session records and then after every 3 meaningful file-writing steps or accepted handoffs. Run privacy scans before adding files. Never auto-push.
-6. **Dependency and environment check**: read `references/dependencies.md`; recommend installing or enabling missing companion skills/plugins that match the requested workflow; use GitHub install paths for public companions and `scripts/install_companion_skills.py` for vendored maintainer-built companions; recommend the permanent `codex-literature` environment from `environment.yml`; run `scripts/env_check.py`; record companion-skill and Python/CLI readiness before long batches.
+5. **Optional Git checkpoint gate**: when checkpointing is enabled, read `references/controller-records.md`, verify the Git root, scan explicit intended files for private data, and commit at the configured interval. Never auto-push. Otherwise record `git checkpoint: disabled` and continue.
+6. **Dependency and environment check**: read `references/dependencies.md`; recommend installing or enabling missing companion skills/plugins that match the requested workflow; use GitHub install paths for public companions and `scripts/install_companion_skills.py` for vendored maintainer-built companions; recommend the permanent `codex-literature` environment from `environment.yml`; run `scripts/env_check.py --json --strict`; record companion-skill and Python/CLI readiness before long batches.
 7. **Source intake**: if `source_input_mode=local-library`, register existing PDFs and skip download; if `mixed`, register local PDFs first, then search only for gaps.
 8. **Search and screening when needed**: use `academic-research-suite` by default for literature discovery, query expansion, and screening strategy; use `research-lr-ra` only as an auxiliary/fallback; produce a dated candidate table with query strings, sources, URLs/DOIs, access route, relevance score, and exclusion reasons.
 9. **Optional acquisition and local registration**: only when `download_enabled=true`, download legal/authorized PDFs. For authenticated publisher pages, prefer `sciencedirect-live-session-fetcher` with one live authorized browser session before generic Chrome/Computer Use fallback; verify title/body/pages; write a manifest row and mark bad PDFs honestly.
-10. **Optional Zotero**: create or locate parent items, attach PDFs/MD notes as linked files, and verify via API or logged Zotero Desktop Run JavaScript results.
+10. **Optional Zotero**: locate parent items through read-only tooling, generate validated linked-file JavaScript, ask the user to run it in Zotero Desktop, and verify via the local API or returned structured result.
 11. **PDF-first reading**: extract text; classify reading level; render only selected claim-bearing pages; record visual evidence or TODO.
-12. **Optional Obsidian/RAG ingest**: create source records, literature notes, concept/claim updates if directly supported, and a batch report.
-13. **Controller acceptance**: check files, provenance, duplicate handling, temp cleanup, status consistency, and the latest Git checkpoint; only the controller marks output accepted.
+12. **Obsidian Wiki Ingest And Manifest Backfill**: when Obsidian/RAG is enabled, write or update the manifest-backed vault contract: `.manifest.json`, `index.md`, `hot.md`, `log.md`, `01_sources/source_registry.md`, `01_sources/zotero_link_index.md`, one formal note per canonical source under `02_literature_notes/`, optional concept/claim pages, and a batch report. Duplicate aliases are report/manifest entries, not independent formal notes. Wrong or incomplete PDFs become `manual-check`.
+13. **QMD / Local RAG Refresh**: if QMD is configured, run update-only refresh and verify status/search. If QMD is missing or collection settings are unavailable, skip and report. Use project-local lexical/sparse fallback only as fallback retrieval, not dense semantic RAG. Run `qmd embed` only with explicit approval.
+14. **Controller acceptance**: check files, provenance, duplicate handling, temp cleanup, status consistency, QMD/fallback status, and Git checkpoint state when enabled; only the controller marks output accepted.
 
 ## Required Handoff Shape
 
@@ -140,9 +150,9 @@ Every phase must leave a durable handoff:
 
 Stop and ask the controller or user when:
 
-- no Controller Console has been explicitly designated for long work;
-- the active controller cannot create or record required fixed specialist sessions;
-- required startup scope is unanswered or `user_scope_confirmed=false`;
+- no Controller Console has been recorded for long multi-phase work;
+- a required specialist phase has no executable route and sequential fallback is unsafe;
+- fields required for the requested phases are unanswered or `user_scope_confirmed=false` for a full run;
 - `git_checkpoint_required=true` but the target project root is not a Git repository, safe files to commit are unclear, or the privacy scan finds secrets/private local paths that cannot be excluded;
 - no legal/authorized PDF is available;
 - the PDF is wrong, incomplete, encrypted, scan-only without OCR, or mostly unreadable;

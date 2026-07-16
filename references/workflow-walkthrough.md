@@ -2,6 +2,13 @@
 
 This document walks through the whole skill as an auditable runbook. Use it when reviewing whether the implementation matches an existing project workflow.
 
+## Contents
+
+- Controller initialization and environment readiness
+- Local intake, discovery, and legal acquisition
+- Zotero linking and PDF-first Obsidian ingest
+- Optional QMD refresh, acceptance, and recovery
+
 ## 0. Controller Opens The Run
 
 The controller starts by creating or reusing one task ID. It does not immediately search the web, read PDFs, write Zotero, or write Obsidian notes.
@@ -20,8 +27,9 @@ Controller decisions:
 10. Set access mode: open-only first, authorized browser/manual only with user permission.
 11. Set authorized download backend. When installed, use `sciencedirect-live-session-fetcher` as the preferred backend for authenticated publisher downloads before generic Chrome or Computer Use.
 12. Set closed-source fallback policy, batch size, render cap, and visual-check mode.
-13. Set the target Git checkpoint root, checkpoint interval, and manual-only push policy.
-14. Record allowed reads, allowed writes, forbidden paths, quota policy, process-check policy, temp cleanup policy, and worklog paths.
+13. Ask whether QMD refresh is enabled, which collection should be reused/created, and whether embeddings are approved.
+14. Ask whether local Git checkpoints are enabled; only then set the target root, interval, and manual-only push policy.
+15. Record allowed reads, allowed writes, forbidden paths, quota policy, process-check policy, temp cleanup policy, and worklog paths.
 
 Durable outputs:
 
@@ -35,7 +43,7 @@ Durable outputs:
 - `git_checkpoints.md`
 - per-task handoff file
 
-The recommended controller goal is in `architecture.md`. A strict project should use goal mode for long work so the controller keeps state and routes fixed specialist sessions.
+The optional controller goal prompt is in `architecture.md`. Use persistent goal mode only when the user explicitly requests it; controller records remain the durable default.
 
 ## 1. Controller Initializes Records
 
@@ -60,15 +68,15 @@ This creates controller records for:
 
 These records prevent long tasks from drifting after context compaction, browser failure, quota limits, or user interruption. After compaction, an agent reads `project_profile.md`, `session_registry.md`, its own worklog, the active handoff, and the relevant manifest/index before continuing.
 
-The controller then verifies the target root is a Git repository. If it is not, it stops and asks the user to initialize Git or designate the correct repo root before long work.
+If local Git checkpoints are enabled, the controller verifies the target root is a Git repository. If it is not, ask the user to initialize Git, designate the correct repo root, or disable checkpoints.
 
-First checkpoint trigger:
+First checkpoint trigger when enabled:
 
 ```bash
 git status --short
 ```
 
-The controller inspects changed paths, runs the configured privacy scan on intended text files, stages explicit safe paths only, commits a local checkpoint, and records the commit hash in `00_controller/git_checkpoints.md`. It does not push.
+When enabled, the controller inspects changed paths, runs the configured privacy scan on intended text files, stages explicit safe paths only, commits a local checkpoint, and records the commit hash in `00_controller/git_checkpoints.md`. It does not push. Otherwise record `disabled`.
 
 ## 2. Environment Is Checked
 
@@ -80,8 +88,10 @@ Commands:
 
 ```bash
 micromamba activate codex-literature
-python scripts/env_check.py --json
+python scripts/env_check.py --json --strict
 ```
+
+If `micromamba` is unavailable, use the equivalent installed `mamba` or `conda` commands.
 
 If the permanent environment has not been created yet, initialize it from the skill repository:
 
@@ -94,8 +104,10 @@ python -m pip install -r requirements.txt
 Use a temporary venv only as an explicit disposable fallback:
 
 ```bash
-python scripts/setup_env.py --venv /private/tmp/codex_literature_workflow_venv --install
+python scripts/setup_env.py --venv /private/tmp/codex_literature_workflow_venv_<task-id> --install
 ```
+
+The fallback target must be a new, non-symlink path outside the skill repository; `--install` creates the venv and installs packages in this one call. Do not pre-create the directory or invoke the helper again for an existing venv. To add packages to an existing venv, call that venv's own `python -m pip` directly.
 
 PDF probing is text-first and selected-page only:
 
@@ -105,7 +117,7 @@ python scripts/pdf_probe.py <paper.pdf> --pages 1,3,9 --out /private/tmp/codex_l
 
 The run records whether Python packages, Poppler tools, OCR tools, browser tools, and temp paths are available. If quota is unknown, write `quota unknown` rather than a guessed number.
 
-After dependency records are updated, the controller creates another local Git checkpoint before dispatching broad search or file-writing work.
+When checkpoints are enabled, the controller creates another local checkpoint after dependency records are updated and before broad search or file-writing work.
 
 ## 3. LiteratureAgent Registers Existing Local PDFs When Provided
 
@@ -124,7 +136,7 @@ Local intake outputs:
 
 No web search or download happens in pure `local-library` mode unless the controller explicitly changes scope.
 
-After local intake writes manifests or quality reports, the controller checkpoints before moving to Zotero, Obsidian, or additional search.
+When checkpoints are enabled, the controller checkpoints local intake manifests or quality reports before moving to Zotero, Obsidian, or additional search.
 
 ## 4. LiteratureAgent Screens Sources When Needed
 
@@ -149,7 +161,7 @@ Screening outputs:
 
 The candidate table is not a final source list. The controller can audit why each item was selected, deferred, rejected, or marked manual-check.
 
-Before acquisition or other risky follow-up writes, the controller checkpoints the screening table and manifest changes.
+When checkpoints are enabled, the controller checkpoints the screening table and manifest changes before acquisition or other risky follow-up writes.
 
 ## 5. LiteratureAgent Optionally Downloads Legal Or Authorized PDFs
 
@@ -203,13 +215,15 @@ Bad PDFs are recorded honestly as `wrong-pdf`, `incomplete-pdf`, `scan-or-ocr-ne
 
 For Chinese databases, LiteratureAgent records database-specific fields such as `cn_database`, `cn_record_url`, `cn_access_route`, Chinese/English title, journal/source name, year/issue/pages, database ID, download method, and manual blocker.
 
-After reviewing download logs and source manifest updates, the controller checkpoints before Zotero linking or Obsidian ingest.
+When checkpoints are enabled, the controller checkpoints reviewed download logs and source manifest updates before Zotero linking or Obsidian ingest.
 
 ## 6. ZoteroAgent Links Bibliography And Files
 
 This phase runs only when Zotero is enabled by the user or host project.
 
-ZoteroAgent never writes `zotero.sqlite` directly. It uses local API, Zotero Desktop JavaScript, a Zotero plugin/tool, or manual confirmation.
+ZoteroAgent never writes `zotero.sqlite` directly. It uses the read-only local API, generated user-run Zotero Desktop JavaScript, connector/manual results, or manual confirmation.
+
+For the formal release, API access is read-only and Zotero Desktop writes are user-run: ZoteroAgent validates the mapping and generates JavaScript, the user executes it, and ZoteroAgent verifies the resulting state. The agent does not launch or control Zotero Desktop.
 
 Strict Zotero gate when enabled records:
 
@@ -228,9 +242,9 @@ Zotero outputs:
 - MD linked-file status only if the optional second pass is requested;
 - exact blocker if manual action is needed.
 
-Default MD note behavior: do not link Markdown notes to Zotero in the first Zotero pass. After Obsidian notes are complete and stable, the controller may dispatch ZoteroAgent for an optional second pass with `attach_md_note=true`.
+Default MD note behavior: do not link Markdown notes to Zotero in the first Zotero pass. After Obsidian notes are complete and stable, the controller may dispatch ZoteroAgent to prepare an optional second pass with `attach_md_note=true` for the user to run.
 
-After Zotero link-index or verification records change, the controller checkpoints before PDF-first reading or Obsidian writes.
+When checkpoints are enabled, the controller checkpoints Zotero link-index or verification record changes before PDF-first reading or Obsidian writes.
 
 ## 7. ObsidianAgent Performs PDF-First Reading
 
@@ -256,11 +270,13 @@ Reading levels:
 
 Visual work is optional and evidence-driven. Render only selected pages when claims depend on figures, tables, formulas, curves, screenshots, or diagrams. If the render cap is not enough, record TODO/RISK instead of rendering everything.
 
-After note drafts, rendered-page ledgers, or reading-level records are written, the controller checkpoints before accepting or dispatching the next note batch.
+When checkpoints are enabled, the controller checkpoints note drafts, rendered-page ledgers, or reading-level records before accepting or dispatching the next note batch.
 
-## 8. Obsidian Notes Become RAG-Ready
+## 8. Obsidian Wiki Ingest And Manifest Backfill
 
-Each literature note should contain:
+Each literature note becomes RAG-ready when it is part of a manifest-backed Obsidian Wiki / LLM Wiki style vault. QMD or any other index is only search infrastructure; the vault Markdown, `.manifest.json`, source registry, Zotero link index, and controller records remain the source of truth.
+
+Each formal literature note should contain:
 
 - `source_id`
 - title and authors/year;
@@ -277,7 +293,8 @@ Each literature note should contain:
 - method/mechanism;
 - limitations/risks;
 - project use boundary;
-- RAG keywords.
+- RAG keywords;
+- Obsidian Wiki ingest metadata.
 
 Optional project metadata fields may be added only when useful:
 
@@ -289,17 +306,41 @@ These are not hard requirements. Use controlled values from local direction docu
 
 Optional outputs:
 
+- `.manifest.json`;
 - source registry row;
+- Zotero link index update when Zotero is enabled or pending;
 - concept pages;
 - claim cards;
 - batch report;
 - ingest queue/status updates.
 
+Canonical source rule:
+
+- one canonical source gets one formal literature note;
+- duplicate aliases are report/manifest/source-registry entries, not separate formal notes;
+- wrong, incomplete, encrypted, or mismatched PDFs become `manual-check`.
+
 Unverified visual claims are marked `TODO: visual verification` or `INFERRED`, not fact.
 
-After Obsidian/RAG notes and ingest status records are written, the controller checkpoints before final acceptance.
+When checkpoints are enabled, the controller checkpoints Obsidian/RAG notes, manifest, ingest status records, and QMD/fallback status before final acceptance.
 
-## 9. Controller Accepts Or Blocks
+## 9. QMD / Local RAG Refresh Is Optional
+
+After vault writes, the controller may refresh local search/index infrastructure.
+
+QMD update-only path:
+
+```bash
+${QMD_CLI:-qmd} update
+${QMD_CLI:-qmd} status
+${QMD_CLI:-qmd} search "<known query>" -c "$QMD_WIKI_COLLECTION" -n 5
+```
+
+Skip QMD when `qmd` is unavailable or `QMD_WIKI_COLLECTION` is unset. Record `qmd_status` and `qmd_reason`.
+
+Do not run `qmd embed`, `qmd query`, or `qmd vsearch` unless the user explicitly approves model downloads/embedding compute or the project profile allows embeddings. If QMD is absent or embeddings are not approved, a project-local lexical/sparse fallback can be used, but it must not be described as dense semantic RAG.
+
+## 10. Controller Accepts Or Blocks
 
 The controller reviews files, not chat memory.
 
@@ -313,17 +354,18 @@ Acceptance checks:
 - Obsidian frontmatter matches Zotero/source records;
 - page evidence exists;
 - visual claims have checked/TODO status;
+- QMD or fallback retrieval status is recorded without being treated as source truth;
 - duplicates are canonicalized;
 - temp artifacts are recorded and moved/preserved according to policy;
 - controller and target agent worklogs were updated;
 - sub-agent status is `Waiting review`.
-- the latest Git checkpoint includes the accepted record changes, or the blocker/skipped reason is recorded in `git_checkpoints.md`.
+- when Git checkpoints are enabled, the latest checkpoint includes the accepted record changes or its blocker is recorded; otherwise `git_checkpoints.md` records `disabled`.
 
 Only then does the controller mark a source or batch accepted. Otherwise it writes an exact blocker and next owner.
 
-After acceptance or blocker decisions are written, the controller checkpoints again before pause, handoff, or the next batch.
+When checkpoints are enabled, the controller checkpoints acceptance or blocker decisions before pause, handoff, or the next batch.
 
-## 10. Recovery And Long-Run Control
+## 11. Recovery And Long-Run Control
 
 If a fixed specialist session stops or context compacts:
 
@@ -335,4 +377,4 @@ If a fixed specialist session stops or context compacts:
 
 The workflow remains recoverable because state is stored in Markdown files, manifests, logs, verification records, and handoff reports.
 
-If the latest checkpoint is older than 3 meaningful file-writing steps or accepted handoffs, recovery starts by creating or repairing the checkpoint before any new broad writes.
+When checkpoints are enabled, if the latest checkpoint is older than 3 meaningful file-writing steps or accepted handoffs, recovery starts by creating or repairing it before new broad writes.

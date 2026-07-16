@@ -31,12 +31,21 @@ The expected child attachment should include:
 - `itemType: attachment`
 - `linkMode: linked_file`
 - expected `contentType`
-- expected absolute `path`
+- a resolvable linked-file path
 - `parentItem` equal to the Zotero parent key
+
+Do not compare the raw child `path` field to an absolute path. With Zotero's Linked Attachment Base Directory enabled, the API can return `attachments:<relative-path>`. Resolve the attachment by requesting:
+
+```text
+GET http://127.0.0.1:23119/api/users/0/items/<ATTACHMENT_KEY>/file/view/url
+```
+
+Require a `file:` URL, convert it to a local path, canonicalize it, and compare that result with the canonical expected mapping path. Paginate child lists in batches of 100; when `Total-Results` is absent, continue until a short or empty page.
 
 ## Operational Safety
 
 - Prefer linked files over imported copies when a project needs one canonical local file path.
 - Keep source PDFs and Markdown notes inside the project or another backed-up source directory.
-- Avoid direct SQLite writes while Zotero is running.
+- Never write Zotero SQLite directly; database-level recovery is outside this skill.
+- Ask the user to launch and operate Zotero Desktop. An unavailable local API is a live-integration blocker, not permission for the agent to open the app or mutate the library.
 - Record attachment status in the project log or source index after verification.

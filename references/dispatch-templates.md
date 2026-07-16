@@ -2,6 +2,12 @@
 
 These templates are intentionally explicit. The controller should fill placeholders and send them to fixed specialist sessions.
 
+## Contents
+
+- Controller pre-dispatch checklist
+- Literature, Zotero, and Obsidian dispatch templates
+- Controller acceptance checklist
+
 Every dispatch has a Markdown recording rule:
 
 - Controller updates `controller_worklog.md` before sending and after reviewing the result.
@@ -35,6 +41,9 @@ Every dispatch has a Markdown recording rule:
 - language_scope: <english|chinese|both>
 - zotero_enabled: <true|false>
 - obsidian_enabled: <true|false>
+- qmd_enabled: <true|false>
+- qmd_collection: <name|pending>
+- qmd_embed_allowed: <true|false>
 - zotero_collection_or_mapping:
 - obsidian_vault_or_output_root:
 - fixed target session:
@@ -56,9 +65,9 @@ Every dispatch has a Markdown recording rule:
 ```
 
 Do not dispatch a new long batch when the previous batch is still `Working` or `Waiting review`.
-Do not dispatch any long batch until one session is explicitly designated as the Controller Console and the required specialist session is created or recorded.
+Do not dispatch a long batch until the current or user-selected Controller Console is recorded. When multi-agent execution is unavailable, record the sequential fallback instead of blocking on a specialist session.
 Do not dispatch search, download, Zotero, Obsidian, or PDF-reading work until `user_scope_confirmed=true`.
-Do not dispatch risky or broad file-writing work when the latest Git checkpoint is stale. The controller should checkpoint after every 3 meaningful file-writing steps or accepted handoffs, and before any batch write.
+When Git checkpoints are enabled, do not dispatch risky or broad file-writing work while the latest checkpoint is stale. Checkpoint after every 3 meaningful file-writing steps or accepted handoffs and before a batch write. When disabled, record `disabled` and continue.
 
 ## LiteratureAgent Dispatch
 
@@ -162,6 +171,7 @@ Sources:
 ## Forbidden
 
 - Do not write zotero.sqlite directly.
+- Do not launch, control, paste into, or execute Zotero Desktop; generate the script and ask the user to run it.
 - Do not change literature screening decisions.
 - Do not create Obsidian notes unless explicitly asked.
 - Do not store the local PDF path only in a parent URL field.
@@ -176,6 +186,8 @@ For each source, report:
 - verification method;
 - exact pending/manual action if incomplete.
 
+When `zotero_mode=desktop-run-js`, write the validated mapping and generated script, record `awaiting-user-execution`, and verify only after the user returns the structured result or the read-only Local API shows the new state.
+
 Update the ZoteroAgent worklog with API/Desktop/manual actions, verification evidence, skipped optional MD note link, blockers, and next owner.
 Use pending/manual-check statuses honestly. Stop at Waiting review.
 ```
@@ -183,7 +195,7 @@ Use pending/manual-check statuses honestly. Stop at Waiting review.
 ## ObsidianAgent Dispatch
 
 ```markdown
-# Controller Dispatch: <TASK_ID> PDF-First Obsidian Ingest
+# Controller Dispatch: <TASK_ID> PDF-First Obsidian Wiki Ingest
 
 You are the fixed ObsidianAgent. Do not create a new session, do not expand scope, and do not mark controller accepted.
 
@@ -203,6 +215,8 @@ You are the fixed ObsidianAgent. Do not create a new session, do not expand scop
 - visual_check: <off|selected-pages|vision-model>
 - render_cap: <N pages total>
 - staging mode: <direct|staged-writes>
+- qmd_refresh: <off|update-only|approved-embed>
+- qmd_collection: <name or pending>
 
 ## Sources
 
@@ -212,9 +226,12 @@ You are the fixed ObsidianAgent. Do not create a new session, do not expand scop
 
 - Literature notes:
   - <paths>
+- Manifest:
+  - <.manifest.json path>
 - Source registry:
 - Zotero link index:
 - Queue/status/log:
+- QMD/local RAG status file or report section:
 - ObsidianAgent worklog:
 - Batch report:
 
@@ -226,6 +243,8 @@ You are the fixed ObsidianAgent. Do not create a new session, do not expand scop
 - Do not process sources outside this batch.
 - Do not create an independent note for a duplicate alias.
 - Do not treat existing summaries as primary evidence.
+- Do not treat QMD or fallback retrieval as source of truth.
+- Do not run `qmd embed`, `qmd query`, or `qmd vsearch` unless explicitly approved in this dispatch.
 - Do not mark any output `controller-accepted`.
 
 ## PDF Reading
@@ -247,11 +266,15 @@ Each literature note frontmatter must include:
 - `duplicate_aliases`
 - `visual_verification_pages`
 - `reading_level`
+- `qmd_status`
+- `qmd_reason`
 - `status: waiting-review`
 
 ## Required Output
 
-Each note must include source_id, local PDF, Zotero status, page evidence, visual pages if any, RAG keywords, TODO/RISK, and use boundary.
+Each canonical source must have one formal note and one manifest row. Duplicate aliases are report/manifest entries, not independent formal notes. Wrong or incomplete PDFs become `manual-check`.
+Each note must include source_id, local PDF, Zotero status, page evidence, visual pages if any, RAG keywords, TODO/RISK, use boundary, and Obsidian Wiki ingest metadata.
+Update `.manifest.json`, source registry, Zotero link index when relevant, and QMD/local RAG status.
 Update the ObsidianAgent worklog with PDFs read, pages rendered, notes written, claims deferred, temp artifacts, and next owner.
 Write a batch report with temp artifact size/path and status `Waiting review`.
 ```
@@ -272,8 +295,10 @@ Write a batch report with temp artifact size/path and status `Waiting review`.
 - Zotero status honest:
 - MD-Zotero note path/frontmatter checked:
 - Obsidian notes include page evidence:
+- `.manifest.json` agrees with note paths/source IDs:
 - Visual claims have visual status or TODO:
 - Duplicate aliases handled:
+- QMD/fallback status is recorded and not treated as source truth:
 - Quota/process/temp policies followed:
 - Temp artifacts recorded:
 - Controller and target agent worklogs updated:

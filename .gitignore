@@ -18,6 +18,9 @@ venv/
 
 # Generated workflow artifacts
 00_controller/
+.codex-literature-backups/
+.qmd/
+10_knowledge_base/.rag/
 tmp/
 outputs/
 downloads/

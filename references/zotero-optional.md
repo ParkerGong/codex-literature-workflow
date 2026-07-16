@@ -2,6 +2,13 @@
 
 Use this only when `zotero_enabled=true` or the user explicitly asks for Zotero.
 
+## Contents
+
+- Principles, connection modes, and status values
+- Recommended and strict verification flows
+- Link-index and verification templates
+- Desktop JavaScript and optional Markdown-note attachment
+
 ## Principles
 
 - Never write `zotero.sqlite` directly.
@@ -15,7 +22,7 @@ Use this only when `zotero_enabled=true` or the user explicitly asks for Zotero.
 | Mode | When to use | Notes |
 | --- | --- | --- |
 | `local-api` | Zotero Desktop local API is enabled and reachable | best for read/verify |
-| `desktop-run-js` | attachments must be created as linked files | use Zotero Developer Run JavaScript or approved wrapper |
+| `desktop-run-js` | attachments must be created as linked files | generate the script, then ask the user to run it in Zotero Developer Run JavaScript |
 | `connector/manual` | user imports through browser connector | record parent key/status after user action |
 | `disabled` | user does not want Zotero | keep DOI/URL/local PDF in source manifest |
 
@@ -38,9 +45,9 @@ The controller should state which mode is allowed before dispatching ZoteroAgent
 ## Recommended Flow
 
 1. Locate existing parent item by DOI, title, or known key.
-2. If absent, import from DOI/BibTeX/RIS or create via approved Zotero tooling.
+2. If absent, prepare DOI/BibTeX/RIS metadata and ask the user to import or create the parent item in Zotero; do not perform the write on the user's behalf.
 3. Ensure item is in the requested collection.
-4. Attach local PDF as linked file.
+4. Generate the validated linked-file script and ask the user to run it in Zotero Desktop.
 5. Do not attach an Obsidian Markdown note by default. Only attach the MD note after the note path is stable and the user or project explicitly asks for Zotero to link notes.
 6. Verify through local Zotero API if available.
 7. If local API is unavailable but Zotero Desktop Run JavaScript returns structured output, save that output as the verification record.
@@ -65,11 +72,11 @@ Default: `attach_md_note=false`.
 
 Recommended sequence:
 
-1. ZoteroAgent links or records the PDF and parent/collection status.
+1. ZoteroAgent prepares the PDF mapping/script and records the parent/collection status; the user runs any Desktop write.
 2. ObsidianAgent creates or promotes the final Markdown note.
 3. Controller confirms the final `md_note_path`.
-4. ZoteroAgent runs a second optional pass with `attach_md_note=true`.
-5. ZoteroAgent updates `md_status` from `pending-md-attachment` or `disabled` to `md-linked`.
+4. ZoteroAgent prepares a second optional pass with `attach_md_note=true`, and the user runs it in Zotero Desktop.
+5. After read-only verification, ZoteroAgent updates `md_status` from `pending-md-attachment` or `disabled` to `md-linked`.
 
 Use `pending-md-attachment` only when the user/project wants the note linked but the path is not stable yet. Use `disabled` when Markdown note linking is not requested.
 
@@ -98,13 +105,15 @@ When available, verify Zotero through `http://127.0.0.1:23119/` or the host's Zo
 - search parent by title/DOI;
 - verify collection membership;
 - list child attachments;
-- compare attachment paths with the project-local PDF/MD paths.
+- resolve each attachment's `/items/<ATTACHMENT_KEY>/file/view/url` response and compare its canonical file path with the project-local PDF/MD path.
 
-If the API fails because Zotero is closed, ask before launching GUI apps in environments that require approval. If the API fails while Zotero is open, record the failure and use Desktop JS/manual verification instead of guessing.
+Do not require the raw attachment `path` field to be absolute. With Zotero's Linked Attachment Base Directory enabled it may be stored as `attachments:<relative-path>`. The vendored `zotero-linked-attachments` verifier implements this resolution and pagination contract; read [`zotero-linked-file-notes.md`](../companion-skills/zotero-linked-attachments/references/zotero-linked-file-notes.md) before custom verification.
+
+If the API fails because Zotero is closed, ask the user to launch it; do not open or control the GUI on their behalf. If the API fails while Zotero is open, record the failure and ask the user to run the generated Desktop JS or verify manually instead of guessing.
 
 ## Zotero Desktop Run JavaScript Pattern
 
-Use this pattern only inside Zotero Desktop Developer tools or an approved automation wrapper:
+Prefer the vendored `zotero-linked-attachments` builder because it validates mappings, prevents same-path duplicates, handles relative base paths, and reports partial failures. The minimal API shape below is only for the user to run inside Zotero Desktop Developer tools:
 
 ```javascript
 const attachment = await Zotero.Attachments.linkFromFile({
@@ -142,7 +151,7 @@ If Zotero is optional and disabled, source records should still include DOI/URL/
 
 ## Optional Markdown Note Attachment
 
-Only attach Markdown notes to Zotero when the user or project profile wants Zotero to open the project note from the parent item.
+Only prepare a Markdown attachment when the user or project profile wants Zotero to open the project note from the parent item; the user performs the Desktop write.
 
 Rules:
 

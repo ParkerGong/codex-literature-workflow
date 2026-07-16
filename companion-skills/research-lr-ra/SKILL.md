@@ -1,6 +1,6 @@
 ---
 name: research-lr-ra
-description: Literature review research assistant workflow for Codex. Use when the user asks Codex to do LR, literature review, literature mapping, paper discovery, research gap finding, Zotero-backed reading, Google Scholar/gs skill searching, Chrome MCP browsing, Zotero MCP ingestion, OneFind local-library synthesis, or to turn a topic, research question, course assignment, advisor suggestion, or rough idea into a structured review plan and reading map.
+description: Literature review research assistant workflow for Codex. Use when the user asks Codex to do LR, literature review, literature mapping, paper discovery, research gap finding, Zotero-backed reading, Google Scholar/gs skill searching, Chrome MCP browsing, user-mediated Zotero intake, OneFind local-library synthesis, or to turn a topic, research question, course assignment, advisor suggestion, or rough idea into a structured review plan and reading map.
 ---
 
 # Research LR RA
@@ -22,10 +22,10 @@ Connect the whole literature-review chain: search, save, read, organize, and syn
    - Iterate keywords across theory terms, empirical setting terms, method terms, and adjacent literatures.
    - Track search terms and why each query was used.
 
-3. Save promising papers.
-   - Use Zotero MCP when available to add useful references directly to the user's Zotero library or collection.
+3. Prepare promising papers for saving.
+   - Use Zotero MCP or the local API only for read-only lookup, export, and verification. Prepare DOI/BibTeX/RIS or an import queue and ask the user to perform Zotero imports or Desktop writes.
    - Preserve metadata: title, authors, year, venue, DOI/URL, abstract, tags, and notes when available.
-   - Prefer saving before deep synthesis so the user does not lose useful findings.
+   - Prefer a durable pending-import record before deep synthesis so the user does not lose useful findings.
 
 4. Read and synthesize the local library.
    - Use OneFind or equivalent local-library search once papers are in Zotero.
@@ -45,6 +45,7 @@ Connect the whole literature-review chain: search, save, read, organize, and syn
 - Do not overstate novelty from a shallow search.
 - Prefer papers with stable bibliographic metadata over vague web snippets.
 - Flag access gaps, missing PDFs, uncertain metadata, and likely duplicate records.
+- Do not launch, control, or write through Zotero Desktop; keep every Zotero mutation user-mediated.
 - When tools are unavailable, still run the same conceptual workflow manually and clearly say which tool-backed steps could not be executed.
 
 ## Output Shape

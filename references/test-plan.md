@@ -2,12 +2,19 @@
 
 Do not rely on this skill for large literature expansion until it passes a small end-to-end test.
 
+## Contents
+
+- Environment and dependency smoke tests
+- Startup, acquisition, Zotero, and Obsidian scenarios
+- Optional Git and QMD scenarios
+- Acceptance criteria
+
 ## Smoke Test 1: Environment Only
 
 Prompt:
 
 ```text
-Use codex-literature-workflow to check whether this machine can extract PDF text and render selected pages. Do not search the web, do not use Zotero, and do not write Obsidian notes.
+Use $codex-literature-workflow to check whether this machine can extract PDF text and render selected pages. Do not search the web, do not use Zotero, and do not write Obsidian notes.
 ```
 
 Expected:
@@ -21,7 +28,7 @@ Expected:
 Prompt:
 
 ```text
-Initialize codex-literature-workflow setup for a mixed Zotero and Obsidian workflow. Do not search yet. Recommend external skill/plugin dependencies that should be installed or enabled.
+Initialize $codex-literature-workflow setup for a mixed Zotero and Obsidian workflow. Do not search yet. Recommend external skill/plugin dependencies that should be installed or enabled.
 ```
 
 Expected:
@@ -37,13 +44,13 @@ Expected:
 Prompt:
 
 ```text
-Use codex-literature-workflow. I want papers.
+Use $codex-literature-workflow. I want papers.
 ```
 
 Expected:
 
 - no search, download, Zotero, Obsidian, or PDF-reading work starts;
-- the Controller Console asks for paper direction, target paper count, source input mode, download/access permission, language scope, Zotero connection, Obsidian connection, local input paths, output/write paths, collection/vault mapping needs, and target Git checkpoint root;
+- the Controller Console asks for paper direction, target paper count, source input mode, download/access permission, language scope, Zotero connection, Obsidian connection, local input paths, output/write paths, collection/vault/QMD mapping needs, and whether Git checkpoints are enabled;
 - `project_profile.md` keeps `user_scope_confirmed=false` until answers are recorded;
 - no specialist dispatch happens before scope confirmation.
 
@@ -52,7 +59,7 @@ Expected:
 Prompt:
 
 ```text
-Use codex-literature-workflow to find 2-3 open-access English papers about <topic>. Download only legal open PDFs, write a candidate table and manifest, but do not use Zotero or Obsidian.
+Use $codex-literature-workflow to find 2-3 open-access English papers about <topic>. Download only legal open PDFs, write a candidate table and manifest, but do not use Zotero or Obsidian.
 ```
 
 Expected:
@@ -68,7 +75,7 @@ Expected:
 Prompt:
 
 ```text
-Use codex-literature-workflow on 2 papers I already downloaded with source_input_mode=local-library and download_enabled=false. Ask whether Zotero and Obsidian should be enabled. If Zotero is enabled, attach PDFs as linked files if Zotero is available, then create PDF-first Obsidian notes with selected visual pages. Do not attach Markdown notes to Zotero yet.
+Use $codex-literature-workflow on 2 papers I already downloaded with source_input_mode=local-library and download_enabled=false. Ask whether Zotero and Obsidian should be enabled. If Zotero is enabled, prepare validated linked-file scripts for me to run, then create PDF-first Obsidian notes with selected visual pages. Do not prepare Markdown-note attachment yet.
 ```
 
 Expected:
@@ -76,7 +83,7 @@ Expected:
 - environment check;
 - local PDFs registered with `access_route=local-library`;
 - download phase recorded as skipped;
-- Zotero parent/attachment verification or honest pending status;
+- user-run Zotero script plus parent/attachment verification or honest pending status;
 - notes with page evidence and visual status;
 - controller and agent worklogs;
 - batch report and controller acceptance checklist.
@@ -86,7 +93,7 @@ Expected:
 Prompt:
 
 ```text
-Use codex-literature-workflow with project_profile=dissertation-strict on one already-downloaded PDF. Do not search the web. First ask whether there is a local direction/mapping document and whether Zotero/Obsidian should be enabled. Initialize controller records. If Zotero is disabled, keep Zotero fields empty/pending for later. If Zotero is enabled but unavailable, write pending statuses rather than launching apps.
+Use $codex-literature-workflow with project_profile=dissertation-strict on one already-downloaded PDF. Do not search the web. First ask whether there is a local direction/mapping document and whether Zotero/Obsidian should be enabled. Initialize controller records. If Zotero is disabled, keep Zotero fields empty/pending for later. If Zotero is enabled but unavailable, write pending statuses rather than launching apps.
 ```
 
 Expected:
@@ -103,7 +110,7 @@ Expected:
 Prompt:
 
 ```text
-Use codex-literature-workflow to screen Chinese papers about <topic>. Do not download unless open or already authorized. Record CNKI/Wanfang/VIP route details and manual blockers.
+Use $codex-literature-workflow to screen Chinese papers about <topic>. Do not download unless open or already authorized. Record CNKI/Wanfang/VIP route details and manual blockers.
 ```
 
 Expected:
@@ -118,7 +125,7 @@ Expected:
 Prompt:
 
 ```text
-Use codex-literature-workflow to acquire one authorized closed-source paper. Set download_enabled=true and closed_source_fallback=chrome-then-computer-use-once. Use my authenticated Chrome session if allowed. If Chrome gets stuck at verification, try Computer Use once, then stop and write the blocker if still unresolved.
+Use $codex-literature-workflow to acquire one authorized closed-source paper. Set download_enabled=true and closed_source_fallback=chrome-then-computer-use-once. Use my authenticated Chrome session if allowed. If Chrome gets stuck at verification, try Computer Use once, then stop and write the blocker if still unresolved.
 ```
 
 Expected:
@@ -130,12 +137,12 @@ Expected:
 - no credentials, cookies, or private account details are stored;
 - accepted PDF, if any, passes PDF quality checks before `downloaded`.
 
-## Smoke Test 8: Forced Git Checkpoint Gate
+## Smoke Test 8: Enabled Git Checkpoint Gate
 
 Prompt:
 
 ```text
-Use codex-literature-workflow to initialize a long mixed literature workflow. Do not search yet. Require the Controller Console to set up the Git checkpoint policy and create the first local checkpoint after initialization/scope records.
+Use $codex-literature-workflow to initialize a long mixed literature workflow. Do not search yet. Explicitly enable Git checkpoints and ask the Controller Console to create the first local checkpoint after initialization/scope records.
 ```
 
 Expected:
@@ -146,6 +153,26 @@ Expected:
 - if the target root is not a Git repository, the controller stops and asks the user to initialize Git or designate the correct root;
 - if Git is available, the controller inspects changed paths, runs a privacy scan on intended text files, stages explicit safe paths only, creates a local checkpoint commit, and records the hash or blocker;
 - no automatic push happens.
+
+## Smoke Test 9: Obsidian Wiki Ingest + QMD Update Only
+
+Prompt:
+
+```text
+Use $codex-literature-workflow to test Obsidian Wiki ingest in an isolated temp vault. Create a few demo Markdown notes, initialize QMD if available, reuse or add a collection, run qmd update, and search for a known title or keyword. Do not run qmd embed and do not touch real PDFs, Zotero sqlite, or production vaults.
+```
+
+Expected:
+
+- temp/test vault contains `.manifest.json`, `index.md`, `hot.md`, `log.md`, `01_sources/source_registry.md`, `01_sources/zotero_link_index.md`, and `02_literature_notes/`;
+- each canonical demo source has one formal note and manifest row;
+- duplicate aliases are recorded only in manifest/report/source registry, not as separate formal notes;
+- wrong/incomplete demo sources are marked `manual-check`;
+- `qmd init`, `qmd collection list`, idempotent collection reuse/add, `qmd update`, `qmd status`, and `qmd search` are attempted only when QMD is available;
+- QMD search returns a known title/keyword when available;
+- vectors remain pending or 0 embedded when `qmd embed` was not approved;
+- `.qmd/` and `10_knowledge_base/.rag/` are ignored by Git;
+- no original PDFs, Zotero sqlite files, browser cookies, credentials, or production vaults are modified.
 
 ## Acceptance Criteria
 
@@ -160,7 +187,28 @@ Expected:
 - No direct Zotero sqlite writes.
 - All outputs are durable files, not chat-only.
 - Controller and fixed specialist agents update Markdown worklogs.
-- Controller creates forced local Git checkpoint commits after initialization/scope/dependency/session records, after every 3 meaningful file-writing steps or accepted handoffs, before risky bulk writes, and before pause/handoff.
-- Git checkpoints inspect `git status`, run privacy scans, avoid `git add .`, exclude private PDFs/Zotero databases/cookies/credentials unless explicitly approved, and never auto-push.
+- When Git checkpoints are enabled, the Controller creates them after initialization/scope/dependency/session records, after every 3 meaningful file-writing steps or accepted handoffs, before risky bulk writes, and before pause/handoff; otherwise the records say `disabled`.
+- When used, Git checkpoints inspect `git status`, run privacy scans, avoid `git add .`, exclude private PDFs/Zotero databases/cookies/credentials unless explicitly approved, and never auto-push.
 - Strict profile outputs include quota/process/temp policy state.
 - When Zotero is enabled or pending, Zotero and Obsidian records agree on `source_id`, `zotero_key`, `zotero_collection`, `local_pdf`, and `md_note_path`.
+- Obsidian Wiki / LLM Wiki ingest writes one formal note per canonical source and records duplicate aliases without duplicate formal notes.
+- `.manifest.json`, source registry, Zotero link index, and note frontmatter agree before controller acceptance.
+- QMD is optional, update-only by default, and never treated as the source of truth.
+- `qmd embed`, `qmd query`, and `qmd vsearch` are not run without explicit approval.
+
+## Automated Release Checks
+
+Run from the repository root:
+
+```bash
+python3 -m pip install -r requirements.txt -r requirements-dev.txt
+python3 scripts/validate_skills.py
+python3 -m py_compile scripts/*.py
+python3 -m json.tool evals/evals.json
+node --check companion-skills/zotero-linked-attachments/scripts/build_zotero_linked_attachment_js.mjs
+node --check companion-skills/zotero-linked-attachments/scripts/verify_zotero_linked_attachments.mjs
+python3 -m unittest discover -s tests -v
+python3 scripts/env_check.py --json --strict
+```
+
+The offline suite must cover YAML metadata validation, input validation, safe backup/install behavior, installer source/destination overlap, disposable-environment target safety, complete PDF report/text/render alias preflight, blank/scan-only/encrypted PDF semantics, relative Zotero base-path resolution, parent/link-mode checks, pagination, conflicting mappings, and mapping/attachment-source/output hard-link or symlink protection. Live Zotero writes, authenticated publisher access, and production-vault writes remain manual opt-in integration tests against disposable or backed-up targets.

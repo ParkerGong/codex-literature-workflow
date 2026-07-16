@@ -2,6 +2,13 @@
 
 Use a project profile to adapt the generic open-source workflow to a host project's stricter rules. The controller should record the selected profile before any long task starts.
 
+## Contents
+
+- Generic and dissertation-strict profiles
+- Direction, collection, and local-input intake
+- Host protocol loading and profile record
+- Override rules
+
 ## Generic Profile
 
 Use `project_profile=generic` when the user has not provided a project-specific protocol.
@@ -11,6 +18,8 @@ Defaults:
 - `user_scope_confirmed=false` until startup questions are answered.
 - `zotero_enabled=false` unless requested.
 - `obsidian_enabled=false` unless requested.
+- `qmd_enabled=false` unless local vault search/index refresh is requested; embeddings remain separately opt-in.
+- `git_checkpoint_required=false` unless the user or host profile enables it.
 - `visual_check=selected-pages` only when figures, tables, curves, formulas, or screenshots matter.
 - `access_mode=open-only` until the user authorizes browser, login, institutional, or manual access.
 - temporary artifacts stay outside the repository and are reported before deletion or reuse.
@@ -39,6 +48,8 @@ Strict overrides:
 | `download_enabled` | ask first; `false` when using only existing local PDFs |
 | `zotero_enabled` | ask at start; optional, but strict verification applies if enabled |
 | `obsidian_enabled` | ask at start; usually `true` when the user wants a knowledge base |
+| `qmd_enabled` | ask only when local vault search/index refresh is in scope; `qmd_embed_allowed=false` by default |
+| `git_checkpoint_required` | `false` unless the user or host protocol explicitly enables local recovery commits |
 | `visual_check` | `selected-pages` by default; `vision-model` only when requested or essential |
 | `batch_size` | first test: `1`; normal papers: `3-5`; long reports/theses: `1-2` |
 | `access_mode` | `open-only` first; `authorized-browser` or `manual-user` only after user consent |
@@ -69,6 +80,8 @@ Do not hard-code a private dissertation direction map or Zotero collection mappi
 7. How many papers should the first batch target?
 8. Should Zotero be enabled?
 9. Should Obsidian/RAG-ready notes be enabled, and where may they be written?
+10. If QMD refresh is wanted, which collection should be reused/created, and are embeddings approved?
+11. Should local Git checkpoints be enabled and, if so, which repository root is safe?
 
 Record the answer in `project_profile.md`:
 
@@ -84,6 +97,11 @@ Record the answer in `project_profile.md`:
 - target_count:
 - zotero_enabled:
 - obsidian_enabled:
+- qmd_enabled:
+- qmd_collection:
+- qmd_embed_allowed:
+- git_checkpoint_required:
+- git_checkpoint_root:
 - zotero_collection_or_mapping:
 - obsidian_vault_or_output_root:
 - allowed_obsidian_write_paths:
@@ -103,7 +121,7 @@ Strict Zotero Gate When Enabled:
 1. LiteratureAgent selects and registers the source.
 2. If Zotero is enabled, ZoteroAgent verifies or honestly marks the Zotero parent item, collection, and PDF linked-file attachment.
 3. ObsidianAgent can write notes before Markdown note attachment to Zotero; note files often need a stable final path first.
-4. After Obsidian notes are stable, ZoteroAgent may attach Markdown notes as linked files if the user/project wants that.
+4. After Obsidian notes are stable, ZoteroAgent may prepare a second linked-file mapping/script if the user/project wants it; the user runs the Zotero Desktop write and ZoteroAgent verifies it read-only.
 5. Controller checks enabled records before marking accepted.
 
 When Zotero is disabled, keep DOI/URL/local PDF and optional empty Zotero fields so Zotero can be added later. When Zotero is temporarily unavailable but enabled, Obsidian can proceed only if the controller records an explicit temporary status such as `pending-import`, `pending-attachment`, or `pending-md-attachment`.
@@ -142,6 +160,11 @@ The controller should translate host-specific paths into this skill's generic re
 - proposed_collection_bucket:
 - zotero_enabled:
 - obsidian_enabled:
+- qmd_enabled:
+- qmd_collection:
+- qmd_embed_allowed:
+- git_checkpoint_required:
+- git_checkpoint_root:
 - visual_check:
 - access_mode:
 - batch_size:
