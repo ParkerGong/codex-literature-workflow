@@ -1,6 +1,6 @@
 # Provenance And Companion Skills
 
-This skill packages a workflow pattern that Codex temporarily summarized from small maintainer-side local tests. It vendors only maintainer-built companion skills that were intentionally added to this repository after a privacy/path review. Third-party and plugin-only companions remain external unless explicitly added with license review.
+This skill packages a controller-led workflow refined from maintainer-side local tests and formalized with offline regression checks. It vendors only maintainer-built companion skills intentionally included after a privacy/path review. Third-party and plugin-only companions remain external unless explicitly added with license review.
 
 ## Observed Companion Skills
 
@@ -9,15 +9,16 @@ These skills or plugins informed the workflow design and can be called when inst
 | Companion | Public/source status | Used for |
 | --- | --- | --- |
 | `skill-creator` | optional Codex/system skill; do not vendor without license review | skill structure, progressive disclosure, test planning |
-| `zotero-linked-attachments` | maintainer-built; vendored at `companion-skills/zotero-linked-attachments` | Zotero linked-file attachment pattern and verification |
+| `zotero-linked-attachments` | maintainer-built; vendored at `companion-skills/zotero-linked-attachments` | user-run Zotero linked-file script preparation and read-only verification |
 | `wiki-ingest` / `obsidian-wiki-ingest` | optional local/public skill when available | Obsidian-style source registry, notes, manifests, staged writes |
 | `pdf` | optional Codex/local skill when available; not vendored here | PDF text extraction, rendering, visual QA pattern |
 | `browser:control-in-app-browser` | optional OpenAI bundled Browser plugin | local/web navigation when browser connector is available |
 | `chrome:control-chrome` | optional OpenAI bundled Chrome plugin | authenticated browser sessions and existing Chrome tabs |
-| `computer-use:computer-use` | optional OpenAI bundled Computer Use plugin | GUI fallback for downloads or Zotero Desktop when connectors fail |
+| `computer-use:computer-use` | optional OpenAI bundled Computer Use plugin | authorized browser/download GUI fallback; never use it to operate Zotero Desktop in this release |
 | `academic-research-suite` | default optional research workflow skill | external paper discovery, deep/systematic review planning, query expansion, source verification, citation/integrity checks |
 | `research-lr-ra` | maintainer-built; vendored at `companion-skills/research-lr-ra` | legacy LR assistant work, research-gap mapping, representative-work selection when ARS is unavailable or a narrow subtask fits better |
 | `sciencedirect-live-session-fetcher` | optional public skill from `Given-Dream/sciencedirect-live-session-fetcher` | preferred authorized-browser backend for ScienceDirect/Elsevier, IEEE Xplore, and publisher PDF routes exposed inside a live browser session |
+| QMD (`@tobilu/qmd`) | optional public npm package | local vault search/index refresh after Obsidian Wiki / LLM Wiki style writes; embeddings only with approval |
 
 ## Packaging Policy
 
@@ -27,9 +28,10 @@ These skills or plugins informed the workflow design and can be called when inst
 - Install the vendored maintainer-built companions with `scripts/install_companion_skills.py`.
 - For literature discovery and search strategy, default to `academic-research-suite`; keep `research-lr-ra` as auxiliary/fallback rather than an equal default.
 - For authorized publisher downloads, prefer `sciencedirect-live-session-fetcher` when installed, but keep the generic Chrome/Computer Use/manual fallback path documented for environments where it is unavailable.
+- For Obsidian Wiki / LLM Wiki style ingestion, treat vault Markdown, `.manifest.json`, source registry, Zotero link index, and controller records as authoritative. Treat QMD and fallback retrieval as optional search/index layers.
 - If a companion skill is unavailable, follow the generic instructions in this package.
 - If vendoring code from another skill or repository, preserve its license, attribution, and upstream URL.
-- For Zotero, prefer API/Desktop automation; never vendor or manipulate Zotero's private database format.
+- For Zotero, prefer read-only API verification plus user-run generated Desktop JavaScript; never vendor or manipulate Zotero's private database format.
 
 ## Attribution In Open Source Releases
 

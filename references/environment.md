@@ -4,11 +4,18 @@ Always check the environment before search/download batches or PDF reading batch
 
 Read `dependencies.md` first during new project initialization so companion skills, permanent Python environment paths, and missing install actions are recorded together.
 
+## Contents
+
+- Permanent Python environment and requirements
+- Optional Node/QMD setup
+- Disposable fallback and readiness checks
+- PDF probing, reading levels, temporary files, and GUI boundaries
+
 ## Permanent Non-Venv Python Environment
 
 For repeated Codex literature work, prefer one dedicated, permanent named environment instead of creating a fresh project venv for every batch. This keeps browser-session fetching, PDF reading, rendering, Poppler/Tesseract command-line tools, and Zotero/Obsidian-adjacent helpers available from a stable path.
 
-Recommended pattern on macOS with `micromamba` or Miniforge:
+Recommended pattern on macOS with `micromamba`, `mamba`, or `conda`:
 
 ```bash
 micromamba create -n codex-literature -c conda-forge python=3.12 pip poppler tesseract
@@ -16,6 +23,8 @@ micromamba activate codex-literature
 python3 -m pip install --upgrade pip setuptools wheel
 python3 -m pip install -r requirements.txt
 ```
+
+If `micromamba` is unavailable, substitute `mamba` or `conda` for the create/activate commands. This host fallback is supported; do not report the environment blocked merely because one manager name is absent.
 
 Record the resulting interpreter path in host-project controller notes:
 
@@ -57,12 +66,60 @@ Install from the repository root:
 python3 -m pip install -r requirements.txt
 ```
 
+## Optional Node / QMD Environment
+
+QMD is optional. It is useful after Obsidian Wiki / LLM Wiki style vault writes when a project wants a local search/index backend. It is not required for basic Obsidian note creation.
+
+Recommended checks:
+
+```bash
+node --version
+npm --version
+qmd --version
+```
+
+Install only when the user/project wants QMD:
+
+```bash
+npm install -g @tobilu/qmd
+```
+
+Record:
+
+- `QMD_CLI`, usually `qmd`;
+- `QMD_WIKI_COLLECTION`, when configured;
+- whether `qmd init`, idempotent collection reuse/add, `qmd update`, and `qmd search` succeeded;
+- whether embeddings are approved.
+
+Do not run `qmd embed` by default. It may download GGUF models and consume local disk/CPU/GPU.
+
+If `qmd --version` works but `qmd init` or `qmd update` fails with a `better-sqlite3` / `NODE_MODULE_VERSION` mismatch, record QMD as failed and let the user's Codex adapt the Node/npm repair to that machine. Do not make QMD a blocker for basic vault notes.
+
+On machines with several Node installations, QMD can pass `qmd --version` but fail when its launcher starts a second Node process. Compare `node --version`, `node -p process.versions.modules`, `type -a node`, and `qmd doctor`. If the QMD error reports a different Node version, pin QMD commands to the Node prefix that installed QMD:
+
+```bash
+QMD_BIN="$(command -v qmd)"
+QMD_NODE_BIN="$(dirname "$QMD_BIN")"
+QMD_PATH="$QMD_NODE_BIN:/usr/bin:/bin:/usr/sbin:/sbin"
+env PATH="$QMD_PATH" "$QMD_BIN" doctor
+env PATH="$QMD_PATH" "$QMD_BIN" init
+```
+
+Record this as a local environment repair before continuing.
+
+Keep local QMD/RAG runtime state out of Git:
+
+```gitignore
+.qmd/
+10_knowledge_base/.rag/
+```
+
 ## Temporary Venv Fallback
 
 Recommended location:
 
 ```bash
-/private/tmp/codex_literature_workflow_venv
+/private/tmp/codex_literature_workflow_venv_<task-id>
 ```
 
 Recommended packages:
@@ -78,17 +135,21 @@ Recommended packages:
 
 Use this fallback when a host project explicitly wants an isolated disposable environment. If dependency download is blocked by sandbox/network policy, ask for approval.
 
-Create a temporary environment with:
+The helper accepts only a brand-new target. The final path must not exist, no final or ancestor path component may be a symlink, and the target must not equal, contain, or sit inside this skill repository. Use a unique disposable path for every creation attempt.
+
+Create a temporary environment without installing packages:
 
 ```bash
-python3 scripts/setup_env.py --venv /private/tmp/codex_literature_workflow_venv
+python3 scripts/setup_env.py --venv /private/tmp/codex_literature_workflow_venv_<task-id>
 ```
 
-Install recommended packages only when network/dependency installation is allowed:
+When network/dependency installation is allowed, create the new environment and install the recommended packages in the same invocation:
 
 ```bash
-python3 scripts/setup_env.py --venv /private/tmp/codex_literature_workflow_venv --install
+python3 scripts/setup_env.py --venv /private/tmp/codex_literature_workflow_venv_<task-id> --install
 ```
+
+Do not pre-create the target and do not rerun the helper against an existing or partially created venv. For an existing venv, use that environment's own pip directly, for example `/path/to/existing-venv/bin/python -m pip install -r requirements.txt` (or `Scripts\\python.exe` on Windows). If a creation attempt is partial, inspect it and choose another new target; the helper will not rewrite it.
 
 The setup script prints the Python and pip paths to use for later `env_check.py` and `pdf_probe.py` runs.
 
@@ -97,7 +158,7 @@ The setup script prints the Python and pip paths to use for later `env_check.py`
 Run:
 
 ```bash
-python3 scripts/env_check.py --json
+python3 scripts/env_check.py --json --strict
 ```
 
 Expected checks:
@@ -121,6 +182,8 @@ It should:
 - extract page text into `texts/`;
 - render only selected pages into `renders/` when PyMuPDF is available;
 - write `probe_report.json`;
+- mark a blank/scan-only selected range as not text-ready even when parsing succeeds;
+- refuse symlink output directories/files rather than following them;
 - fail honestly if rendering is unavailable.
 
 ## Reading Levels
@@ -162,7 +225,7 @@ Use this style when the host project asks for recoverable cleanup:
 
 ## Browser And GUI Access Check
 
-Only use Chrome, Computer Use, or Zotero Desktop automation when the user or project profile allows it.
+Only use Chrome or Computer Use when the user or project profile allows it. Zotero Local API access is read-only; Zotero Desktop writes remain user-run in this release.
 
 Record:
 

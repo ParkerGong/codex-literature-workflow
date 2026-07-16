@@ -2,6 +2,13 @@
 
 This phase turns a topic, direction, existing PDF library, or mixed source set into registered local sources. Download is optional. If the user already has local PDFs, register and verify the library first, then continue to Zotero/Obsidian stages without searching or downloading unless the controller asks for gap filling.
 
+## Contents
+
+- Direction, input modes, and local-library intake
+- Screening rubric, records, and candidate tables
+- Access routes and authorized-browser boundaries
+- Download runbook, Chinese databases, and PDF acceptance
+
 ## Direction Intake
 
 Before LiteratureAgent starts, the controller must ask the user to confirm missing startup scope fields and record them in `project_profile.md`. Do not start search, download, Zotero, Obsidian, or PDF-reading work while `user_scope_confirmed=false`.
@@ -22,11 +29,11 @@ The controller should ask or infer from the latest user message:
 - whether Zotero/Obsidian outputs are enabled;
 - Zotero collection or mapping document when Zotero is enabled;
 - Obsidian vault/project root and allowed write paths when Obsidian is enabled;
-- target Git checkpoint root and whether the latest checkpoint is current.
+- whether Git checkpoints are enabled and, if so, the target root and latest checkpoint state.
 
 If the user gives a broad direction, LiteratureAgent first writes a direction map before downloading.
 
-Do not dispatch search, local-library intake, or download batches if the latest required Git checkpoint is stale or the checkpoint root is unclear.
+When Git checkpoints are enabled, do not dispatch search, local-library intake, or download batches if the required checkpoint is stale or its root is unclear. When disabled, record that state and continue.
 
 ## Source Input Modes
 

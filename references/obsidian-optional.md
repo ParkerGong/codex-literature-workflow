@@ -2,6 +2,15 @@
 
 Use this only when `obsidian_enabled=true` or the user asks for a knowledge base.
 
+For the manifest-backed Obsidian Wiki / LLM Wiki contract, read `obsidian-wiki-ingest.md`. For optional QMD or fallback local RAG refresh after vault writes, read `qmd-rag.md`.
+
+## Contents
+
+- Connection modes, output files, and vault layout
+- Literature-note structure and source links
+- Optional project metadata and Zotero-note linking
+- Visual checks, RAG readiness, link rules, and batch reports
+
 ## Connection Modes
 
 This skill does not require Obsidian Desktop automation. Prefer file-based vault writes because they are portable and versionable.
@@ -35,6 +44,7 @@ A typical Obsidian-enabled project writes:
 - optional claim cards for dissertation/report-ready claims;
 - batch report;
 - ingest queue/status/log updates.
+- `.manifest.json` updates when the project uses Obsidian Wiki / LLM Wiki style ingestion.
 
 ## Minimal Vault Layout
 
@@ -53,7 +63,7 @@ knowledge_base/
 └── _staging/
 ```
 
-Projects may use different names. Preserve local conventions.
+Projects may use different names. Preserve local conventions. A manifest-backed vault should include `.manifest.json` at the vault root.
 
 ## Literature Note Template
 
@@ -175,6 +185,8 @@ A note is RAG-ready when it has:
 - uncertainty tags.
 
 Do not create a note for duplicate aliases. Register the alias and point it to the canonical note.
+
+QMD or fallback retrieval can index a RAG-ready note, but it does not make the note true. The note, manifest, source registry, Zotero index, and controller acceptance records remain the source of truth.
 
 Duplicate rule:
 

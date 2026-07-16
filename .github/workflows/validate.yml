@@ -7,7 +7,11 @@ on:
 
 jobs:
   validate:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Check out repository
@@ -18,19 +22,36 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
       - name: Install system PDF tools
+        if: runner.os == 'Linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y poppler-utils tesseract-ocr
 
       - name: Install Python dependencies
-        run: python3 -m pip install -r requirements.txt
+        run: python3 -m pip install -r requirements.txt -r requirements-dev.txt
 
       - name: Compile helper scripts
         run: python3 -m py_compile scripts/*.py
 
+      - name: Check Zotero helper syntax
+        run: |
+          node --check companion-skills/zotero-linked-attachments/scripts/build_zotero_linked_attachment_js.mjs
+          node --check companion-skills/zotero-linked-attachments/scripts/verify_zotero_linked_attachments.mjs
+
       - name: Validate eval JSON
         run: python3 -m json.tool evals/evals.json >/dev/null
 
-      - name: Run environment report
-        run: python3 scripts/env_check.py --json
+      - name: Validate skill metadata
+        run: python3 scripts/validate_skills.py
+
+      - name: Run strict environment report
+        run: python3 scripts/env_check.py --json --strict
+
+      - name: Run offline regression tests
+        run: python3 -m unittest discover -s tests -v

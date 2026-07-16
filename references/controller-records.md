@@ -2,18 +2,25 @@
 
 Long literature workflows drift when state lives only in chat. Before dispatching a long task, the controller should create or update a small set of Markdown records. These records are portable and can live in any project; adjust paths to the host repo.
 
+## Contents
+
+- Minimal records, worklogs, and status vocabulary
+- Controller, kanban, session, dispatch, and handoff templates
+- Optional Git checkpoint policy
+- Quota, process, and temporary-artifact policies
+
 ## Minimal File Set
 
 | File | Purpose | Owner |
 | --- | --- | --- |
-| `00_controller/initialization.md` | Controller Console designation, goal status, and specialist session creation plan | Controller |
+| `00_controller/initialization.md` | Controller Console record, optional goal status, and specialist session creation plan | Controller |
 | `00_controller/project_profile.md` | selected profile, options, host-project policy overrides | Controller |
 | `00_controller/controller_worklog.md` | chronological controller decisions, dispatches, acceptance, and recovery notes | Controller |
 | `00_controller/agent_worklogs/<Agent>.md` | per-agent read/write/action ledger for context recovery | each fixed specialist |
 | `00_controller/controller_kanban.md` | active task board and acceptance state | Controller |
 | `00_controller/session_registry.md` | fixed specialist sessions and their current role/status | Controller |
 | `00_controller/dispatch_log.md` | sent/recovered/accepted/blocker history | Controller |
-| `00_controller/git_checkpoints.md` | forced local Git checkpoints, privacy scans, commit hashes, and skipped/blocker reasons | Controller |
+| `00_controller/git_checkpoints.md` | optional local Git checkpoints, privacy scans, commit hashes, and disabled/blocker reasons | Controller |
 | `00_controller/source_manifest.md` | canonical source IDs, metadata, local paths, DOI/URL, access status | LiteratureAgent, Controller accepts |
 | `00_controller/download_log.md` | attempted URLs, used URLs, browser/manual access notes, file sizes | LiteratureAgent |
 | `00_controller/quota_status.md` | reliable quota reading, `quota unknown`, or pause decision when applicable | Controller |
@@ -175,9 +182,9 @@ Use a small vocabulary consistently:
 
 Policy:
 
-- Required for long workflows: true
+- Required for long workflows: false by default; enable only by user or host profile
 - Interval: after every 3 meaningful file-writing steps or accepted handoffs
-- Also required: after initialization/scope/dependency/session records, before risky bulk writes, after each phase acceptance, and before pause/handoff
+- When enabled, also checkpoint: after initialization/scope/dependency/session records, before risky bulk writes, after each phase acceptance, and before pause/handoff
 - Push policy: manual-only; never push automatically
 
 | Time | Task ID | Trigger | Files intended | Privacy scan | Commit hash | Status | Notes |
@@ -224,9 +231,9 @@ Policy:
 
 ## Git Checkpoint Policy
 
-Local Git checkpoints are mandatory for long workflows so that controller records, manifests, notes, and routing decisions can be recovered after tool failure, context compaction, accidental overwrite, or a bad batch. A checkpoint means a local commit in the target project repository. It does not mean pushing to GitHub.
+Local Git checkpoints are an opt-in durability feature for controller records, manifests, notes, and routing decisions. They are disabled in the generic profile unless the user or host project enables them. A checkpoint means a local commit in the target project repository; it does not mean pushing to GitHub.
 
-If the target project root is not a Git repository, stop before long work and ask the user to initialize Git or designate the correct repo root.
+When checkpoints are enabled and the target root is not a Git repository, ask the user to initialize Git, designate the correct repo root, or disable checkpoints. Record `disabled` when checkpointing is not enabled.
 
 Meaningful file-writing steps include:
 
@@ -239,7 +246,7 @@ Meaningful file-writing steps include:
 - controller acceptance or rejection decisions;
 - specialist handoff files.
 
-Forced checkpoint triggers:
+Checkpoint triggers when enabled:
 
 - immediately after initialization and startup-scope records are written;
 - immediately after dependency and session records are written;
@@ -251,19 +258,24 @@ Forced checkpoint triggers:
 Before staging files:
 
 1. Run `git status --short` and inspect changed paths.
-2. Run a privacy scan over intended text files for credentials, cookies, local private paths, and tokens.
+2. Build an explicit `INTENDED_TEXT_PATHS` list containing every controller record, manifest, Zotero index, Obsidian note, and handoff intended for the checkpoint. Run the privacy scan over exactly that list.
 3. Exclude private PDFs, Zotero databases, browser profiles/cookies, credential files, closed vault content, and large rendered artifacts unless the user explicitly approves.
 4. Stage explicit safe paths only; do not use `git add .` for literature workflows.
 5. Commit with a message such as `checkpoint(<TASK_ID>): <phase-or-trigger>`.
 6. Record the commit hash or blocker in `00_controller/git_checkpoints.md`.
 
-Suggested minimum privacy scan pattern:
+Suggested minimum privacy scan pattern (replace the example paths with the complete intended text-file list; do not record `passed` while examples or omissions remain):
 
 ```bash
-rg -n -i "<api-key-or-token-pattern>|<password-or-cookie-pattern>|zotero\\.sqlite|/Users/[^/ ]+" 00_controller
+INTENDED_TEXT_PATHS=(
+  00_controller/project_profile.md
+  00_controller/source_manifest.md
+  00_controller/zotero_link_index.md
+)
+rg -n -i '(api[_-]?key|access[_-]?token|secret|password|passwd|cookie|authorization[=:]|bearer[[:space:]]+[A-Za-z0-9._~+/-]{12,}|BEGIN (RSA|OPENSSH|EC) PRIVATE KEY|zotero\.sqlite|/Users/[^/[:space:]]+|/home/[^/[:space:]]+)' "${INTENDED_TEXT_PATHS[@]}"
 ```
 
-Treat matches as review items, not automatic deletion instructions. If a match is expected in a private local checkpoint, record why it is safe. For any repository that may be pushed publicly, local user paths and private project names must be scrubbed before commit or push.
+Extend the array with every intended Obsidian note, ingest record, and handoff; an abbreviated list is a failed/incomplete scan. Treat matches as review items, not automatic deletion instructions. After scanning, stage only that explicit list and inspect `git diff --cached --name-only` plus the staged diff. If a match is expected in a private local checkpoint, record why it is safe. For any repository that may be pushed publicly, local user paths and private project names must be scrubbed before commit or push.
 
 Never push automatically. Pushing to GitHub requires a separate explicit user request after the controller confirms the local checkpoint is safe.
 
