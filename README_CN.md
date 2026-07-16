@@ -25,8 +25,6 @@
 
 1.0.0 是工作流契约和确定性辅助脚本的正式版。离线回归测试覆盖：skill 元数据、安全安装、controller workspace 初始化与备份、环境报告、PDF 探针的成功/失败语义，以及基于 mock Local API 的 Zotero linked-file mapping 与验证。
 
-1.0.0 发布门已通过 40/40 项离线回归测试，并验证了主 skill 与两个 vendored companion 共 3 个 skill tree。测试核心、集成证据和有意保留的人工边界见[发布审计](RELEASE_AUDIT.md)。
-
 真实集成仍取决于本机环境：
 
 - Zotero Desktop 写入需要用户运行生成的 JavaScript，再通过 Local API 验证；本项目绝不写 `zotero.sqlite`。
@@ -194,22 +192,22 @@ python3 scripts/init_workspace.py --root /path/to/literature/project
 - source/download/Zotero/ingest manifests
 - handoff 和状态文件
 
-### 6. 回答启动前 scope 问题
+### 6. 第一次启动工作流时，Codex 必须询问
 
-完整的多阶段检索/下载/Zotero/Obsidian 流程开始前，总控台确认缺失且会影响结果的 scope 字段；单一阶段只询问相关字段。
+用户第一次在某个项目里启动这套工作流时，Codex 必须在检索、下载文件、派发 specialist 或写入 Zotero/Obsidian 之前询问以下问题。用户已经提供的信息不要重复询问，也不得猜测本地路径或权限。若用户只要求一个单独阶段，则只询问与该阶段有关的问题。
 
-1. 论文方向或研究边界。
-2. 第一批期望找多少篇。
-3. 来源模式：已有本地 PDF、新检索/下载、或混合。
-4. 是否启用新 PDF 下载/获取；若启用，是仅开放获取，还是允许授权浏览器/manual 访问。
-5. 语言范围：英文、中文、或中英都要。
-6. 是否接入 Zotero。
-7. 是否创建 Obsidian/RAG-ready 笔记。
-8. 如果启用 Zotero，使用哪个 collection 或 mapping 文档。
-9. 如果启用 Obsidian，vault/project root 和允许写入路径是什么。
-10. 是否已有方向文档、文献索引、本地 PDF 文件夹、manifest、或 Zotero/Obsidian mapping 文件。
-11. 是否启用 QMD 刷新、复用/创建哪个 collection、是否批准 embedding。
-12. 是否启用本地 Git checkpoint；如果启用，目标 Git root 是什么。
+1. “这次需要完整文献工作流，还是只做检索、PDF 精读、Zotero 附件或 Obsidian ingest 中的某一个阶段？”
+2. “研究方向、研究问题或文献纳入边界是什么？”
+3. “第一批希望处理多少篇论文？”
+4. “文献来源是已有本地 PDF、新检索/下载，还是两者混合？如果包含本地文件，文件在哪里？”
+5. “controller records 和生成结果应写入哪个本地项目目录？”
+6. “是否允许获取新的 PDF？如果允许，是仅使用开放获取来源、复用已授权浏览器 session，还是由你手动提供文件？”
+7. “文献语言范围是英文、中文，还是中英都要？”
+8. “是否接入 Zotero？如果接入，使用哪个 library/collection 或 mapping 文档；需要用户执行写入时，Zotero Desktop 是否可用？”
+9. “是否创建 Obsidian 笔记？如果创建，使用哪个 vault/project root，Codex 被允许写入哪些明确路径？”
+10. “是否已有方向文档、文献索引、manifest、PDF 文件夹或 Zotero/Obsidian mapping，需要作为现有输入？”
+11. “是否启用 QMD 索引刷新？如果启用，复用或创建哪个 collection；是否明确批准 embedding？”
+12. “是否启用本地 Git checkpoint？如果启用，使用哪个 Git root？”
 
 把这些答案记录到 `00_controller/project_profile.md`，并在派发 specialist 工作前设置 `user_scope_confirmed: true`。
 

@@ -25,8 +25,6 @@ The project exists because agent-led literature work has many sharp edges: sourc
 
 Version 1.0.0 is the formal release of the workflow contract and its deterministic helpers. Offline regression tests cover skill metadata, safe installation, controller-workspace initialization and backup, environment reporting, PDF probe success/failure semantics, and Zotero linked-file mapping/verification with mocked Local API responses.
 
-The 1.0.0 release gate passes 40/40 offline regression tests and validates all three skill trees: the main skill and both vendored companions. See the [release audit](RELEASE_AUDIT.md) for the tested core, integration evidence, and deliberate manual boundaries.
-
 Live integrations remain conditional on the user's machine:
 
 - Zotero Desktop writes require the user to run the generated JavaScript and then verify through the Local API. This release never writes `zotero.sqlite`.
@@ -194,22 +192,22 @@ This creates:
 - source/download/Zotero/ingest manifests
 - handoff and status files
 
-### 6. Answer the startup scope questions
+### 6. First workflow start: what Codex must ask
 
-Before a full multi-phase search/download/Zotero/Obsidian run, the Controller Console confirms missing material scope fields. A bounded single-phase request asks only relevant fields.
+The first time a project starts this workflow, Codex must ask the questions below before it searches, downloads files, dispatches specialists, or writes Zotero/Obsidian output. It should ask only for information the user has not already provided and must not guess local paths or permissions. For a bounded single-phase request, it asks only the relevant subset.
 
-1. Paper direction or research boundary.
-2. Target number of papers for the first batch.
-3. Source mode: local PDFs, new search/download, or mixed.
-4. Whether new PDF download/acquisition is enabled, and whether access is open-only or authorized browser/manual.
-5. Language scope: English, Chinese, or both.
-6. Whether Zotero should be connected.
-7. Whether Obsidian/RAG-ready notes should be created.
-8. Zotero collection or mapping document, if Zotero is enabled.
-9. Obsidian vault/project root and allowed write paths, if Obsidian is enabled.
-10. Existing direction documents, literature indexes, PDF folders, manifests, or mapping files.
-11. Whether QMD refresh is enabled, which collection to reuse/create, and whether embeddings are approved.
-12. Whether local Git checkpoints are enabled and, if so, the target Git root.
+1. “Do you want the full literature workflow, or only a specific phase such as search, PDF reading, Zotero attachment, or Obsidian ingest?”
+2. “What is the research direction, research question, or inclusion boundary?”
+3. “How many papers should the first batch contain?”
+4. “Are the sources existing local PDFs, newly searched/downloaded papers, or a mixture? If local files are involved, where are they?”
+5. “Which local project directory should hold controller records and generated outputs?”
+6. “May the workflow acquire new PDFs? If yes, should it use open-access sources only, an authorized browser session, or files provided manually by you?”
+7. “Should the literature scope be English, Chinese, or both?”
+8. “Should Zotero be connected? If yes, which library/collection or mapping document should be used, and is Zotero Desktop available for user-run write steps?”
+9. “Should Obsidian notes be created? If yes, which vault/project root and exact paths may Codex write to?”
+10. “Are there existing direction documents, literature indexes, manifests, PDF folders, or Zotero/Obsidian mappings that should be treated as inputs?”
+11. “Should QMD index refresh be enabled? If yes, which collection should be reused or created, and are embeddings explicitly approved?”
+12. “Should local Git checkpoints be enabled? If yes, which Git root should be used?”
 
 Record these answers in `00_controller/project_profile.md` and set `user_scope_confirmed: true` before dispatching specialist work.
 
